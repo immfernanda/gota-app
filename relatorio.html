@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relatório · App Gota 💧</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9F5DE; --card:#FFFDF6; --borda:#DCEECB;
+  --verde:#5BB450; --verde-esc:#3E8E38; --verde-claro:#C9E7B4; --verde-fundo:#EFF8E6;
+  --laranja:#FF9F1C; --amarelo:#FFD93D; --azul:#4FC3F7; --azul-esc:#2FA8DF; --roxo:#8E7CC3;
+  --texto:#37522E; --cinza:#8A9B7E; --rosa:#F17BA6; --vermelho:#E2606C;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--texto);font-family:'Fredoka',sans-serif;min-height:100vh}
+.wrap{max-width:960px;margin:0 auto;padding:22px 16px 60px}
+h1,h2,h3{font-family:'Baloo 2'}
+.topo{text-align:center;margin-bottom:18px}
+.topo h1{font-size:28px;color:var(--verde-esc)}
+.topo p{color:var(--cinza);font-size:14px}
+
+/* portão de senha */
+.gate{max-width:420px;margin:8vh auto 0;background:var(--card);border:2px solid var(--borda);border-radius:24px;padding:30px 26px;text-align:center;box-shadow:0 10px 30px rgba(62,142,56,.10)}
+.gate .emoji{font-size:52px;display:block;margin-bottom:10px}
+.gate h2{font-size:22px;color:var(--verde-esc);margin-bottom:4px}
+.gate p{font-size:13.5px;color:var(--cinza);margin-bottom:16px}
+.gate input{width:100%;border:2px solid var(--borda);border-radius:16px;padding:13px;font-family:'Baloo 2';font-size:20px;font-weight:700;text-align:center;letter-spacing:6px;color:var(--texto);outline:none}
+.gate input:focus{border-color:var(--verde)}
+.gate button{width:100%;margin-top:12px;border:none;border-radius:30px;padding:14px;font-family:'Baloo 2';font-size:16px;font-weight:800;color:#fff;background:linear-gradient(135deg,#6FC162,#4C9A41);cursor:pointer;box-shadow:0 6px 14px rgba(76,154,65,.35)}
+.gate .erro{color:var(--vermelho);font-size:13px;margin-top:10px;font-weight:600;min-height:18px}
+
+/* controles */
+.controles{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.controles select{border:2px solid var(--borda);background:#fff;border-radius:30px;padding:9px 16px;font-family:'Fredoka';font-size:13.5px;font-weight:600;color:var(--texto);cursor:pointer}
+.controles button{border:2px solid var(--borda);background:#fff;border-radius:30px;padding:9px 16px;font-family:'Fredoka';font-size:13.5px;font-weight:600;color:var(--texto);cursor:pointer}
+.controles button:hover{border-color:var(--verde)}
+
+/* visão geral */
+.geral{background:var(--card);border:2px solid var(--borda);border-radius:22px;padding:16px;margin-bottom:20px;overflow-x:auto}
+.geral h2{font-size:18px;color:var(--verde-esc);margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+th{font-family:'Baloo 2';font-weight:700;color:var(--cinza);text-align:left;font-size:11.5px;text-transform:uppercase;padding:7px 8px;border-bottom:2px solid var(--borda)}
+td{padding:9px 8px;border-bottom:1.5px solid #F0F6E8;font-weight:500}
+tr:last-child td{border-bottom:none}
+td b{font-family:'Baloo 2';color:var(--verde-esc)}
+.tag{display:inline-block;border-radius:20px;padding:2px 10px;font-size:11.5px;font-weight:700}
+.tag.ok{background:var(--verde-fundo);color:var(--verde-esc)}
+.tag.atencao{background:#FDEEEE;color:var(--vermelho)}
+
+/* card por criança */
+.kid{background:var(--card);border:2px solid var(--borda);border-radius:22px;padding:18px;margin-bottom:18px;box-shadow:0 6px 18px rgba(62,142,56,.06)}
+.kid-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.kid-head h2{font-size:21px;color:var(--verde-esc)}
+.kid-head span{font-size:12.5px;color:var(--cinza)}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.pill{flex:1;min-width:100px;background:var(--verde-fundo);border:2px solid var(--verde-claro);border-radius:16px;padding:10px 8px;text-align:center}
+.pill .v{font-family:'Baloo 2';font-size:19px;font-weight:800;color:var(--verde-esc)}
+.pill .l{font-size:10.5px;color:var(--cinza);font-weight:600;text-transform:uppercase}
+.pill.agua{background:#EAF7FD;border-color:#BFE4F7}.pill.agua .v{color:var(--azul-esc)}
+.pill.xixi{background:#FFF4E3;border-color:#FFDFA8}.pill.xixi .v{color:var(--laranja)}
+.pill.escape{background:#FDF0F4;border-color:#F7CBDD}.pill.escape .v{color:var(--rosa)}
+
+.grafico{margin:6px 0 4px}
+.grafico h3{font-size:13.5px;color:var(--cinza);font-weight:700;margin-bottom:6px}
+.barras{display:flex;gap:5px;align-items:flex-end;height:78px}
+.dia{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;min-width:0}
+.dia .b{width:100%;max-width:34px;border-radius:6px 6px 3px 3px;min-height:3px;position:relative}
+.dia .b.agua{background:linear-gradient(180deg,#8ED4F5,#4FC3F7)}
+.dia .b.agua.meta{background:linear-gradient(180deg,#FFE97F,#FFD93D)}
+.dia .b.xixi{background:linear-gradient(180deg,#FFCF87,#FF9F1C)}
+.dia .n{font-family:'Baloo 2';font-size:11px;font-weight:700;color:var(--texto)}
+.dia .d{font-size:9.5px;color:var(--cinza);font-weight:600;white-space:nowrap}
+.legenda-g{font-size:11px;color:var(--cinza);margin-top:4px}
+
+.sinais{margin-top:14px}
+.sinais h3{font-size:13.5px;color:var(--cinza);font-weight:700;margin-bottom:6px}
+.sinal-row{display:flex;gap:10px;padding:7px 2px;border-top:1.5px solid #F0F6E8;font-size:13px;align-items:baseline}
+.sinal-row:first-of-type{border-top:none}
+.sinal-row .sd{font-family:'Baloo 2';font-weight:700;color:var(--verde-esc);min-width:52px;font-size:12.5px}
+.sinal-row .st{flex:1}
+.sinal-row .escape-sim{color:var(--vermelho);font-weight:600}
+.vazio{text-align:center;color:var(--cinza);font-size:13.5px;padding:30px 10px}
+.rodape{text-align:center;font-size:11.5px;color:#9cae90;margin-top:26px;line-height:1.5}
+.aviso-config{max-width:560px;margin:6vh auto 0;background:#FFF8E6;border:2px solid #F5DFA0;border-radius:22px;padding:26px;text-align:center;font-size:14px;line-height:1.6;color:#7B5E00}
+.aviso-config code{background:#FFF;padding:2px 7px;border-radius:8px;font-size:12.5px}
+.carregando{text-align:center;padding:60px 0;color:var(--cinza);font-size:15px}
+
+@media print{
+  body{background:#fff}
+  .controles,.gate{display:none!important}
+  .kid,.geral{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topo">
+    <h1>💧 Relatório do App Gota</h1>
+    <p id="subTopo">Acompanhamento das crianças</p>
+  </div>
+
+  <!-- portão de senha -->
+  <div class="gate" id="gate">
+    <span class="emoji">🔐</span>
+    <h2>Área do profissional</h2>
+    <p>Digite sua senha para ver o relatório de todas as crianças</p>
+    <input type="password" id="pinInput" maxlength="8" inputmode="numeric" placeholder="····">
+    <button id="btnEntrar">Ver relatório 💚</button>
+    <div class="erro" id="gateErro"></div>
+  </div>
+
+  <!-- aviso quando a URL da planilha não foi configurada -->
+  <div class="aviso-config" id="avisoConfig" style="display:none">
+    ⚙️ <b>Quase lá!</b> Este relatório ainda não está ligado à planilha.<br>
+    Abra o arquivo <code>relatorio.html</code> num editor de texto e cole a URL do
+    App da Web na linha <code>const PLANILHA_URL = ''</code>, como explica o
+    <b>GUIA-PLANILHA.md</b>.
+  </div>
+
+  <div id="painel" style="display:none">
+    <div class="controles">
+      <select id="selDias">
+        <option value="7">Últimos 7 dias</option>
+        <option value="14" selected>Últimos 14 dias</option>
+        <option value="30">Últimos 30 dias</option>
+      </select>
+      <button id="btnAtualizar">🔄 Atualizar</button>
+      <button onclick="window.print()">🖨️ Imprimir / PDF</button>
+    </div>
+    <div id="conteudo"></div>
+    <p class="rodape">Relatório gerado pelo App Gota 💧 · Os dados chegam automaticamente conforme as famílias usam o app.<br><span id="geradoEm"></span></p>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// ⚙️ CONFIGURAÇÃO: cole aqui a URL do App da Web do Apps Script
+// (a mesma que vai em PROFISSIONAL.planilhaUrl no index.html)
+// ============================================================
+const PLANILHA_URL = 'https://script.google.com/macros/s/AKfycbyg5kJ0k866-Ufsei9BvaH4I-SGjk604j0OERqkAc7T_0e_LxvcnUQeieT0ndCkPz1I/exec';
+
+let PIN_OK = '';
+
+// Normaliza data para "AAAA-MM-DD" e hora para "HH:MM", aceitando tanto o
+// formato certo quanto strings de Date antigas (ex.: "Fri Jul 03 2026 ...").
+const normData = v => {
+  const s = String(v);
+  if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10);
+  const d = new Date(s);
+  if(isNaN(d)) return s;
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+};
+const normHora = v => {
+  const s = String(v);
+  const m = s.match(/(\d{1,2}):(\d{2})/);
+  if(m) return m[1].padStart(2,'0')+':'+m[2];
+  const d = new Date(s);
+  if(isNaN(d)) return s;
+  return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+};
+const fmtDataBr = d => { const [a,m,dia]=normData(d).split('-'); return dia+'/'+m; };
+const fmtMl = ml => ml>=1000 ? (ml/1000).toLocaleString('pt-BR',{maximumFractionDigits:1})+' L' : ml+' mL';
+const hojeId = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
+const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+document.getElementById('btnEntrar').addEventListener('click', entrar);
+document.getElementById('pinInput').addEventListener('keydown', e => { if(e.key==='Enter') entrar(); });
+document.getElementById('btnAtualizar').addEventListener('click', () => carregar());
+document.getElementById('selDias').addEventListener('change', () => carregar());
+
+function entrar(){
+  if(!PLANILHA_URL){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('avisoConfig').style.display='block';
+    return;
+  }
+  const pin = document.getElementById('pinInput').value.trim();
+  if(!pin){ document.getElementById('gateErro').textContent='Digite a senha 🙂'; return; }
+  PIN_OK = pin;
+  carregar(true);
+}
+
+async function carregar(primeira){
+  const dias = document.getElementById('selDias').value;
+  const alvo = primeira ? document.getElementById('gateErro') : null;
+  if(alvo) alvo.textContent = 'Carregando…';
+  else document.getElementById('conteudo').innerHTML = '<div class="carregando">Carregando os dados… 💧</div>';
+  try{
+    const resp = await fetch(PLANILHA_URL+'?pin='+encodeURIComponent(PIN_OK)+'&dias='+dias);
+    const json = await resp.json();
+    if(!json.ok){
+      if(alvo) alvo.textContent = json.erro==='PIN incorreto' ? 'Senha incorreta 😕' : ('Erro: '+json.erro);
+      else document.getElementById('conteudo').innerHTML = '<div class="vazio">Erro ao carregar: '+escapeHtml(json.erro)+'</div>';
+      return;
+    }
+    document.getElementById('gate').style.display='none';
+    document.getElementById('painel').style.display='block';
+    document.getElementById('geradoEm').textContent = 'Atualizado em '+new Date().toLocaleString('pt-BR');
+    render(json.registros);
+  }catch(err){
+    const msg = 'Não consegui falar com a planilha. Confira a internet e a URL configurada.';
+    if(alvo) alvo.textContent = msg;
+    else document.getElementById('conteudo').innerHTML = '<div class="vazio">'+msg+'</div>';
+  }
+}
+
+function render(regs){
+  const cont = document.getElementById('conteudo');
+  // padroniza data/hora de todo registro (tolera formato antigo do script)
+  regs.forEach(r => { r.data = normData(r.data); r.hora = normHora(r.hora); });
+  if(!regs.length){
+    cont.innerHTML = '<div class="vazio">🌱 Ainda não chegou nenhum registro neste período.<br>Assim que as famílias usarem o app, os dados aparecem aqui.</div>';
+    return;
+  }
+
+  // agrupa por criança
+  const kids = {};
+  regs.forEach(r => {
+    const chave = r.crianca+'|'+r.responsavel;
+    (kids[chave] = kids[chave] || {nome:r.crianca, resp:r.responsavel, regs:[]}).regs.push(r);
+  });
+
+  const hoje = hojeId();
+  const nomes = Object.values(kids).sort((a,b)=>a.nome.localeCompare(b.nome));
+  document.getElementById('subTopo').textContent =
+    nomes.length+' criança'+(nomes.length>1?'s':'')+' em acompanhamento';
+
+  // ===== visão geral =====
+  let html = '<div class="geral"><h2>👀 Visão geral de hoje</h2><table><thead><tr>'+
+    '<th>Criança</th><th>💧 Água hoje</th><th>🚽 Xixi hoje</th><th>Último registro</th><th>⚠️ Escapes no período</th></tr></thead><tbody>';
+  nomes.forEach(k => {
+    const st = stats(k.regs);
+    const aguaHoje = st.porDia[hoje] ? st.porDia[hoje].agua : 0;
+    const xixiHoje = st.porDia[hoje] ? st.porDia[hoje].xixi : 0;
+    const metaTxt = st.meta ? aguaHoje+'/'+st.meta+' copos' : aguaHoje+' copos';
+    html += '<tr><td><b>'+escapeHtml(k.nome)+'</b></td>'+
+      '<td>'+metaTxt+(st.copoMl? ' · '+fmtMl(aguaHoje*st.copoMl):'')+'</td>'+
+      '<td>'+xixiHoje+' vez'+(xixiHoje===1?'':'es')+'</td>'+
+      '<td>'+escapeHtml(st.ultimoReg)+'</td>'+
+      '<td>'+(st.escapes.length>0
+        ? '<span class="tag atencao">'+st.escapes.length+' escape'+(st.escapes.length>1?'s':'')+': '+escapeHtml(resumoEscapes(st.escapes))+'</span>'
+        : '<span class="tag ok">nenhum 🎉</span>')+'</td></tr>';
+  });
+  html += '</tbody></table></div>';
+
+  // ===== card por criança =====
+  nomes.forEach(k => {
+    const st = stats(k.regs);
+    const diasOrd = Object.keys(st.porDia).sort();
+    const ultimos = diasOrd.slice(-10);
+    const maxAgua = Math.max(st.meta||0, ...ultimos.map(d=>st.porDia[d].agua), 1);
+    const maxXixi = Math.max(...ultimos.map(d=>st.porDia[d].xixi), 1);
+
+    html += '<div class="kid"><div class="kid-head"><h2>'+escapeHtml(k.nome)+'</h2>'+
+      '<span>responsável: '+escapeHtml(k.resp)+'</span></div>';
+
+    const aguaHoje = st.porDia[hoje] ? st.porDia[hoje].agua : 0;
+    const xixiHoje = st.porDia[hoje] ? st.porDia[hoje].xixi : 0;
+    html += '<div class="pills">'+
+      '<div class="pill agua"><div class="v">'+aguaHoje+(st.meta?'/'+st.meta:'')+'</div><div class="l">copos hoje</div></div>'+
+      (st.copoMl ? '<div class="pill agua"><div class="v">'+fmtMl(aguaHoje*st.copoMl)+'</div><div class="l">água hoje</div></div>' : '')+
+      '<div class="pill xixi"><div class="v">'+xixiHoje+'</div><div class="l">xixis hoje</div></div>'+
+      '<div class="pill"><div class="v">'+st.tarefas+'</div><div class="l">tarefas no período</div></div>'+
+      '<div class="pill escape"><div class="v">'+st.escapes.length+'</div><div class="l">escapes no período</div></div>'+
+    '</div>';
+
+    if(st.escapes.length){
+      html += '<div class="sinais"><h3>⚠️ Escapes no período</h3>';
+      st.escapes.slice(-10).reverse().forEach(e => {
+        html += '<div class="sinal-row"><span class="sd">'+fmtDataBr(e.data)+'</span>'+
+          '<span class="st escape-sim">escape de '+escapeHtml(e.tipo)+
+          (e.atividade ? ' · estava '+escapeHtml(e.atividade) : '')+'</span></div>';
+      });
+      html += '</div>';
+    }
+
+    if(ultimos.length){
+      html += '<div class="grafico"><h3>💧 Copos de água por dia'+(st.meta?' (meta: '+st.meta+')':'')+'</h3><div class="barras">';
+      ultimos.forEach(d => {
+        const v = st.porDia[d].agua;
+        const h = Math.max(4, Math.round(58*v/maxAgua));
+        html += '<div class="dia"><div class="n">'+(v||'')+'</div><div class="b agua'+(st.meta&&v>=st.meta?' meta':'')+'" style="height:'+h+'px"></div><div class="d">'+fmtDataBr(d)+'</div></div>';
+      });
+      html += '</div><div class="legenda-g">Barra amarela = meta batida 🌟</div></div>';
+
+      html += '<div class="grafico"><h3>🚽 Xixis por dia</h3><div class="barras">';
+      ultimos.forEach(d => {
+        const v = st.porDia[d].xixi;
+        const h = Math.max(4, Math.round(58*v/maxXixi));
+        html += '<div class="dia"><div class="n">'+(v||'')+'</div><div class="b xixi" style="height:'+h+'px"></div><div class="d">'+fmtDataBr(d)+'</div></div>';
+      });
+      html += '</div></div>';
+    }
+
+    if(st.sinais.length){
+      html += '<div class="sinais"><h3>🌙 Sinais do fim do dia</h3>';
+      st.sinais.slice(-7).reverse().forEach(s => {
+        const temEscape = /Escape: de/.test(s.detalhe);
+        html += '<div class="sinal-row"><span class="sd">'+fmtDataBr(s.data)+'</span>'+
+          '<span class="st'+(temEscape?' escape-sim':'')+'">'+escapeHtml(s.detalhe)+'</span></div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+  });
+
+  cont.innerHTML = html;
+}
+
+function stats(regs){
+  const porDia = {};
+  const sinais = [];
+  const escapes = []; // {data, tipo: 'xixi'|'cocô'|'xixi e cocô', atividade}
+  let tarefas = 0, meta = null, copoMl = null, ultimoReg = '';
+  regs.sort((a,b)=>a.ts-b.ts);
+  regs.forEach(r => {
+    porDia[r.data] = porDia[r.data] || {agua:0, xixi:0};
+    if(r.tipo==='Agua') porDia[r.data].agua++;
+    if(r.tipo==='Xixi') porDia[r.data].xixi++;
+    if(r.tipo==='Tarefa') tarefas++;
+    if(r.tipo==='SinaisDia'){
+      sinais.push(r);
+      const m = r.detalhe.match(/Escape: de ([^·]+)/);
+      if(m){
+        const [tipo, atividade] = m[1].trim().split(', estava ');
+        escapes.push({data:r.data, tipo:tipo.trim(), atividade:(atividade||'').trim()});
+      }
+    }
+    if(r.meta) meta = r.meta;
+    if(r.copoMl) copoMl = r.copoMl;
+    ultimoReg = r.tipo+' · '+fmtDataBr(r.data)+' '+r.hora;
+  });
+  return {porDia, sinais, tarefas, escapes, meta, copoMl, ultimoReg};
+}
+function resumoEscapes(escapes){
+  const porTipo = {};
+  escapes.forEach(e => porTipo[e.tipo] = (porTipo[e.tipo]||0)+1);
+  return Object.entries(porTipo).map(([t,n]) => (n>1? n+'× ' : '')+t).join(' · ');
+}
+</script>
+</body>
+</html>

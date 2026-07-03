@@ -1,0 +1,19 @@
+{
+  "name": "Gota · Rotina e Hidratação",
+  "short_name": "Gota",
+  "description": "Rotina, água e idas ao banheiro do seu filho(a), de um jeito divertido e com acompanhamento profissional.",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#E9F5DE",
+  "theme_color": "#5BB450",
+  "categories": ["health", "lifestyle", "kids"],
+  "icons": [
+    { "src": "img/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "img/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "img/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

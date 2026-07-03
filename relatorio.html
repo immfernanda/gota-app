@@ -87,7 +87,40 @@ td b{font-family:'Baloo 2';color:var(--verde-esc)}
 .aviso-config code{background:#FFF;padding:2px 7px;border-radius:8px;font-size:12.5px}
 .carregando{text-align:center;padding:60px 0;color:var(--cinza);font-size:15px}
 
+/* abas de criança + Todas */
+.abas{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
+.aba{border:2px solid var(--borda);background:#fff;border-radius:30px;padding:8px 16px;font-family:'Baloo 2';font-weight:700;font-size:13.5px;color:var(--cinza);cursor:pointer;transition:all .15s}
+.aba:hover{border-color:var(--verde-claro)}
+.aba.on{background:var(--verde);border-color:var(--verde);color:#fff;box-shadow:0 4px 10px rgba(76,154,65,.3)}
+.ajuda{font-size:12.5px;color:var(--cinza);margin-bottom:12px}
+
+/* tendência / melhora */
+.trend{display:inline-block;border-radius:20px;padding:2px 10px;font-family:'Baloo 2';font-size:12px;font-weight:700;vertical-align:middle}
+.trend.up{background:var(--verde-fundo);color:var(--verde-esc)}
+.trend.down{background:#FDEEEE;color:var(--vermelho)}
+.trend.flat{background:#F0F0EA;color:var(--cinza)}
+.mini-meta{font-size:12px;color:var(--cinza);font-weight:600}
+
+/* linha por criança na home */
+.linha-kid{border:2px solid var(--borda);border-radius:16px;padding:12px 14px;margin-bottom:10px;cursor:pointer;transition:border-color .15s,transform .1s}
+.linha-kid:hover{border-color:var(--verde-claro)}
+.linha-kid:active{transform:scale(.995)}
+.linha-topo{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.linha-topo b{font-family:'Baloo 2';color:var(--verde-esc);font-size:15px}
+.linha-media{font-size:11.5px;color:var(--cinza);margin-left:auto;font-weight:600}
+.barras.mini{height:46px}
+.barras.mini .dia .n,.barras.mini .dia .d{display:none}
+
+/* apagar + tabela dia a dia */
+.btn-apagar{margin-left:auto;border:2px solid #F3C6C6;background:#fff;color:var(--vermelho);border-radius:30px;padding:6px 13px;font-family:'Fredoka';font-size:12.5px;font-weight:600;cursor:pointer}
+.btn-apagar:hover{background:#FDEEEE}
+.dia-tabela{margin-top:16px;overflow-x:auto}
+.dia-tabela h3{font-size:13.5px;color:var(--cinza);font-weight:700;margin-bottom:8px}
+.dia-tabela table{min-width:420px}
+.celula-sinais{font-size:12px;color:var(--texto);max-width:300px}
+
 @media print{
+  .abas,.btn-apagar{display:none!important}
   body{background:#fff}
   .controles,.gate{display:none!important}
   .kid,.geral{box-shadow:none;break-inside:avoid}
@@ -130,6 +163,7 @@ td b{font-family:'Baloo 2';color:var(--verde-esc)}
       <button id="btnAtualizar">🔄 Atualizar</button>
       <button onclick="window.print()">🖨️ Imprimir / PDF</button>
     </div>
+    <div class="abas" id="abas"></div>
     <div id="conteudo"></div>
     <p class="rodape">Relatório gerado pelo App Gota 💧 · Os dados chegam automaticamente conforme as famílias usam o app.<br><span id="geradoEm"></span></p>
   </div>
@@ -207,31 +241,70 @@ async function carregar(primeira){
   }
 }
 
+let DADOS = null;   // { nomes:[{key,nome,resp,regs}] }
+let ABA = 'todas';  // 'todas' ou a chave de uma criança
+
+function periodoDias(){ return parseInt(document.getElementById('selDias').value,10)||14; }
+function listaDatas(n){
+  const a=[], base=new Date();
+  for(let i=n-1;i>=0;i--){ const d=new Date(base); d.setDate(base.getDate()-i);
+    a.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')); }
+  return a;
+}
+
 function render(regs){
-  const cont = document.getElementById('conteudo');
   // padroniza data/hora de todo registro (tolera formato antigo do script)
   regs.forEach(r => { r.data = normData(r.data); r.hora = normHora(r.hora); });
+  const cont = document.getElementById('conteudo');
+  const abasEl = document.getElementById('abas');
   if(!regs.length){
+    abasEl.innerHTML = '';
     cont.innerHTML = '<div class="vazio">🌱 Ainda não chegou nenhum registro neste período.<br>Assim que as famílias usarem o app, os dados aparecem aqui.</div>';
     return;
   }
-
-  // agrupa por criança
   const kids = {};
   regs.forEach(r => {
     const chave = r.crianca+'|'+r.responsavel;
-    (kids[chave] = kids[chave] || {nome:r.crianca, resp:r.responsavel, regs:[]}).regs.push(r);
+    (kids[chave] = kids[chave] || {key:chave, nome:r.crianca, resp:r.responsavel, regs:[]}).regs.push(r);
   });
-
-  const hoje = hojeId();
   const nomes = Object.values(kids).sort((a,b)=>a.nome.localeCompare(b.nome));
+  DADOS = {nomes};
   document.getElementById('subTopo').textContent =
     nomes.length+' criança'+(nomes.length>1?'s':'')+' em acompanhamento';
+  if(ABA!=='todas' && !nomes.some(k=>k.key===ABA)) ABA='todas';
+  renderAbas();
+  renderAtiva();
+}
 
-  // ===== visão geral =====
+function renderAbas(){
+  const abasEl = document.getElementById('abas');
+  let h = '<button class="aba'+(ABA==='todas'?' on':'')+'" data-k="todas">🏠 Todas</button>';
+  DADOS.nomes.forEach(k => {
+    h += '<button class="aba'+(ABA===k.key?' on':'')+'" data-k="'+escapeHtml(k.key)+'">'+escapeHtml(k.nome)+'</button>';
+  });
+  abasEl.innerHTML = h;
+  abasEl.querySelectorAll('.aba').forEach(b => b.addEventListener('click', () => {
+    ABA = b.dataset.k;
+    renderAbas(); renderAtiva();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }));
+}
+
+function renderAtiva(){
+  if(ABA==='todas') return renderTodas();
+  const k = DADOS.nomes.find(x=>x.key===ABA);
+  if(k) renderKid(k); else renderTodas();
+}
+
+// ---------- HOME: todas as crianças ----------
+function renderTodas(){
+  const cont = document.getElementById('conteudo');
+  const hoje = hojeId();
+  const datas = listaDatas(periodoDias());
+
   let html = '<div class="geral"><h2>👀 Visão geral de hoje</h2><table><thead><tr>'+
-    '<th>Criança</th><th>💧 Água hoje</th><th>🚽 Xixi hoje</th><th>Último registro</th><th>⚠️ Escapes no período</th></tr></thead><tbody>';
-  nomes.forEach(k => {
+    '<th>Criança</th><th>💧 Água hoje</th><th>🚽 Xixi hoje</th><th>Último registro</th><th>⚠️ Escapes</th></tr></thead><tbody>';
+  DADOS.nomes.forEach(k => {
     const st = stats(k.regs);
     const aguaHoje = st.porDia[hoje] ? st.porDia[hoje].agua : 0;
     const xixiHoje = st.porDia[hoje] ? st.porDia[hoje].xixi : 0;
@@ -241,104 +314,180 @@ function render(regs){
       '<td>'+xixiHoje+' vez'+(xixiHoje===1?'':'es')+'</td>'+
       '<td>'+escapeHtml(st.ultimoReg)+'</td>'+
       '<td>'+(st.escapes.length>0
-        ? '<span class="tag atencao">'+st.escapes.length+' escape'+(st.escapes.length>1?'s':'')+': '+escapeHtml(resumoEscapes(st.escapes))+'</span>'
+        ? '<span class="tag atencao">'+st.escapes.length+' no período</span>'
         : '<span class="tag ok">nenhum 🎉</span>')+'</td></tr>';
   });
   html += '</tbody></table></div>';
 
-  // ===== card por criança =====
-  nomes.forEach(k => {
+  html += '<div class="geral"><h2>📈 Evolução de cada criança</h2>'+
+    '<p class="ajuda">Toque numa criança para ver o detalhe. As barrinhas são os copos de água por dia no período.</p>';
+  DADOS.nomes.forEach(k => {
     const st = stats(k.regs);
-    const diasOrd = Object.keys(st.porDia).sort();
-    const ultimos = diasOrd.slice(-10);
-    const maxAgua = Math.max(st.meta||0, ...ultimos.map(d=>st.porDia[d].agua), 1);
-    const maxXixi = Math.max(...ultimos.map(d=>st.porDia[d].xixi), 1);
-
-    html += '<div class="kid"><div class="kid-head"><h2>'+escapeHtml(k.nome)+'</h2>'+
-      '<span>responsável: '+escapeHtml(k.resp)+'</span></div>';
-
-    const aguaHoje = st.porDia[hoje] ? st.porDia[hoje].agua : 0;
-    const xixiHoje = st.porDia[hoje] ? st.porDia[hoje].xixi : 0;
-    html += '<div class="pills">'+
-      '<div class="pill agua"><div class="v">'+aguaHoje+(st.meta?'/'+st.meta:'')+'</div><div class="l">copos hoje</div></div>'+
-      (st.copoMl ? '<div class="pill agua"><div class="v">'+fmtMl(aguaHoje*st.copoMl)+'</div><div class="l">água hoje</div></div>' : '')+
-      '<div class="pill xixi"><div class="v">'+xixiHoje+'</div><div class="l">xixis hoje</div></div>'+
-      '<div class="pill"><div class="v">'+st.tarefas+'</div><div class="l">tarefas no período</div></div>'+
-      '<div class="pill escape"><div class="v">'+st.escapes.length+'</div><div class="l">escapes no período</div></div>'+
+    const serie = datas.map(d => st.porDia[d] ? st.porDia[d].agua : 0);
+    const media = serie.reduce((s,x)=>s+x,0)/(serie.length||1);
+    html += '<div class="linha-kid" data-k="'+escapeHtml(k.key)+'">'+
+      '<div class="linha-topo"><b>'+escapeHtml(k.nome)+'</b> '+badgeAgua(serie)+
+        (st.escapes.length
+          ? ' <span class="trend down">'+st.escapes.length+' escape'+(st.escapes.length>1?'s':'')+'</span>'
+          : ' <span class="trend up">sem escapes 🎉</span>')+
+        '<span class="linha-media">média '+media.toFixed(1).replace('.',',')+' copos/dia'+(st.meta?' · meta '+st.meta:'')+'</span></div>'+
+      grafBarras(datas, d => st.porDia[d]?st.porDia[d].agua:0, {cls:'agua', meta:st.meta, mini:true})+
     '</div>';
-
-    if(st.escapes.length){
-      html += '<div class="sinais"><h3>⚠️ Escapes no período</h3>';
-      st.escapes.slice(-10).reverse().forEach(e => {
-        html += '<div class="sinal-row"><span class="sd">'+fmtDataBr(e.data)+'</span>'+
-          '<span class="st escape-sim">escape de '+escapeHtml(e.tipo)+
-          (e.atividade ? ' · estava '+escapeHtml(e.atividade) : '')+'</span></div>';
-      });
-      html += '</div>';
-    }
-
-    if(ultimos.length){
-      html += '<div class="grafico"><h3>💧 Copos de água por dia'+(st.meta?' (meta: '+st.meta+')':'')+'</h3><div class="barras">';
-      ultimos.forEach(d => {
-        const v = st.porDia[d].agua;
-        const h = Math.max(4, Math.round(58*v/maxAgua));
-        html += '<div class="dia"><div class="n">'+(v||'')+'</div><div class="b agua'+(st.meta&&v>=st.meta?' meta':'')+'" style="height:'+h+'px"></div><div class="d">'+fmtDataBr(d)+'</div></div>';
-      });
-      html += '</div><div class="legenda-g">Barra amarela = meta batida 🌟</div></div>';
-
-      html += '<div class="grafico"><h3>🚽 Xixis por dia</h3><div class="barras">';
-      ultimos.forEach(d => {
-        const v = st.porDia[d].xixi;
-        const h = Math.max(4, Math.round(58*v/maxXixi));
-        html += '<div class="dia"><div class="n">'+(v||'')+'</div><div class="b xixi" style="height:'+h+'px"></div><div class="d">'+fmtDataBr(d)+'</div></div>';
-      });
-      html += '</div></div>';
-    }
-
-    if(st.sinais.length){
-      html += '<div class="sinais"><h3>🌙 Sinais do fim do dia</h3>';
-      st.sinais.slice(-7).reverse().forEach(s => {
-        const temEscape = /Escape: de/.test(s.detalhe);
-        html += '<div class="sinal-row"><span class="sd">'+fmtDataBr(s.data)+'</span>'+
-          '<span class="st'+(temEscape?' escape-sim':'')+'">'+escapeHtml(s.detalhe)+'</span></div>';
-      });
-      html += '</div>';
-    }
-    html += '</div>';
   });
+  html += '</div>';
 
   cont.innerHTML = html;
+  cont.querySelectorAll('.linha-kid').forEach(el => el.addEventListener('click', () => {
+    ABA = el.dataset.k; renderAbas(); renderAtiva(); window.scrollTo({top:0, behavior:'smooth'});
+  }));
+}
+
+// ---------- DETALHE: uma criança ----------
+function renderKid(k){
+  const cont = document.getElementById('conteudo');
+  const hoje = hojeId();
+  const datas = listaDatas(periodoDias());
+  const st = stats(k.regs);
+  const serieAgua = datas.map(d => st.porDia[d]?st.porDia[d].agua:0);
+  const aguaHoje = st.porDia[hoje] ? st.porDia[hoje].agua : 0;
+  const xixiHoje = st.porDia[hoje] ? st.porDia[hoje].xixi : 0;
+  const mediaAgua = serieAgua.reduce((s,x)=>s+x,0)/(serieAgua.length||1);
+
+  let html = '<div class="kid"><div class="kid-head"><h2>'+escapeHtml(k.nome)+'</h2>'+
+    '<span>responsável: '+escapeHtml(k.resp)+'</span>'+
+    '<button class="btn-apagar" title="Apagar os dados desta criança">🗑️ Apagar dados</button></div>';
+
+  html += '<div class="pills">'+
+    '<div class="pill agua"><div class="v">'+aguaHoje+(st.meta?'/'+st.meta:'')+'</div><div class="l">copos hoje</div></div>'+
+    (st.copoMl ? '<div class="pill agua"><div class="v">'+fmtMl(aguaHoje*st.copoMl)+'</div><div class="l">água hoje</div></div>' : '')+
+    '<div class="pill"><div class="v">'+mediaAgua.toFixed(1).replace('.',',')+'</div><div class="l">média copos/dia</div></div>'+
+    '<div class="pill xixi"><div class="v">'+xixiHoje+'</div><div class="l">xixis hoje</div></div>'+
+    '<div class="pill escape"><div class="v">'+st.escapes.length+'</div><div class="l">escapes no período</div></div>'+
+  '</div>';
+
+  html += '<div class="grafico"><h3>💧 Copos de água por dia '+badgeAgua(serieAgua)+
+    (st.meta?' <span class="mini-meta">meta: '+st.meta+'</span>':'')+'</h3>'+
+    grafBarras(datas, d => st.porDia[d]?st.porDia[d].agua:0, {cls:'agua', meta:st.meta})+
+    '<div class="legenda-g">Barra amarela = meta batida 🌟</div></div>';
+
+  html += '<div class="grafico"><h3>🚽 Xixis por dia</h3>'+
+    grafBarras(datas, d => st.porDia[d]?st.porDia[d].xixi:0, {cls:'xixi'})+'</div>';
+
+  if(st.escapes.length){
+    html += '<div class="sinais"><h3>⚠️ Escapes no período</h3>';
+    st.escapes.slice().reverse().forEach(e => {
+      html += '<div class="sinal-row"><span class="sd">'+fmtDataBr(e.data)+'</span>'+
+        '<span class="st escape-sim">escape de '+escapeHtml(e.tipo)+
+        (e.atividade ? ' · estava '+escapeHtml(e.atividade) : '')+'</span></div>';
+    });
+    html += '</div>';
+  }
+
+  // dia a dia (dados por dia, mais recente primeiro)
+  const diasComDados = datas.filter(d => st.porDia[d] || st.sinalPorDia[d]).reverse();
+  if(diasComDados.length){
+    html += '<div class="dia-tabela"><h3>📅 Dia a dia</h3><table><thead><tr>'+
+      '<th>Data</th><th>💧 Copos</th>'+(st.copoMl?'<th>mL</th>':'')+'<th>🚽 Xixi</th><th>⭐ Tarefas</th><th>🌙 Sinais do dia</th></tr></thead><tbody>';
+    diasComDados.forEach(d => {
+      const p = st.porDia[d] || {agua:0,xixi:0,tarefas:0};
+      const bateu = st.meta && p.agua>=st.meta;
+      html += '<tr><td><b>'+fmtDataBr(d)+'</b></td>'+
+        '<td>'+p.agua+(bateu?' 🌟':'')+'</td>'+
+        (st.copoMl?'<td>'+fmtMl(p.agua*st.copoMl)+'</td>':'')+
+        '<td>'+p.xixi+'</td>'+
+        '<td>'+(p.tarefas||0)+'</td>'+
+        '<td class="celula-sinais">'+(st.sinalPorDia[d]?escapeHtml(st.sinalPorDia[d]):'—')+'</td></tr>';
+    });
+    html += '</tbody></table></div>';
+  }
+
+  html += '</div>';
+  cont.innerHTML = html;
+  const btn = cont.querySelector('.btn-apagar');
+  if(btn) btn.addEventListener('click', () => apagarCrianca(k));
+}
+
+// ---------- gráfico de barras + tendência ----------
+function grafBarras(datas, valorDe, opts){
+  opts = opts || {};
+  const max = Math.max(opts.meta||0, ...datas.map(valorDe), 1);
+  const muitos = datas.length>18;
+  let h = '<div class="barras'+(opts.mini?' mini':'')+'">';
+  datas.forEach((d,i) => {
+    const v = valorDe(d);
+    const px = v>0 ? Math.max(6, Math.round(56*v/max)) : 3;
+    const meta = opts.meta && v>=opts.meta;
+    const rot = muitos ? (i%3===0 ? d.slice(8,10) : '') : fmtDataBr(d);
+    h += '<div class="dia"><div class="n">'+(v||'')+'</div>'+
+      '<div class="b '+opts.cls+(meta?' meta':'')+'" style="height:'+px+'px" title="'+fmtDataBr(d)+': '+v+'"></div>'+
+      '<div class="d">'+rot+'</div></div>';
+  });
+  return h+'</div>';
+}
+
+function tendencia(vals){
+  if(vals.length<4) return {tipo:'novo'};
+  const meio = Math.ceil(vals.length/2);
+  const med = a => a.length ? a.reduce((s,x)=>s+x,0)/a.length : 0;
+  const a1 = med(vals.slice(0,meio)), a2 = med(vals.slice(meio));
+  const pct = a1>0 ? Math.round((a2-a1)/a1*100) : (a2>0?100:0);
+  return {tipo: pct>=10?'up': pct<=-10?'down':'flat', pct};
+}
+function badgeAgua(vals){
+  const t = tendencia(vals);
+  if(t.tipo==='novo') return '<span class="trend flat">poucos dias ainda</span>';
+  if(t.tipo==='up')   return '<span class="trend up">📈 melhorando +'+t.pct+'%</span>';
+  if(t.tipo==='down') return '<span class="trend down">📉 caiu '+Math.abs(t.pct)+'%</span>';
+  return '<span class="trend flat">→ estável</span>';
 }
 
 function stats(regs){
   const porDia = {};
+  const sinalPorDia = {};
   const sinais = [];
-  const escapes = []; // {data, tipo: 'xixi'|'cocô'|'xixi e cocô', atividade}
+  const escapes = []; // {data, tipo, atividade}
   let tarefas = 0, meta = null, copoMl = null, ultimoReg = '';
-  regs.sort((a,b)=>a.ts-b.ts);
-  regs.forEach(r => {
-    porDia[r.data] = porDia[r.data] || {agua:0, xixi:0};
+  regs.slice().sort((a,b)=>a.ts-b.ts).forEach(r => {
+    porDia[r.data] = porDia[r.data] || {agua:0, xixi:0, tarefas:0};
     if(r.tipo==='Agua') porDia[r.data].agua++;
     if(r.tipo==='Xixi') porDia[r.data].xixi++;
-    if(r.tipo==='Tarefa') tarefas++;
+    if(r.tipo==='Tarefa'){ tarefas++; porDia[r.data].tarefas++; }
     if(r.tipo==='SinaisDia'){
       sinais.push(r);
-      const m = r.detalhe.match(/Escape: de ([^·]+)/);
-      if(m){
-        const [tipo, atividade] = m[1].trim().split(', estava ');
-        escapes.push({data:r.data, tipo:tipo.trim(), atividade:(atividade||'').trim()});
+      sinalPorDia[r.data] = r.detalhe;
+      const m = r.detalhe.match(/Escape: (de [^·]+|não teve)/);
+      if(m && m[1].indexOf('de ')===0){
+        let resto = m[1].slice(3).trim(), atividade='';
+        const parts = resto.split(/\s*(?:[—–-]|,)\s*estava\s+/);
+        if(parts.length>1){ atividade = parts[1].trim(); resto = parts[0].trim(); }
+        escapes.push({data:r.data, tipo:resto, atividade});
       }
     }
     if(r.meta) meta = r.meta;
     if(r.copoMl) copoMl = r.copoMl;
     ultimoReg = r.tipo+' · '+fmtDataBr(r.data)+' '+r.hora;
   });
-  return {porDia, sinais, tarefas, escapes, meta, copoMl, ultimoReg};
+  return {porDia, sinalPorDia, sinais, tarefas, escapes, meta, copoMl, ultimoReg};
 }
-function resumoEscapes(escapes){
-  const porTipo = {};
-  escapes.forEach(e => porTipo[e.tipo] = (porTipo[e.tipo]||0)+1);
-  return Object.entries(porTipo).map(([t,n]) => (n>1? n+'× ' : '')+t).join(' · ');
+
+async function apagarCrianca(k){
+  if(!confirm('Apagar TODOS os dados de '+k.nome+' (responsável: '+k.resp+')?\n\nIsso remove os registros da planilha e não tem como desfazer.')) return;
+  try{
+    const resp = await fetch(PLANILHA_URL, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({action:'apagar', pin:PIN_OK, crianca:k.nome, responsavel:k.resp})
+    });
+    const json = await resp.json();
+    if(json.ok){
+      alert('Pronto! '+(json.apagadas||0)+' registro(s) de '+k.nome+' apagado(s).');
+      ABA='todas'; carregar();
+    }else{
+      alert('Não deu para apagar: '+(json.erro||'erro')+'.\n\nSe aparecer algo como "ação não reconhecida", é porque o script publicado ainda é o antigo — republique o Code.gs.');
+    }
+  }catch(e){
+    alert('Falha ao falar com a planilha. Se o script publicado ainda for o antigo, republique o Code.gs para o botão de apagar funcionar.');
+  }
 }
 </script>
 </body>

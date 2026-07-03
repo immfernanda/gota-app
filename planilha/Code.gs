@@ -34,6 +34,8 @@ function json_(obj) {
 function doPost(e) {
   try {
     const d = JSON.parse(e.postData.contents);
+    // Apagar dados de uma criança (usado pelo botão 🗑️ do relatório)
+    if (d.action === 'apagar') return apagar_(d);
     const aba = aba_();
     const linha = aba.getLastRow() + 1;
     // Guarda Data (col 2) e Hora (col 3) como TEXTO puro, senão o Sheets
@@ -54,6 +56,22 @@ function doPost(e) {
   } catch (err) {
     return json_({ ok: false, erro: String(err) });
   }
+}
+
+// Apaga todas as linhas de uma criança (protegido por PIN)
+function apagar_(d) {
+  if (String(d.pin || '') !== PIN) return json_({ ok: false, erro: 'PIN incorreto' });
+  const aba = aba_();
+  const valores = aba.getDataRange().getValues();
+  let apagadas = 0;
+  // de baixo para cima, para os índices não mudarem ao deletar
+  for (let i = valores.length - 1; i >= 1; i--) {
+    const l = valores[i];
+    const mesmaCrianca = String(l[3]) === String(d.crianca || '');
+    const mesmoResp = (d.responsavel == null) || String(l[4]) === String(d.responsavel);
+    if (mesmaCrianca && mesmoResp) { aba.deleteRow(i + 1); apagadas++; }
+  }
+  return json_({ ok: true, apagadas: apagadas });
 }
 
 // Entrega os dados para o relatorio.html (protegido por PIN)

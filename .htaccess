@@ -1,0 +1,26 @@
+# ============================================================
+# App Gota · Configuração para hospedagem (Hostinger / Apache / LiteSpeed)
+# Coloque este arquivo junto com o index.html, dentro de public_html.
+# ============================================================
+
+# 1) Força HTTPS (o cadeado é obrigatório pro PWA funcionar)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+</IfModule>
+
+# 2) Tipo correto do manifest do PWA
+<IfModule mod_mime.c>
+  AddType application/manifest+json .webmanifest
+</IfModule>
+
+# 3) Service worker sempre atualizado (senão o app "trava" numa versão antiga)
+<IfModule mod_headers.c>
+  <FilesMatch "sw\.js$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# 4) Página inicial
+DirectoryIndex index.html

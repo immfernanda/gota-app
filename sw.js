@@ -1,11 +1,12 @@
 // Service worker do App Gota 💧
 // Faz o app abrir offline e permite instalar na tela inicial.
 // Ao mudar arquivos, suba o número da versão para forçar atualização.
-const CACHE = 'gota-v1';
+const CACHE = 'gota-v2';
 
 const APP_SHELL = [
   './',
   './index.html',
+  './relatorio.html',
   './manifest.webmanifest',
   './img/icons/icon-192.png',
   './img/icons/icon-512.png',

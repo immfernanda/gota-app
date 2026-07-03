@@ -192,6 +192,21 @@ body{
 .agua-meta-txt{text-align:center;font-size:13px;color:var(--cinza);font-weight:600}
 .agua-ml-txt{text-align:center;font-size:12px;color:#3D9BC9;font-weight:700;margin:2px 0 12px}
 .meta-ml{text-align:center;font-size:12.5px;color:#3D9BC9;font-weight:700;margin-top:8px}
+/* Tela: usar como site ou instalar como app */
+.pwa-gate{position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#EAF7FD,#E9F5DE);display:flex;align-items:center;justify-content:center;padding:22px}
+.pwa-gate[hidden]{display:none}
+.pwa-card{background:var(--card);border:2px solid var(--borda);border-radius:26px;max-width:400px;width:100%;padding:26px 22px;text-align:center;box-shadow:0 16px 40px rgba(62,142,56,.18)}
+.pwa-mascote{width:92px;height:92px;border-radius:22px;margin-bottom:10px}
+.pwa-card h2{font-family:'Baloo 2';font-size:22px;color:var(--verde-esc);margin-bottom:8px}
+.pwa-sub{font-size:14px;color:var(--cinza);line-height:1.5;margin-bottom:18px}
+.pwa-btn{display:block;width:100%;border:none;border-radius:30px;padding:14px;font-family:'Baloo 2';font-size:16px;font-weight:800;cursor:pointer;margin-top:10px;transition:transform .12s}
+.pwa-btn:active{transform:scale(.97)}
+.pwa-btn.primario{color:#fff;background:linear-gradient(135deg,#5BC8F5,#2FA8DF);box-shadow:0 6px 14px rgba(47,168,223,.35)}
+.pwa-btn.secundario{color:var(--verde-esc);background:var(--verde-fundo);border:2px solid var(--verde-claro)}
+.pwa-passos{margin-top:18px;text-align:left;background:var(--verde-fundo);border:1.5px solid var(--verde-claro);border-radius:16px;padding:14px 16px}
+.pwa-passos-titulo{font-family:'Baloo 2';font-weight:700;color:var(--verde-esc);margin-bottom:6px}
+.pwa-passos ol{margin:0 0 8px 18px;font-size:14px;color:var(--texto);line-height:1.6}
+.pwa-dica{font-size:12.5px;color:#5c7351;line-height:1.5;margin-top:8px}
 .hist-lista{margin-top:6px}
 .hist-item{display:flex;align-items:center;gap:10px;padding:9px 4px;border-top:1.5px solid #F0F6E8;font-size:14px}
 .hist-item:first-child{border-top:none}
@@ -354,11 +369,11 @@ body{
           <div class="campo">
             <label for="cfgAgua">Avisar a cada:</label>
             <select id="cfgAgua">
-              <option value="30">30 min</option>
-              <option value="45">45 min</option>
               <option value="60" selected>1 hora</option>
               <option value="90">1 h 30 min</option>
               <option value="120">2 horas</option>
+              <option value="150">2 h 30 min</option>
+              <option value="180">3 horas</option>
               <option value="0">Livre</option>
             </select>
           </div>
@@ -370,23 +385,11 @@ body{
               <option value="200" selected>200 mL</option>
               <option value="250">250 mL</option>
               <option value="300">300 mL</option>
+              <option value="350">350 mL</option>
             </select>
           </div>
         </div>
-        <div class="campo">
-          <label for="cfgAguaMl">💧 Quantos mL a criança deve tomar por dia?</label>
-          <select id="cfgAguaMl">
-            <option value="600">600 mL</option>
-            <option value="800">800 mL</option>
-            <option value="1000">1.000 mL (1 L)</option>
-            <option value="1200" selected>1.200 mL (1,2 L)</option>
-            <option value="1400">1.400 mL (1,4 L)</option>
-            <option value="1600">1.600 mL (1,6 L)</option>
-            <option value="1800">1.800 mL (1,8 L)</option>
-            <option value="2000">2.000 mL (2 L)</option>
-          </select>
-        </div>
-        <p class="meta-ml" id="cfgMetaMl">1.200 mL por dia ÷ copo de 200 mL = meta de 6 copos</p>
+        <p class="meta-ml" id="cfgMetaMl">Meta calculada automaticamente…</p>
         <p class="nota" style="margin-top:2px">Os avisos só tocam entre a hora de acordar e a de dormir. 😴</p>
       </div>
 
@@ -698,6 +701,23 @@ body{
   <button class="av-x" id="avFechar">✕</button>
 </div>
 
+<!-- Escolha: usar como site ou instalar como app -->
+<div class="pwa-gate" id="pwaGate" hidden>
+  <div class="pwa-card">
+    <img class="pwa-mascote" src="img/icons/icon-192.png" alt="Gota">
+    <h2>Como você quer usar o Gota?</h2>
+    <p class="pwa-sub">Instalar como app é melhor: abre em tela cheia, funciona sem internet e guarda tudo certinho no seu celular. 💚</p>
+    <button class="pwa-btn primario" id="pwaInstalar">📲 Instalar como aplicativo</button>
+    <button class="pwa-btn secundario" id="pwaSite">🌐 Usar no navegador mesmo</button>
+    <div class="pwa-passos" id="pwaPassos" hidden>
+      <p class="pwa-passos-titulo">Pra instalar é rapidinho:</p>
+      <ol id="pwaPassosLista"></ol>
+      <p class="pwa-dica">💡 Depois de instalar, <b>abra o Gota pelo ícone novo</b> e cadastre por lá — assim você não precisa preencher duas vezes.</p>
+      <button class="pwa-btn secundario" id="pwaJaInstalei">Já instalei / continuar aqui</button>
+    </div>
+  </div>
+</div>
+
 <!-- Navegação inferior -->
 <nav class="navbar" id="navbar">
   <div class="nav-in">
@@ -915,6 +935,19 @@ const B_ROTINA='rotina-mv-rotina', B_CONFIG='rotina-mv-config', B_CUIDADOS='roti
       B_SEMANA='rotina-mv-semana', B_HIST='rotina-mv-hist';
 const CONFIG_PADRAO = {acordar:'07:00', dormir:'20:30', xixiMin:120, aguaMin:60, aguaMetaMl:1200, aguaMeta:6, copoMl:200};
 function mlCopo(){ return (config && config.copoMl) || 200; }
+function horasAcordada(cfg){
+  cfg = cfg || config || CONFIG_PADRAO;
+  const p = s => { const [h,m] = String(s).split(':').map(Number); return h*60 + (m||0); };
+  let ini = p(cfg.acordar||'07:00'), fim = p(cfg.dormir||'20:30');
+  if(fim <= ini) fim += 1440;
+  return (fim - ini) / 60;
+}
+// Meta automática: ~90 mL por hora acordada (arredonda a 50), entre 800 e 2000 mL.
+function metaAguaAuto(cfg){
+  const ml = Math.min(2000, Math.max(800, Math.round((horasAcordada(cfg)*90)/50)*50));
+  const copo = (cfg && cfg.copoMl) || 200;
+  return { ml, copo, copos: Math.max(1, Math.round(ml/copo)) };
+}
 function fmtMl(ml){ return ml>=1000 ? (ml/1000).toLocaleString('pt-BR',{maximumFractionDigits:1})+' L' : ml+' mL'; }
 
 function lerJSON(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){ return null; } }
@@ -964,8 +997,9 @@ function carregarEstadoCrianca(){
   rotina=lerJSON(kkey(B_ROTINA));
   config=Object.assign({}, CONFIG_PADRAO, lerJSON(kkey(B_CONFIG))||{});
   // perfis antigos guardavam só a meta em copos; a meta em mL manda agora
-  if(!config.aguaMetaMl) config.aguaMetaMl=(config.aguaMeta||6)*(config.copoMl||200);
-  config.aguaMeta=Math.max(1, Math.round(config.aguaMetaMl/(config.copoMl||200)));
+  const _m=metaAguaAuto(config); // meta sempre recalculada pelo tempo acordada
+  config.aguaMetaMl=_m.ml;
+  config.aguaMeta=_m.copos;
   cuidados=carregarCuidados();
   hist=lerJSON(kkey(B_HIST))||{};
   avisadoAgua=0; avisadoXixi=0;
@@ -1152,14 +1186,6 @@ function abrirSetup(){
   document.getElementById('cfgDormir').value=config.dormir;
   document.getElementById('cfgXixi').value=String(config.xixiMin);
   document.getElementById('cfgAgua').value=String(config.aguaMin);
-  const selMl=document.getElementById('cfgAguaMl');
-  selMl.value=String(config.aguaMetaMl||1200);
-  if(!selMl.value){ // valor salvo fora das opções: escolhe a mais próxima
-    let melhor=selMl.options[0];
-    for(const op of selMl.options)
-      if(Math.abs(op.value-config.aguaMetaMl)<Math.abs(melhor.value-config.aguaMetaMl)) melhor=op;
-    selMl.value=melhor.value;
-  }
   document.getElementById('cfgCopoMl').value=String(config.copoMl||200);
   atualizaMetaMl();
   const jaTem = rotina&&rotina.tarefas&&rotina.tarefas.length;
@@ -1236,10 +1262,11 @@ document.getElementById('btnSetup').addEventListener('click',()=>{
     dormir:  document.getElementById('cfgDormir').value  || '20:30',
     xixiMin: parseInt(document.getElementById('cfgXixi').value,10),
     aguaMin: parseInt(document.getElementById('cfgAgua').value,10),
-    aguaMetaMl: parseInt(document.getElementById('cfgAguaMl').value,10)||1200,
     copoMl:  parseInt(document.getElementById('cfgCopoMl').value,10)||200,
   };
-  config.aguaMeta=Math.max(1, Math.round(config.aguaMetaMl/config.copoMl));
+  const _m=metaAguaAuto(config); // meta automática pelo tempo acordada
+  config.aguaMetaMl=_m.ml;
+  config.aguaMeta=_m.copos;
   salvarJSON(kkey(B_CONFIG), config);
   const ordem={manha:0,tarde:1,noite:2};
   const tarefas=[...selecionadas].sort((a,b)=>ordem[a.periodo]-ordem[b.periodo]);
@@ -1370,13 +1397,16 @@ function registrarXixi(){
   sincronizarNuvem('Xixi', '');
 }
 function atualizaMetaMl(){
-  const ml=parseInt(document.getElementById('cfgAguaMl').value,10)||1200;
-  const c=parseInt(document.getElementById('cfgCopoMl').value,10)||200;
-  const copos=Math.max(1, Math.round(ml/c));
-  document.getElementById('cfgMetaMl').textContent=fmtMl(ml)+' por dia ÷ copo de '+c+' mL = meta de '+copos+' copo'+(copos>1?'s':'');
+  const cfgTmp={
+    acordar: document.getElementById('cfgAcordar').value || '07:00',
+    dormir:  document.getElementById('cfgDormir').value  || '20:30',
+    copoMl:  parseInt(document.getElementById('cfgCopoMl').value,10)||200
+  };
+  const m=metaAguaAuto(cfgTmp);
+  document.getElementById('cfgMetaMl').textContent=
+    '💧 Meta do dia: '+fmtMl(m.ml)+' ≈ '+m.copos+' copo'+(m.copos>1?'s':'')+' de '+m.copo+' mL · calculada pelo tempo que fica acordada';
 }
-document.getElementById('cfgAguaMl').addEventListener('change',atualizaMetaMl);
-document.getElementById('cfgCopoMl').addEventListener('change',atualizaMetaMl);
+['cfgAcordar','cfgDormir','cfgCopoMl'].forEach(id=>document.getElementById(id).addEventListener('change',atualizaMetaMl));
 
 document.getElementById('btnBebi').addEventListener('click',registrarAgua);
 document.getElementById('btnBebi2').addEventListener('click',registrarAgua);
@@ -1601,11 +1631,19 @@ document.getElementById('ajAdmin').addEventListener('click',()=>{
 });
 document.getElementById('pinCancel').addEventListener('click',()=>document.getElementById('modalPin').classList.remove('show'));
 function tentarPin(){
-  if(document.getElementById('pinInput').value===PROFISSIONAL.pin){
+  const pin=document.getElementById('pinInput').value;
+  if(pin===PROFISSIONAL.pin){
     document.getElementById('modalPin').classList.remove('show');
-    relKidId=kids.ativa;
-    renderRelatorio();
-    mostrarTela('tela-relatorio');
+    document.getElementById('pinInput').value='';
+    if(PROFISSIONAL.planilhaUrl){
+      // relatório completo, com TODAS as crianças (puxa da planilha)
+      location.href='relatorio.html?pin='+encodeURIComponent(pin);
+    }else{
+      // sem nuvem configurada: relatório local só desta criança
+      relKidId=kids.ativa;
+      renderRelatorio();
+      mostrarTela('tela-relatorio');
+    }
   }else{
     showToast('Senha incorreta 🔒');
     document.getElementById('pinInput').value='';
@@ -1789,6 +1827,50 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js').catch(()=>{});
   });
 }
+
+// ---- Escolha: usar como site ou instalar como app ----
+let promptInstalar=null;
+window.addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); promptInstalar=e; });
+
+function ehStandalone(){
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
+}
+function plataformaPWA(){
+  const ua=navigator.userAgent||'';
+  if(/iPhone|iPad|iPod/i.test(ua)) return 'ios';
+  if(/Android/i.test(ua)) return 'android';
+  return 'desktop';
+}
+function passosInstalacao(){
+  const p=plataformaPWA();
+  if(p==='ios') return ['Toque no botão <b>Compartilhar</b> (o quadradinho com a setinha ⬆️), na barra do Safari.','Escolha <b>Adicionar à Tela de Início</b>.','Toque em <b>Adicionar</b>.'];
+  if(p==='android') return ['Toque no <b>menu (⋮)</b> do navegador, lá em cima.','Escolha <b>Instalar aplicativo</b> (ou "Adicionar à tela inicial").','Confirme em <b>Instalar</b>.'];
+  return ['Na barra de endereço, clique no ícone de <b>instalar</b> (uma telinha com uma setinha).','Confirme em <b>Instalar</b>.'];
+}
+function mostrarGatePWA(){
+  if(ehStandalone() || localStorage.getItem('gota-modo')) return; // já é app ou já escolheu
+  document.getElementById('pwaGate').hidden=false;
+}
+function fecharGatePWA(modo){
+  if(modo) localStorage.setItem('gota-modo', modo);
+  document.getElementById('pwaGate').hidden=true;
+}
+document.getElementById('pwaSite').addEventListener('click',()=>fecharGatePWA('site'));
+document.getElementById('pwaJaInstalei').addEventListener('click',()=>fecharGatePWA('app'));
+document.getElementById('pwaInstalar').addEventListener('click', async ()=>{
+  if(promptInstalar){ // Android/desktop com instalação nativa
+    promptInstalar.prompt();
+    const r=await promptInstalar.userChoice;
+    promptInstalar=null;
+    if(r && r.outcome==='accepted'){ fecharGatePWA('app'); return; }
+  }
+  // iPhone (ou sem suporte nativo): mostra o passo a passo
+  document.getElementById('pwaPassosLista').innerHTML = passosInstalacao().map(p=>'<li>'+p+'</li>').join('');
+  document.getElementById('pwaPassos').hidden=false;
+});
+// se o app for instalado, marca e fecha
+window.addEventListener('appinstalled', ()=>fecharGatePWA('app'));
+mostrarGatePWA();
 </script>
 </body>
 </html>

@@ -118,6 +118,24 @@ td b{font-family:'Baloo 2';color:var(--verde-esc)}
 .dia-tabela h3{font-size:13.5px;color:var(--cinza);font-weight:700;margin-bottom:8px}
 .dia-tabela table{min-width:420px}
 .celula-sinais{font-size:12px;color:var(--texto);max-width:300px}
+/* Linha do tempo dos xixis */
+.tl-horas{display:flex;justify-content:space-between;font-size:10px;color:var(--cinza);font-weight:600;margin:2px 0 6px;padding:0 4px}
+.tl-linha{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.tl-data{font-family:'Baloo 2';font-weight:700;color:var(--verde-esc);font-size:12px;min-width:44px}
+.tl-track{position:relative;flex:1;height:16px;background:linear-gradient(90deg,#EAF7FD,#F4FBFF);border:1.5px solid #DCEECB;border-radius:20px}
+.tl-dot{position:absolute;top:50%;width:13px;height:13px;margin-left:-6.5px;transform:translateY(-50%);background:radial-gradient(circle at 35% 30%,#8ED4F5,#2FA8DF);border:2px solid #fff;border-radius:50%;box-shadow:0 1px 3px rgba(47,168,223,.5);cursor:default}
+.tl-hora{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);font-size:9px;color:#2FA8DF;font-weight:700;white-space:nowrap;opacity:0;transition:opacity .12s}
+.tl-dot:hover .tl-hora{opacity:1}
+.tl-vazio{font-size:12.5px;color:var(--cinza);padding:6px 0}
+/* Gráficos de pizza (rosquinha) */
+.donuts{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+.donut-box{text-align:center;flex:1;min-width:150px}
+.donut-cap{font-family:'Baloo 2';font-weight:700;color:var(--verde-esc);font-size:13px;margin-bottom:6px}
+.donut{width:104px;height:104px;border-radius:50%;margin:0 auto;position:relative}
+.donut-hole{position:absolute;inset:24px;background:var(--card);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2';font-weight:800;font-size:15px;color:var(--texto)}
+.dn-legenda{margin-top:8px;display:flex;flex-direction:column;gap:3px;align-items:center}
+.dn-item{font-size:12px;color:var(--texto);font-weight:500}
+.dn-item i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
 
 @media print{
   .abas,.btn-apagar{display:none!important}
@@ -204,6 +222,18 @@ document.getElementById('btnEntrar').addEventListener('click', entrar);
 document.getElementById('pinInput').addEventListener('keydown', e => { if(e.key==='Enter') entrar(); });
 document.getElementById('btnAtualizar').addEventListener('click', () => carregar());
 document.getElementById('selDias').addEventListener('change', () => carregar());
+
+// Aberto pelo app (relatorio.html?pin=XXXX): entra sozinho e mostra "voltar"
+(function(){
+  const pin = new URLSearchParams(location.search).get('pin');
+  if(!pin) return;
+  const back = document.createElement('button');
+  back.textContent = '← Voltar ao app';
+  back.addEventListener('click', () => location.href = 'index.html');
+  document.querySelector('.controles').prepend(back);
+  document.getElementById('pinInput').value = pin;
+  entrar();
+})();
 
 function entrar(){
   if(!PLANILHA_URL){
@@ -373,6 +403,22 @@ function renderKid(k){
   html += '<div class="grafico"><h3>🚽 Xixis por dia</h3>'+
     grafBarras(datas, d => st.porDia[d]?st.porDia[d].xixi:0, {cls:'xixi'})+'</div>';
 
+  html += '<div class="grafico"><h3>🕐 Horários do xixi</h3>'+
+    linhaDoTempoXixi(datas, st.porDia)+
+    '<div class="legenda-g">Cada pontinho é um xixi (passe o dedo/mouse pra ver a hora). Ajuda a ver os intervalos ao longo do dia.</div></div>';
+
+  const donutManha = donut('Manhãs 🌅', [
+    {label:'Secas', v:st.manhaSeca, cor:'#5BB450'},
+    {label:'Molhadas', v:st.manhaMolhada, cor:'#4FC3F7'}
+  ]);
+  const donutEsc = donut('Escapes ⚠️', [
+    {label:'Sem escape', v:st.semEscape, cor:'#5BB450'},
+    {label:'Com escape', v:st.comEscape, cor:'#E2606C'}
+  ]);
+  if(donutManha || donutEsc){
+    html += '<div class="grafico"><h3>📊 Resumo do período</h3><div class="donuts">'+donutManha+donutEsc+'</div></div>';
+  }
+
   if(st.escapes.length){
     html += '<div class="sinais"><h3>⚠️ Escapes no período</h3>';
     st.escapes.slice().reverse().forEach(e => {
@@ -405,6 +451,34 @@ function renderKid(k){
   cont.innerHTML = html;
   const btn = cont.querySelector('.btn-apagar');
   if(btn) btn.addEventListener('click', () => apagarCrianca(k));
+}
+
+// ---------- linha do tempo dos xixis (por dia) ----------
+function linhaDoTempoXixi(datas, porDia){
+  const INI=6*60, FIM=22*60; // janela 06:00–22:00
+  const dias = datas.filter(d => porDia[d] && porDia[d].xixiHoras && porDia[d].xixiHoras.length).reverse();
+  if(!dias.length) return '<div class="tl-vazio">Sem horários de xixi registrados ainda. 🌱</div>';
+  const pos = hhmm => { const [h,m]=String(hhmm).split(':').map(Number); const t=Math.min(FIM,Math.max(INI,(h||0)*60+(m||0))); return (t-INI)/(FIM-INI)*100; };
+  let h = '<div class="tl-horas"><span>6h</span><span>10h</span><span>14h</span><span>18h</span><span>22h</span></div>';
+  dias.slice(0,12).forEach(d => {
+    const horas = porDia[d].xixiHoras.slice().sort();
+    h += '<div class="tl-linha"><span class="tl-data">'+fmtDataBr(d)+'</span><div class="tl-track">';
+    horas.forEach(hh => { h += '<span class="tl-dot" style="left:'+pos(hh).toFixed(1)+'%" title="'+escapeHtml(hh)+'"><span class="tl-hora">'+escapeHtml(hh)+'</span></span>'; });
+    h += '</div></div>';
+  });
+  return h;
+}
+
+// ---------- gráfico de pizza (rosquinha) ----------
+function donut(caption, partes){
+  const total = partes.reduce((s,p)=>s+p.v, 0);
+  if(!total) return '';
+  let acc = 0;
+  const segs = partes.map(p => { const ini=acc/total*360; acc+=p.v; return p.cor+' '+ini+'deg '+(acc/total*360)+'deg'; }).join(', ');
+  const legenda = partes.map(p => '<span class="dn-item"><i style="background:'+p.cor+'"></i>'+p.label+' <b>'+p.v+'</b> ('+Math.round(p.v/total*100)+'%)</span>').join('');
+  return '<div class="donut-box"><div class="donut-cap">'+caption+'</div>'+
+    '<div class="donut" style="background:conic-gradient('+segs+')"><div class="donut-hole">'+total+'</div></div>'+
+    '<div class="dn-legenda">'+legenda+'</div></div>';
 }
 
 // ---------- gráfico de barras + tendência ----------
@@ -447,27 +521,34 @@ function stats(regs){
   const sinais = [];
   const escapes = []; // {data, tipo, atividade}
   let tarefas = 0, meta = null, copoMl = null, ultimoReg = '';
+  let manhaSeca = 0, manhaMolhada = 0, diasComSinalEscape = 0;
   regs.slice().sort((a,b)=>a.ts-b.ts).forEach(r => {
-    porDia[r.data] = porDia[r.data] || {agua:0, xixi:0, tarefas:0};
+    porDia[r.data] = porDia[r.data] || {agua:0, xixi:0, tarefas:0, xixiHoras:[]};
     if(r.tipo==='Agua') porDia[r.data].agua++;
-    if(r.tipo==='Xixi') porDia[r.data].xixi++;
+    if(r.tipo==='Xixi'){ porDia[r.data].xixi++; if(r.hora) porDia[r.data].xixiHoras.push(r.hora); }
     if(r.tipo==='Tarefa'){ tarefas++; porDia[r.data].tarefas++; }
     if(r.tipo==='SinaisDia'){
       sinais.push(r);
       sinalPorDia[r.data] = r.detalhe;
+      if(/Acordou seca/i.test(r.detalhe)) manhaSeca++;
+      else if(/Acordou molhada/i.test(r.detalhe)) manhaMolhada++;
       const m = r.detalhe.match(/Escape: (de [^·]+|não teve)/);
-      if(m && m[1].indexOf('de ')===0){
-        let resto = m[1].slice(3).trim(), atividade='';
-        const parts = resto.split(/\s*(?:[—–-]|,)\s*estava\s+/);
-        if(parts.length>1){ atividade = parts[1].trim(); resto = parts[0].trim(); }
-        escapes.push({data:r.data, tipo:resto, atividade});
+      if(m){
+        diasComSinalEscape++;
+        if(m[1].indexOf('de ')===0){
+          let resto = m[1].slice(3).trim(), atividade='';
+          const parts = resto.split(/\s*(?:[—–-]|,)\s*estava\s+/);
+          if(parts.length>1){ atividade = parts[1].trim(); resto = parts[0].trim(); }
+          escapes.push({data:r.data, tipo:resto, atividade});
+        }
       }
     }
     if(r.meta) meta = r.meta;
     if(r.copoMl) copoMl = r.copoMl;
     ultimoReg = r.tipo+' · '+fmtDataBr(r.data)+' '+r.hora;
   });
-  return {porDia, sinalPorDia, sinais, tarefas, escapes, meta, copoMl, ultimoReg};
+  const semEscape = Math.max(0, diasComSinalEscape - escapes.length);
+  return {porDia, sinalPorDia, sinais, tarefas, escapes, meta, copoMl, ultimoReg, manhaSeca, manhaMolhada, comEscape:escapes.length, semEscape};
 }
 
 async function apagarCrianca(k){

@@ -235,6 +235,19 @@ body{
 .sinal-op.sel{background:var(--verde-fundo);border-color:var(--verde);color:var(--verde-esc);font-weight:700;box-shadow:0 4px 12px rgba(126,178,90,.28);transform:translateY(-1px)}
 .sinal-op.sel::after{content:" ✓";font-weight:800;color:var(--verde)}
 
+/* ====== Escala de Bristol (cocô) ====== */
+.bristol-grid{display:flex;flex-direction:column;gap:8px}
+.bristol-op{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:2px solid var(--borda);background:#fff;border-radius:16px;padding:8px 12px 8px 8px;cursor:pointer;transition:all .18s;box-shadow:0 2px 0 rgba(93,115,81,.07);color:var(--texto);font-family:'Fredoka'}
+.bristol-op:active{transform:scale(.98)}
+.bristol-op::after{content:none!important}
+.bristol-op .br-ico{flex:none;width:52px;height:38px;border-radius:12px;background:color-mix(in srgb, var(--c) 14%, #fff);display:flex;align-items:center;justify-content:center}
+.bristol-op .br-ico svg{width:46px;height:34px;display:block}
+.bristol-op .br-txt{display:flex;flex-direction:column;gap:1px;min-width:0}
+.bristol-op .br-txt b{font-family:'Baloo 2';font-size:14px;font-weight:800;color:var(--c);line-height:1.1}
+.bristol-op .br-txt small{font-size:11.5px;font-weight:500;color:var(--cinza);line-height:1.25}
+.bristol-op.sel{border-color:var(--c);background:color-mix(in srgb, var(--c) 9%, #fff);box-shadow:0 4px 12px color-mix(in srgb, var(--c) 30%, transparent);transform:translateY(-1px);color:var(--texto)}
+.bristol-op.sel .br-txt small{color:#5c6b52}
+
 /* ====== Relatório ====== */
 .rel-head,.rel-row{display:grid;grid-template-columns:1.1fr .9fr .7fr .7fr 1fr;gap:4px;align-items:center;padding:8px 4px;font-size:12.5px}
 .rel-head{font-weight:700;color:var(--cinza);text-transform:uppercase;font-size:10px;letter-spacing:.3px;border-bottom:2px solid #F0F6E8}
@@ -389,6 +402,12 @@ body{
             </select>
           </div>
         </div>
+        <div class="campo">
+          <label for="cfgMetaDia">🎯 Meta do dia:</label>
+          <select id="cfgMetaDia">
+            <option value="0">Automático (pelo tempo acordada)</option>
+          </select>
+        </div>
         <p class="meta-ml" id="cfgMetaMl">Meta calculada automaticamente…</p>
         <p class="nota" style="margin-top:2px">Os avisos só tocam entre a hora de acordar e a de dormir. 😴</p>
       </div>
@@ -537,14 +556,35 @@ body{
 
         <div class="sinal-grupo" id="snTipoWrap" style="display:none">
           <span class="sinal-label">Como era o cocô? (Escala de Bristol)</span>
-          <div class="sinal-opts" id="snTipo">
-            <button class="sinal-op" data-v="1">1 · Bolinhas duras</button>
-            <button class="sinal-op" data-v="2">2 · Grumos duros</button>
-            <button class="sinal-op" data-v="3">3 · Com rachaduras</button>
-            <button class="sinal-op" data-v="4">4 · Lisinho e macio</button>
-            <button class="sinal-op" data-v="5">5 · Pedaços moles</button>
-            <button class="sinal-op" data-v="6">6 · Pastoso</button>
-            <button class="sinal-op" data-v="7">7 · Líquido</button>
+          <div class="bristol-grid" id="snTipo">
+            <button class="sinal-op bristol-op" data-v="1" style="--c:#7C8A32">
+              <span class="br-ico"><svg viewBox="0 0 56 40" aria-hidden="true"><g fill="var(--c)"><ellipse cx="15" cy="14" rx="7" ry="6"/><ellipse cx="33" cy="12" rx="6" ry="5.5"/><ellipse cx="25" cy="27" rx="7.5" ry="6.5"/><ellipse cx="42" cy="26" rx="6" ry="5.5"/></g></svg></span>
+              <span class="br-txt"><b>Tipo 1</b><small>Pedaços separados, duros como amendoim</small></span>
+            </button>
+            <button class="sinal-op bristol-op" data-v="2" style="--c:#F2C025">
+              <span class="br-ico"><svg viewBox="0 0 56 40" aria-hidden="true"><path fill="var(--c)" d="M8 20c0-5 4-7 8-7 3 0 4 1 7 1s4-2 8-2 8 2 8 8-4 8-8 8-5-2-8-2-4 1-7 1-8-2-8-7z"/></svg></span>
+              <span class="br-txt"><b>Tipo 2</b><small>Forma de salsicha, mas segmentada</small></span>
+            </button>
+            <button class="sinal-op bristol-op" data-v="3" style="--c:#EE6B3B">
+              <span class="br-ico"><svg viewBox="0 0 56 40" aria-hidden="true"><rect x="8" y="12" width="40" height="16" rx="8" fill="var(--c)"/><g stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".7"><path d="M20 14v12"/><path d="M30 13v14"/><path d="M39 15v10"/></g></svg></span>
+              <span class="br-txt"><b>Tipo 3</b><small>Forma de salsicha, mas com fendas na superfície</small></span>
+            </button>
+            <button class="sinal-op bristol-op" data-v="4" style="--c:#2FB3A8">
+              <span class="br-ico"><svg viewBox="0 0 56 40" aria-hidden="true"><path d="M8 26c8-14 12 6 20-4s12 8 20-2" fill="none" stroke="var(--c)" stroke-width="11" stroke-linecap="round"/></svg></span>
+              <span class="br-txt"><b>Tipo 4</b><small>Forma de salsicha ou cobra, lisa e mole</small></span>
+            </button>
+            <button class="sinal-op bristol-op" data-v="5" style="--c:#8E5BC8">
+              <span class="br-ico"><svg viewBox="0 0 56 40" aria-hidden="true"><g fill="var(--c)"><path d="M12 20c0-5 4-8 9-8s8 4 8 8-4 7-9 7-8-2-8-7z"/><ellipse cx="38" cy="16" rx="8" ry="7"/><ellipse cx="34" cy="29" rx="7" ry="6"/></g></svg></span>
+              <span class="br-txt"><b>Tipo 5</b><small>Pedaços moles, mas contornos nítidos</small></span>
+            </button>
+            <button class="sinal-op bristol-op" data-v="6" style="--c:#3B93E0">
+              <span class="br-ico"><svg viewBox="0 0 56 40" aria-hidden="true"><path fill="var(--c)" d="M12 24c-3 0-4-3-2-5-2-3 1-6 4-5 0-4 5-5 7-2 2-3 7-3 8 1 4-2 8 1 6 5 3 1 3 6-1 6-2 2-6 1-7-1-2 2-6 2-8 0-2 2-6 2-7 0z"/></svg></span>
+              <span class="br-txt"><b>Tipo 6</b><small>Pedaços aerados, contornos esgarçados</small></span>
+            </button>
+            <button class="sinal-op bristol-op" data-v="7" style="--c:#E86BB0">
+              <span class="br-ico"><svg viewBox="0 0 56 40" aria-hidden="true"><ellipse cx="28" cy="26" rx="20" ry="7" fill="var(--c)"/><g fill="none" stroke="var(--c)" stroke-width="2" stroke-linecap="round" opacity=".55"><path d="M16 16c3 2 6 2 9 0"/><path d="M32 14c3 2 6 2 9 0"/></g></svg></span>
+              <span class="br-txt"><b>Tipo 7</b><small>Aquosa, sem peças sólidas</small></span>
+            </button>
           </div>
         </div>
 
@@ -933,7 +973,7 @@ const NOMES_PERIODO = {manha:'☀️ Manhã', tarde:'🌤️ Tarde', noite:'🌙
 const K_KIDS='rotina-mv-kids';
 const B_ROTINA='rotina-mv-rotina', B_CONFIG='rotina-mv-config', B_CUIDADOS='rotina-mv-cuidados',
       B_SEMANA='rotina-mv-semana', B_HIST='rotina-mv-hist';
-const CONFIG_PADRAO = {acordar:'07:00', dormir:'20:30', xixiMin:120, aguaMin:60, aguaMetaMl:1200, aguaMeta:6, copoMl:200};
+const CONFIG_PADRAO = {acordar:'07:00', dormir:'20:30', xixiMin:120, aguaMin:60, aguaMetaMl:1200, aguaMeta:6, copoMl:200, metaManualMl:0};
 function mlCopo(){ return (config && config.copoMl) || 200; }
 function horasAcordada(cfg){
   cfg = cfg || config || CONFIG_PADRAO;
@@ -947,6 +987,15 @@ function metaAguaAuto(cfg){
   const ml = Math.min(2000, Math.max(800, Math.round((horasAcordada(cfg)*90)/50)*50));
   const copo = (cfg && cfg.copoMl) || 200;
   return { ml, copo, copos: Math.max(1, Math.round(ml/copo)) };
+}
+// Meta efetiva: usa a escolhida na mão (metaManualMl) se houver; senão a automática.
+function metaEfetiva(cfg){
+  const manual = cfg && parseInt(cfg.metaManualMl,10);
+  if(manual>0){
+    const copo = (cfg && cfg.copoMl) || 200;
+    return { ml: manual, copo, copos: Math.max(1, Math.round(manual/copo)), manual:true };
+  }
+  return Object.assign(metaAguaAuto(cfg), {manual:false});
 }
 function fmtMl(ml){ return ml>=1000 ? (ml/1000).toLocaleString('pt-BR',{maximumFractionDigits:1})+' L' : ml+' mL'; }
 
@@ -997,7 +1046,7 @@ function carregarEstadoCrianca(){
   rotina=lerJSON(kkey(B_ROTINA));
   config=Object.assign({}, CONFIG_PADRAO, lerJSON(kkey(B_CONFIG))||{});
   // perfis antigos guardavam só a meta em copos; a meta em mL manda agora
-  const _m=metaAguaAuto(config); // meta sempre recalculada pelo tempo acordada
+  const _m=metaEfetiva(config); // meta escolhida na mão, ou automática pelo tempo acordada
   config.aguaMetaMl=_m.ml;
   config.aguaMeta=_m.copos;
   cuidados=carregarCuidados();
@@ -1187,6 +1236,7 @@ function abrirSetup(){
   document.getElementById('cfgXixi').value=String(config.xixiMin);
   document.getElementById('cfgAgua').value=String(config.aguaMin);
   document.getElementById('cfgCopoMl').value=String(config.copoMl||200);
+  document.getElementById('cfgMetaDia').value=String(config.metaManualMl||0);
   atualizaMetaMl();
   const jaTem = rotina&&rotina.tarefas&&rotina.tarefas.length;
   document.getElementById('setupTitulo').textContent = 'Rotina de '+primeiroNome()+' 🌟';
@@ -1263,8 +1313,9 @@ document.getElementById('btnSetup').addEventListener('click',()=>{
     xixiMin: parseInt(document.getElementById('cfgXixi').value,10),
     aguaMin: parseInt(document.getElementById('cfgAgua').value,10),
     copoMl:  parseInt(document.getElementById('cfgCopoMl').value,10)||200,
+    metaManualMl: parseInt(document.getElementById('cfgMetaDia').value,10)||0,
   };
-  const _m=metaAguaAuto(config); // meta automática pelo tempo acordada
+  const _m=metaEfetiva(config); // meta escolhida na mão, ou automática pelo tempo acordada
   config.aguaMetaMl=_m.ml;
   config.aguaMeta=_m.copos;
   salvarJSON(kkey(B_CONFIG), config);
@@ -1396,17 +1447,30 @@ function registrarXixi(){
   wrapBex.classList.remove('pop'); void wrapBex.offsetWidth; wrapBex.classList.add('pop');
   sincronizarNuvem('Xixi', '');
 }
+// popula o seletor de meta: 100, 200, 300 ... até 3000 mL
+(function preencheMetaDia(){
+  const sel=document.getElementById('cfgMetaDia');
+  if(!sel) return;
+  for(let ml=100; ml<=3000; ml+=100){
+    const o=document.createElement('option');
+    o.value=String(ml);
+    o.textContent = ml>=1000 ? (ml/1000).toLocaleString('pt-BR',{maximumFractionDigits:1})+' L ('+ml+' mL)' : ml+' mL';
+    sel.appendChild(o);
+  }
+})();
 function atualizaMetaMl(){
   const cfgTmp={
     acordar: document.getElementById('cfgAcordar').value || '07:00',
     dormir:  document.getElementById('cfgDormir').value  || '20:30',
-    copoMl:  parseInt(document.getElementById('cfgCopoMl').value,10)||200
+    copoMl:  parseInt(document.getElementById('cfgCopoMl').value,10)||200,
+    metaManualMl: parseInt(document.getElementById('cfgMetaDia').value,10)||0
   };
-  const m=metaAguaAuto(cfgTmp);
+  const m=metaEfetiva(cfgTmp);
   document.getElementById('cfgMetaMl').textContent=
-    '💧 Meta do dia: '+fmtMl(m.ml)+' ≈ '+m.copos+' copo'+(m.copos>1?'s':'')+' de '+m.copo+' mL · calculada pelo tempo que fica acordada';
+    '💧 Meta do dia: '+fmtMl(m.ml)+' ≈ '+m.copos+' copo'+(m.copos>1?'s':'')+' de '+m.copo+' mL'
+    + (m.manual ? ' · escolhida por você' : ' · calculada pelo tempo que fica acordada');
 }
-['cfgAcordar','cfgDormir','cfgCopoMl'].forEach(id=>document.getElementById(id).addEventListener('change',atualizaMetaMl));
+['cfgAcordar','cfgDormir','cfgCopoMl','cfgMetaDia'].forEach(id=>document.getElementById(id).addEventListener('change',atualizaMetaMl));
 
 document.getElementById('btnBebi').addEventListener('click',registrarAgua);
 document.getElementById('btnBebi2').addEventListener('click',registrarAgua);
@@ -1719,11 +1783,29 @@ function dispararAviso(emoji, titulo, msg){
       o.start(ctx.currentTime+t); o.stop(ctx.currentTime+t+0.4);
     });
   }catch(e){}
-  try{
-    if('Notification' in window && Notification.permission==='granted'){
-      new Notification(titulo,{body:msg, tag:'rotina-mv'});
-    }
-  }catch(e){}
+  mostrarNotificacao(emoji+' '+titulo, msg);
+}
+
+// Mostra a notificação pelo service worker (funciona no Android/celular);
+// só usa new Notification() como último recurso no desktop.
+function mostrarNotificacao(titulo, msg){
+  if(!('Notification' in window) || Notification.permission!=='granted') return;
+  const opcoes={
+    body: msg,
+    icon: 'img/icons/icon-192.png',
+    badge: 'img/icons/icon-192.png',
+    vibrate: [120,60,120],
+    tag: 'gota-lembrete',
+    renotify: true,
+    data: { url: './index.html' }
+  };
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.ready
+      .then(reg=>reg.showNotification(titulo, opcoes))
+      .catch(()=>{ try{ new Notification(titulo, opcoes); }catch(e){} });
+  }else{
+    try{ new Notification(titulo, opcoes); }catch(e){}
+  }
 }
 function atualizarRim(){
   const wrap=document.getElementById('bexWrap'); if(!wrap || !cuidados) return;
@@ -1756,6 +1838,8 @@ function fecharAviso(){ document.getElementById('avisoTopo').classList.remove('s
 document.getElementById('avFechar').addEventListener('click',fecharAviso);
 
 setInterval(()=>{ if(kids) atualizarLembretes(); }, 20000);
+// quando o app volta ao primeiro plano, reavalia os lembretes na hora
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden && kids) atualizarLembretes(); });
 
 // ===================== AJUSTES =====================
 document.getElementById('ajEditar').addEventListener('click',abrirSetup);
@@ -1823,9 +1907,25 @@ rotear();
 
 // ===================== PWA (app instalável + offline) =====================
 if('serviceWorker' in navigator){
-  window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  let regSW=null;
+  // se já havia um SW no controle, uma troca significa "versão nova assumiu"
+  const tinhaControle = !!navigator.serviceWorker.controller;
+  let jaRecarregou=false;
+  navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+    if(jaRecarregou || !tinhaControle) return; // na 1ª instalação não recarrega à toa
+    jaRecarregou=true;
+    window.location.reload();
   });
+  const procurarAtualizacao=()=>{ if(regSW) regSW.update().catch(()=>{}); };
+  window.addEventListener('load', ()=>{
+    // updateViaCache:'none' evita que o próprio sw.js fique preso no cache do navegador
+    navigator.serviceWorker.register('sw.js', {updateViaCache:'none'})
+      .then(reg=>{ regSW=reg; reg.update().catch(()=>{}); })
+      .catch(()=>{});
+  });
+  // ao voltar pro app (troca de aba/abrir de novo), confere se saiu versão nova
+  document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) procurarAtualizacao(); });
+  window.addEventListener('focus', procurarAtualizacao);
 }
 
 // ---- Escolha: usar como site ou instalar como app ----

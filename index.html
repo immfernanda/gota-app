@@ -321,12 +321,12 @@ body{
           <input type="text" id="inResp" placeholder="Ex.: Ana Paula" autocomplete="off">
         </div>
         <div class="campo">
-          <label for="inCrianca">Nome da criança</label>
+          <label for="inCrianca">Nome do paciente</label>
           <input type="text" id="inCrianca" placeholder="Ex.: Sofia" autocomplete="off">
         </div>
         <div class="consent">
           <input type="checkbox" id="inConsent">
-          <label for="inConsent">Autorizo o uso do nome do responsável e da criança para personalizar esta rotina, e o envio automático dos registros de rotina para acompanhamento profissional.</label>
+          <label for="inConsent">Autorizo o uso do nome do responsável e do paciente para personalizar esta rotina, e o envio automático dos registros de rotina para acompanhamento profissional.</label>
         </div>
       </div>
       <button class="btn btn-primary" id="btnCadastro" disabled>Continuar</button>
@@ -536,15 +536,15 @@ body{
         </div>
         <button class="btn-registro r-xixi" id="btnXixi2">🚽 Fiz xixi agora!</button>
         <div class="hist-lista" id="xixiHist"></div>
-        <p class="nota">Os registros ajudam no acompanhamento da saúde da criança e são enviados automaticamente para a equipe responsável. 🩺</p>
+        <p class="nota">Os registros ajudam no acompanhamento da saúde do paciente e são enviados automaticamente para a equipe responsável. 🩺</p>
       </div>
 
       <div class="card-form">
         <h2>🌙 Como foi o dia?</h2>
-        <p class="sinal-intro">Um minutinho antes de dormir: registre como foi o dia. Esses sinais ajudam muito no acompanhamento da criança 🩺</p>
+        <p class="sinal-intro">Um minutinho antes de dormir: registre como foi o dia. Esses sinais ajudam muito no acompanhamento do paciente 🩺</p>
 
         <div class="sinal-grupo">
-          <span class="sinal-label">💩 A criança fez cocô hoje?</span>
+          <span class="sinal-label">💩 O paciente fez cocô hoje?</span>
           <div class="sinal-opts" id="snEvacuou">
             <button class="sinal-op" data-v="sim">Sim</button>
             <button class="sinal-op" data-v="nao">Não</button>
@@ -567,7 +567,7 @@ body{
         </div>
 
         <div class="sinal-grupo">
-          <span class="sinal-label">🌅 Como a criança acordou?</span>
+          <span class="sinal-label">🌅 Como o paciente acordou?</span>
           <div class="sinal-opts" id="snAcordou">
             <button class="sinal-op" data-v="seca">Seca 🌞</button>
             <button class="sinal-op" data-v="molhada">Molhada 💧</button>
@@ -586,7 +586,7 @@ body{
 
         <div class="sinal-grupo" id="snAtivWrap" style="display:none">
           <div class="campo">
-            <label for="snAtividade">O que a criança estava fazendo na hora do escape?</label>
+            <label for="snAtividade">O que o paciente estava fazendo na hora do escape?</label>
             <input type="text" id="snAtividade" placeholder="Ex.: brincando, vendo TV, dormindo…" autocomplete="off">
           </div>
         </div>
@@ -608,7 +608,7 @@ body{
 
       <div class="card-form" id="relSelCard" style="display:none">
         <div class="campo">
-          <label for="relSel">Criança:</label>
+          <label for="relSel">Paciente:</label>
           <select id="relSel"></select>
         </div>
       </div>
@@ -636,12 +636,12 @@ body{
     <div class="topo mini"><div class="cenario"></div></div>
     <div class="pad">
       <div class="saudacao">
-        <h1>Crianças 🧒</h1>
-        <p>Toque em uma criança para usar a rotina dela</p>
+        <h1>Pacientes 🧒</h1>
+        <p>Toque em um paciente para usar a rotina dele</p>
       </div>
       <div id="listaCriancas"></div>
-      <button class="btn btn-primary" id="btnAddCrianca">➕ Adicionar criança</button>
-      <p class="nota">Cada criança tem a própria rotina, horários, registros e personagem. Use ✏️ para mudar o nome.</p>
+      <button class="btn btn-primary" id="btnAddCrianca">➕ Adicionar paciente</button>
+      <p class="nota">Cada paciente tem a própria rotina, horários, registros e personagem. Use ✏️ para mudar o nome.</p>
     </div>
   </section>
 
@@ -660,7 +660,7 @@ body{
       </div>
       <div class="ajuste-item" id="ajCriancas">
         <span class="aj-ico">🧒</span>
-        <div class="aj-txt"><b>Crianças</b><span id="ajCriancasSub">Trocar, renomear ou adicionar criança</span></div>
+        <div class="aj-txt"><b>Pacientes</b><span id="ajCriancasSub">Trocar, renomear ou adicionar paciente</span></div>
         <span class="aj-seta">›</span>
       </div>
       <div class="ajuste-item" id="ajEditar">
@@ -1102,8 +1102,8 @@ function prepCadastro(){
   const temKids = kids && kids.lista.length;
   inResp.value = temKids ? (kids.lista[0].responsavel||'') : '';
   inCri.value=''; inCons.checked=false; validaCad();
-  document.getElementById('cadTitulo').textContent = temKids ? 'Nova criança 🧒' : 'Bem-vindo(a)! 🌈';
-  document.getElementById('cadSub').textContent = temKids ? 'Adicione mais uma criança à rotina' : 'Vamos montar a rotina do seu filho(a)';
+  document.getElementById('cadTitulo').textContent = temKids ? 'Novo paciente 🧒' : 'Bem-vindo(a)! 🌈';
+  document.getElementById('cadSub').textContent = temKids ? 'Adicione mais um paciente à rotina' : 'Vamos montar a rotina do seu filho(a)';
   document.getElementById('btnCadVoltar').style.display = temKids ? 'block' : 'none';
 }
 document.getElementById('btnCadVoltar').addEventListener('click',()=>{ renderCriancas(); mostrarTela('tela-criancas'); });
@@ -1175,7 +1175,7 @@ function trocarCrianca(id){
 }
 function renomearCrianca(id){
   const c=kids.lista.find(x=>x.id===id); if(!c) return;
-  const novo=prompt('Novo nome da criança:', c.nome);
+  const novo=prompt('Novo nome do paciente:', c.nome);
   if(!novo || !novo.trim()) return;
   c.nome=novo.trim(); salvarJSON(K_KIDS,kids);
   renderCriancas();
@@ -1576,7 +1576,7 @@ function statsDia(h){
 function relKid(){ return kids.lista.find(c=>c.id===relKidId) || kidAtiva(); }
 function renderRelatorio(){
   if(!relKidId || !kids.lista.some(c=>c.id===relKidId)) relKidId=kids.ativa;
-  // seletor de criança (aparece se houver mais de uma)
+  // seletor de paciente (aparece se houver mais de um)
   const selCard=document.getElementById('relSelCard'), sel=document.getElementById('relSel');
   if(kids.lista.length>1){
     selCard.style.display='block';
@@ -1594,7 +1594,7 @@ function renderRelatorio(){
   const dados=histDe(c.id);
   const tab=document.getElementById('relTabela'); tab.innerHTML='';
   const dias=Object.keys(dados).sort().reverse();
-  if(!dias.length){ tab.innerHTML='<div class="hist-vazio">Ainda não há registros desta criança. 🌱</div>'; return; }
+  if(!dias.length){ tab.innerHTML='<div class="hist-vazio">Ainda não há registros deste paciente. 🌱</div>'; return; }
   dias.slice(0,14).forEach(d=>{
     const s=statsDia(dados[d]);
     const row=document.createElement('div'); row.className='rel-row';
@@ -1678,10 +1678,10 @@ function tentarPin(){
     document.getElementById('modalPin').classList.remove('show');
     document.getElementById('pinInput').value='';
     if(PROFISSIONAL.planilhaUrl){
-      // relatório completo, com TODAS as crianças (puxa da planilha)
+      // relatório completo, com TODOS os pacientes (puxa da planilha)
       location.href='relatorio.html?pin='+encodeURIComponent(pin);
     }else{
-      // sem nuvem configurada: relatório local só desta criança
+      // sem nuvem configurada: relatório local só deste paciente
       relKidId=kids.ativa;
       renderRelatorio();
       mostrarTela('tela-relatorio');
@@ -1714,7 +1714,7 @@ function atualizarLembretes(){
     {prox: cuidados.xixi.length ? proximoEvento(cuidados.xixi, config.xixiMin) : janelaAcordado().ini.getTime()+30*60000,
      livre:!config.xixiMin, rowId:'lemXixi', tempoId:'lemXixiTempo',
      emoji:'🚽', titulo: cuidados.xixi.length ? 'Hora de ir ao banheiro!' : 'Primeiro xixi do dia!',
-     msg: cuidados.xixi.length ? 'Vamos tentar fazer xixi? 🌟' : 'A bexiga guardou a noite toda! 🚽',
+     msg: cuidados.xixi.length ? 'Vamos tentar fazer xixi? 🌟' : 'A bexiga segurou o xixi por muito tempo! 🚽',
      jaAvisado:()=>avisadoXixi, marcar:v=>avisadoXixi=v},
   ];
   alvos.forEach(a=>{
@@ -1855,7 +1855,7 @@ function atualizarTextosNome(){
   document.getElementById('congratsTxt').textContent='Parabéns, '+nome+'! Rotina completa!';
   document.getElementById('ajustesSub').textContent='Rotina de '+nome;
   document.getElementById('ajEnviarSub').textContent=(PROFISSIONAL.planilhaUrl?'Os registros de '+nome+' são enviados automaticamente para '+PROFISSIONAL.nome:'Toque para reenviar os registros de '+nome+' para '+PROFISSIONAL.nome);
-  document.getElementById('ajCriancasSub').textContent=kids.lista.length+(kids.lista.length===1?' criança cadastrada':' crianças cadastradas');
+  document.getElementById('ajCriancasSub').textContent=kids.lista.length+(kids.lista.length===1?' paciente cadastrado':' pacientes cadastrados');
   aplicarAvatar();
 }
 function iniciarRotina(){

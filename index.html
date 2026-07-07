@@ -235,15 +235,19 @@ body{
 .sinal-op.sel{background:var(--verde-fundo);border-color:var(--verde);color:var(--verde-esc);font-weight:700;box-shadow:0 4px 12px rgba(126,178,90,.28);transform:translateY(-1px)}
 .sinal-op.sel::after{content:" ✓";font-weight:800;color:var(--verde)}
 
-/* ====== Escala de Bristol (cocô) — imagem real com áreas clicáveis ====== */
-.bristol-img-wrap{position:relative;width:100%;border-radius:16px;overflow:hidden;background:transparent;line-height:0}
-.bristol-img{display:block;width:100%;height:auto}
-.bristol-hot{position:absolute;left:0;width:100%;background:transparent;border:none;padding:0;margin:0;box-shadow:none;cursor:pointer;transition:background .15s}
-.bristol-hot::after{content:none!important}
-.bristol-hot:active{transform:none}
-.bristol-hot:hover{background:rgba(126,178,90,.08)}
-.bristol-hot.sel{background:rgba(126,178,90,.16);outline:3px solid var(--verde);outline-offset:-3px;border-radius:10px}
-.bristol-legenda{font-size:11.5px;color:var(--cinza);font-weight:500;margin-top:7px;line-height:1.4}
+/* ====== Escala de Bristol (cocô) — desenhos reais + texto na fonte do site ====== */
+.bristol{display:flex;flex-direction:column;gap:3px}
+.bristol-titulo{font-family:'Baloo 2';font-weight:800;color:var(--verde-esc);text-align:center;font-size:14.5px;letter-spacing:.4px;text-transform:uppercase;margin:2px 0 9px}
+.bristol-op{display:grid;grid-template-columns:58px 96px 1fr;align-items:center;gap:10px;width:100%;text-align:left;border:none;background:transparent;border-radius:14px;padding:7px 8px;cursor:pointer;transition:background .15s;box-shadow:none;color:var(--texto);font-family:'Fredoka'}
+.bristol-op::after{content:none!important}
+.bristol-op:active{transform:none}
+.bristol-op:hover{background:rgba(126,178,90,.06)}
+.bristol-op .br-badge{justify-self:start;background:var(--c);color:#fff;font-family:'Baloo 2';font-weight:800;font-size:12.5px;padding:4px 11px;border-radius:20px;white-space:nowrap;box-shadow:0 2px 5px color-mix(in srgb, var(--c) 40%, transparent)}
+.bristol-op .br-img{width:100%;max-height:44px;object-fit:contain;display:block}
+.bristol-op .br-desc{font-size:12.5px;font-weight:500;color:#5c6b52;line-height:1.25}
+.bristol-op.sel{background:color-mix(in srgb, var(--c) 12%, #fff);outline:2.5px solid var(--c);outline-offset:-2px}
+.bristol-op.sel .br-desc{color:var(--texto)}
+.bristol-legenda{font-size:11.5px;color:var(--cinza);font-weight:500;margin-top:8px;line-height:1.4}
 
 /* ====== Relatório ====== */
 .rel-head,.rel-row{display:grid;grid-template-columns:1.1fr .9fr .7fr .7fr 1fr;gap:4px;align-items:center;padding:8px 4px;font-size:12.5px}
@@ -553,17 +557,45 @@ body{
 
         <div class="sinal-grupo" id="snTipoWrap" style="display:none">
           <span class="sinal-label">Como era o cocô? (Escala de Bristol)</span>
-          <div class="bristol-img-wrap" id="snTipo">
-            <img class="bristol-img" src="img/bristol.png" alt="Classificação da Escala de Bristol: 7 tipos de cocô, do Tipo 1 (pedaços duros e separados) ao Tipo 7 (aquoso)" loading="lazy">
-            <button class="sinal-op bristol-hot" data-v="1" style="top:13.1%;height:12.4%" aria-label="Tipo 1: pedaços separados, duros como amendoim"></button>
-            <button class="sinal-op bristol-hot" data-v="2" style="top:25.5%;height:12.4%" aria-label="Tipo 2: forma de salsicha, mas segmentada"></button>
-            <button class="sinal-op bristol-hot" data-v="3" style="top:37.9%;height:12.4%" aria-label="Tipo 3: forma de salsicha, mas com fendas na superfície"></button>
-            <button class="sinal-op bristol-hot" data-v="4" style="top:50.4%;height:12.4%" aria-label="Tipo 4: forma de salsicha ou cobra, lisa e mole"></button>
-            <button class="sinal-op bristol-hot" data-v="5" style="top:62.8%;height:12.4%" aria-label="Tipo 5: pedaços moles, mas contornos nítidos"></button>
-            <button class="sinal-op bristol-hot" data-v="6" style="top:75.2%;height:12.4%" aria-label="Tipo 6: pedaços aerados, contornos esgarçados"></button>
-            <button class="sinal-op bristol-hot" data-v="7" style="top:87.6%;height:12.4%" aria-label="Tipo 7: aquosa, sem peças sólidas"></button>
+          <div class="bristol" id="snTipo">
+            <div class="bristol-titulo">Classificação da Escala de Bristol</div>
+            <button class="sinal-op bristol-op" data-v="1" style="--c:#8A9A3C">
+              <span class="br-badge">Tipo 1</span>
+              <img class="br-img" src="img/bristol/tipo-1.png" alt="" loading="lazy">
+              <span class="br-desc">Pedaços separados, duros como amendoim.</span>
+            </button>
+            <button class="sinal-op bristol-op" data-v="2" style="--c:#E4A92A">
+              <span class="br-badge">Tipo 2</span>
+              <img class="br-img" src="img/bristol/tipo-2.png" alt="" loading="lazy">
+              <span class="br-desc">Forma de salsicha, mas segmentada.</span>
+            </button>
+            <button class="sinal-op bristol-op" data-v="3" style="--c:#E56C42">
+              <span class="br-badge">Tipo 3</span>
+              <img class="br-img" src="img/bristol/tipo-3.png" alt="" loading="lazy">
+              <span class="br-desc">Forma de salsicha, mas com fendas na superfície.</span>
+            </button>
+            <button class="sinal-op bristol-op" data-v="4" style="--c:#4FB0AD">
+              <span class="br-badge">Tipo 4</span>
+              <img class="br-img" src="img/bristol/tipo-4.png" alt="" loading="lazy">
+              <span class="br-desc">Forma de salsicha ou cobra, lisa e mole.</span>
+            </button>
+            <button class="sinal-op bristol-op" data-v="5" style="--c:#9B7BC4">
+              <span class="br-badge">Tipo 5</span>
+              <img class="br-img" src="img/bristol/tipo-5.png" alt="" loading="lazy">
+              <span class="br-desc">Pedaços moles, mas contornos nítidos.</span>
+            </button>
+            <button class="sinal-op bristol-op" data-v="6" style="--c:#6E96C4">
+              <span class="br-badge">Tipo 6</span>
+              <img class="br-img" src="img/bristol/tipo-6.png" alt="" loading="lazy">
+              <span class="br-desc">Pedaços aerados, contornos esgarçados.</span>
+            </button>
+            <button class="sinal-op bristol-op" data-v="7" style="--c:#C08BA8">
+              <span class="br-badge">Tipo 7</span>
+              <img class="br-img" src="img/bristol/tipo-7.png" alt="" loading="lazy">
+              <span class="br-desc">Aquosa, sem peças sólidas.</span>
+            </button>
           </div>
-          <p class="bristol-legenda">Toque na linha que mais parece com o cocô de hoje.</p>
+          <p class="bristol-legenda">Toque no tipo que mais parece com o cocô de hoje.</p>
         </div>
 
         <div class="sinal-grupo">

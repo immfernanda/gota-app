@@ -236,7 +236,7 @@ body{
 .sinal-op.sel::after{content:" ✓";font-weight:800;color:var(--verde)}
 
 /* ====== Escala de Bristol (cocô) — imagem real com áreas clicáveis ====== */
-.bristol-img-wrap{position:relative;width:100%;border-radius:16px;overflow:hidden;border:1.5px solid #E9F1DC;background:#fff;line-height:0}
+.bristol-img-wrap{position:relative;width:100%;border-radius:16px;overflow:hidden;background:transparent;line-height:0}
 .bristol-img{display:block;width:100%;height:auto}
 .bristol-hot{position:absolute;left:0;width:100%;background:transparent;border:none;padding:0;margin:0;box-shadow:none;cursor:pointer;transition:background .15s}
 .bristol-hot::after{content:none!important}
@@ -554,7 +554,7 @@ body{
         <div class="sinal-grupo" id="snTipoWrap" style="display:none">
           <span class="sinal-label">Como era o cocô? (Escala de Bristol)</span>
           <div class="bristol-img-wrap" id="snTipo">
-            <img class="bristol-img" src="img/bristol-full.jpeg" alt="Classificação da Escala de Bristol: 7 tipos de cocô, do Tipo 1 (pedaços duros e separados) ao Tipo 7 (aquoso)" loading="lazy">
+            <img class="bristol-img" src="img/bristol.png" alt="Classificação da Escala de Bristol: 7 tipos de cocô, do Tipo 1 (pedaços duros e separados) ao Tipo 7 (aquoso)" loading="lazy">
             <button class="sinal-op bristol-hot" data-v="1" style="top:13.1%;height:12.4%" aria-label="Tipo 1: pedaços separados, duros como amendoim"></button>
             <button class="sinal-op bristol-hot" data-v="2" style="top:25.5%;height:12.4%" aria-label="Tipo 2: forma de salsicha, mas segmentada"></button>
             <button class="sinal-op bristol-hot" data-v="3" style="top:37.9%;height:12.4%" aria-label="Tipo 3: forma de salsicha, mas com fendas na superfície"></button>

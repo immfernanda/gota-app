@@ -234,6 +234,8 @@ body{
 .sinal-op:active{transform:scale(.94)}
 .sinal-op.sel{background:var(--verde-fundo);border-color:var(--verde);color:var(--verde-esc);font-weight:700;box-shadow:0 4px 12px rgba(126,178,90,.28);transform:translateY(-1px)}
 .sinal-op.sel::after{content:" ✓";font-weight:800;color:var(--verde)}
+.escape-prompt{margin-top:12px;background:linear-gradient(180deg,#FFF8F0,#FFF1E6);border:1.5px solid #FFD9B8;border-radius:16px;padding:12px 13px;animation:toastin .25s ease}
+.escape-prompt .sinal-label{margin-bottom:9px;color:#B5651D}
 
 /* ====== Escala de Bristol (cocô) — desenhos reais + texto na fonte do site ====== */
 .bristol{display:flex;flex-direction:column;gap:3px}
@@ -539,6 +541,13 @@ body{
           <div class="stat-pill"><div class="sp-v" id="xxMedia">···</div><div class="sp-l">intervalo médio</div></div>
         </div>
         <button class="btn-registro r-xixi" id="btnXixi2">🚽 Fiz xixi agora!</button>
+        <div class="escape-prompt" id="xixiEscapeWrap" hidden>
+          <span class="sinal-label">😬 Teve escape de xixi?</span>
+          <div class="sinal-opts" id="xixiEscape">
+            <button class="sinal-op" data-v="sim">Sim</button>
+            <button class="sinal-op" data-v="nao">Não teve 🎉</button>
+          </div>
+        </div>
         <div class="hist-lista" id="xixiHist"></div>
         <p class="nota">Os registros ajudam no acompanhamento da saúde do paciente e são enviados automaticamente para a equipe responsável. 🩺</p>
       </div>
@@ -552,6 +561,13 @@ body{
           <div class="sinal-opts" id="snEvacuou">
             <button class="sinal-op" data-v="sim">Sim</button>
             <button class="sinal-op" data-v="nao">Não</button>
+          </div>
+        </div>
+
+        <div class="sinal-grupo" id="snCocoHoraWrap" style="display:none">
+          <div class="campo">
+            <label for="snCocoHora">🕐 Que horas foi o cocô?</label>
+            <input type="time" id="snCocoHora">
           </div>
         </div>
 
@@ -598,21 +614,11 @@ body{
           <p class="bristol-legenda">Toque no tipo que mais parece com o cocô de hoje.</p>
         </div>
 
-        <div class="sinal-grupo">
-          <span class="sinal-label">🌅 Como o paciente acordou?</span>
-          <div class="sinal-opts" id="snAcordou">
-            <button class="sinal-op" data-v="seca">Seca 🌞</button>
-            <button class="sinal-op" data-v="molhada">Molhada 💧</button>
-          </div>
-        </div>
-
-        <div class="sinal-grupo">
-          <span class="sinal-label">⚠️ Teve escape de xixi ou cocô?</span>
-          <div class="sinal-opts" id="snEscape">
+        <div class="sinal-grupo" id="snEscapeCocoWrap" style="display:none">
+          <span class="sinal-label">💩 Teve escape de cocô?</span>
+          <div class="sinal-opts" id="snEscapeCoco">
+            <button class="sinal-op" data-v="sim">Sim</button>
             <button class="sinal-op" data-v="nao">Não teve 🎉</button>
-            <button class="sinal-op" data-v="xixi">Xixi</button>
-            <button class="sinal-op" data-v="coco">Cocô</button>
-            <button class="sinal-op" data-v="ambos">Xixi e cocô</button>
           </div>
         </div>
 
@@ -620,6 +626,14 @@ body{
           <div class="campo">
             <label for="snAtividade">O que o paciente estava fazendo na hora do escape?</label>
             <input type="text" id="snAtividade" placeholder="Ex.: brincando, vendo TV, dormindo…" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="sinal-grupo">
+          <span class="sinal-label">🌅 Como o paciente acordou?</span>
+          <div class="sinal-opts" id="snAcordou">
+            <button class="sinal-op" data-v="seca">Seca 🌞</button>
+            <button class="sinal-op" data-v="molhada">Molhada 💧</button>
           </div>
         </div>
 
@@ -1064,14 +1078,16 @@ function carregarEstadoCrianca(){
   avisadoAgua=0; avisadoXixi=0;
 }
 
-function sinaisPadrao(){ return {evacuou:null, tipoCoco:null, acordou:null, escape:null, atividade:'', ts:null}; }
+function sinaisPadrao(){ return {evacuou:null, tipoCoco:null, cocoHora:'', escapeCoco:null, acordou:null, escape:null, atividade:'', ts:null}; }
 function carregarCuidados(){
   const c=lerJSON(kkey(B_CUIDADOS));
   if(c && c.data===hojeId() && Array.isArray(c.agua) && Array.isArray(c.xixi)){
     if(!c.sinais) c.sinais=sinaisPadrao();
+    else c.sinais=Object.assign(sinaisPadrao(), c.sinais); // garante campos novos
+    if(!Array.isArray(c.xixiEscape)) c.xixiEscape=[]; // horários dos xixis com escape
     return c;
   }
-  return {data:hojeId(), agua:[], xixi:[], sinais:sinaisPadrao()};
+  return {data:hojeId(), agua:[], xixi:[], xixiEscape:[], sinais:sinaisPadrao()};
 }
 function salvarCuidados(){ salvarJSON(kkey(B_CUIDADOS), cuidados); }
 function checarViradaDia(){
@@ -1445,9 +1461,10 @@ function registrarAgua(){
   wrapGota.classList.remove('pop'); void wrapGota.offsetWidth; wrapGota.classList.add('pop');
   sincronizarNuvem('Agua', 'copo de ~'+mlCopo()+' mL');
 }
+let ultimoXixiTs=0;
 function registrarXixi(){
   checarViradaDia();
-  const ts=Date.now();
+  const ts=Date.now(); ultimoXixiTs=ts;
   cuidados.xixi.push(ts); histDia().xixi.push(ts);
   salvarCuidados(); salvarHist(); avisadoXixi=0;
   showToast('🚽 Registrado! Muito bem!');
@@ -1456,7 +1473,25 @@ function registrarXixi(){
   wrapBex.classList.remove('apertado');
   wrapBex.classList.remove('pop'); void wrapBex.offsetWidth; wrapBex.classList.add('pop');
   sincronizarNuvem('Xixi', '');
+  // logo após o xixi (bexiga esvazia), pergunta se teve escape
+  document.querySelectorAll('#xixiEscape .sinal-op').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('xixiEscapeWrap').hidden=false;
 }
+// resposta rápida do escape de xixi (por evento, com horário)
+document.querySelectorAll('#xixiEscape .sinal-op').forEach(b=>{
+  b.addEventListener('click',()=>{
+    if(b.dataset.v==='sim'){
+      if(!Array.isArray(cuidados.xixiEscape)) cuidados.xixiEscape=[];
+      cuidados.xixiEscape.push(ultimoXixiTs||Date.now());
+      salvarCuidados();
+      sincronizarNuvem('Escape de xixi', fmtHora(ultimoXixiTs||Date.now()));
+      showToast('Anotado: escape de xixi 😬');
+    }else{
+      showToast('Boa! Sem escape 🎉');
+    }
+    document.getElementById('xixiEscapeWrap').hidden=true;
+  });
+});
 // popula o seletor de meta: 100, 200, 300 ... até 3000 mL
 (function preencheMetaDia(){
   const sel=document.getElementById('cfgMetaDia');
@@ -1526,10 +1561,15 @@ function renderSinais(){
   };
   marca('snEvacuou', s.evacuou);
   marca('snTipo', s.tipoCoco);
+  marca('snEscapeCoco', s.escapeCoco);
   marca('snAcordou', s.acordou);
-  marca('snEscape', s.escape);
-  document.getElementById('snTipoWrap').style.display = s.evacuou==='sim' ? '' : 'none';
-  document.getElementById('snAtivWrap').style.display = (s.escape && s.escape!=='nao') ? '' : 'none';
+  const fezCoco = s.evacuou==='sim';
+  document.getElementById('snCocoHoraWrap').style.display = fezCoco ? '' : 'none';
+  document.getElementById('snTipoWrap').style.display = fezCoco ? '' : 'none';
+  document.getElementById('snEscapeCocoWrap').style.display = fezCoco ? '' : 'none';
+  document.getElementById('snAtivWrap').style.display = (s.escapeCoco==='sim') ? '' : 'none';
+  const hora=document.getElementById('snCocoHora');
+  if(hora.value!==(s.cocoHora||'')) hora.value=s.cocoHora||'';
   const inp=document.getElementById('snAtividade');
   if(inp.value!==s.atividade) inp.value=s.atividade||'';
 }
@@ -1539,32 +1579,42 @@ function ligaSinais(grpId, campo){
       checarViradaDia();
       const s=cuidados.sinais;
       s[campo] = s[campo]===b.dataset.v ? null : b.dataset.v;
-      if(campo==='evacuou' && s.evacuou!=='sim') s.tipoCoco=null;
-      if(campo==='escape' && (!s.escape || s.escape==='nao')) s.atividade='';
+      if(campo==='evacuou'){
+        if(s.evacuou==='sim'){ if(!s.cocoHora) s.cocoHora=fmtHora(Date.now()); }
+        else { s.tipoCoco=null; s.cocoHora=''; s.escapeCoco=null; s.atividade=''; }
+      }
+      if(campo==='escapeCoco' && s.escapeCoco!=='sim') s.atividade='';
       salvarCuidados(); renderSinais();
     });
   });
 }
 ligaSinais('snEvacuou','evacuou');
 ligaSinais('snTipo','tipoCoco');
+ligaSinais('snEscapeCoco','escapeCoco');
 ligaSinais('snAcordou','acordou');
-ligaSinais('snEscape','escape');
+document.getElementById('snCocoHora').addEventListener('change',()=>{
+  cuidados.sinais.cocoHora=document.getElementById('snCocoHora').value;
+  salvarCuidados();
+});
 document.getElementById('snAtividade').addEventListener('input',()=>{
   cuidados.sinais.atividade=document.getElementById('snAtividade').value;
   salvarCuidados();
 });
 function resumoSinais(s){
-  const ESC={nao:'não teve', xixi:'de xixi', coco:'de cocô', ambos:'de xixi e cocô'};
   const partes=[];
-  if(s.evacuou) partes.push('Evacuou: '+(s.evacuou==='sim' ? 'sim'+(s.tipoCoco?' (tipo '+s.tipoCoco+' de Bristol)':'') : 'não'));
+  if(s.evacuou) partes.push('Evacuou: '+(s.evacuou==='sim'
+    ? 'sim'+(s.cocoHora?' às '+s.cocoHora:'')+(s.tipoCoco?' (tipo '+s.tipoCoco+' de Bristol)':'')
+    : 'não'));
+  if(s.escapeCoco) partes.push('Escape de cocô: '+(s.escapeCoco==='sim'?'sim'+(s.atividade?', estava '+s.atividade:''):'não'));
+  const nEsc=(cuidados.xixiEscape||[]).length;
+  if(nEsc) partes.push('Escapes de xixi: '+nEsc);
   if(s.acordou) partes.push('Acordou '+s.acordou);
-  if(s.escape) partes.push('Escape: '+ESC[s.escape]+(s.escape!=='nao'&&s.atividade?', estava '+s.atividade:''));
   return partes.join(' · ');
 }
 document.getElementById('btnSinais').addEventListener('click',()=>{
   checarViradaDia();
   const s=cuidados.sinais;
-  if(!s.evacuou && !s.acordou && !s.escape){ showToast('Escolha pelo menos um sinal do dia 🌱'); return; }
+  if(!s.evacuou && !s.acordou && !s.escapeCoco){ showToast('Escolha pelo menos um sinal do dia 🌱'); return; }
   s.ts=Date.now();
   salvarCuidados();
   histDia().sinais={...s};
@@ -1856,7 +1906,7 @@ document.getElementById('ajEditar').addEventListener('click',abrirSetup);
 document.getElementById('ajLimpar').addEventListener('click',()=>{
   if(!confirm('Limpar as tarefas, água e xixi de HOJE de '+primeiroNome()+'?')) return;
   estadoSemana.dias[diaAtivo]=[]; salvarSemana();
-  cuidados={data:hojeId(), agua:[], xixi:[], sinais:sinaisPadrao()}; salvarCuidados();
+  cuidados={data:hojeId(), agua:[], xixi:[], xixiEscape:[], sinais:sinaisPadrao()}; salvarCuidados();
   delete hist[hojeId()]; salvarHist();
   avisadoAgua=0; avisadoXixi=0;
   aplicarDia(); renderCuidados(); atualizarLembretes();

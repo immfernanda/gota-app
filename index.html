@@ -260,6 +260,36 @@ body{
 .rel-row:last-child{border-bottom:none}
 .rel-row .r-data{font-family:'Baloo 2';font-weight:800;color:var(--verde-esc)}
 .rel-row .r-hoje{background:var(--verde-fundo);border-radius:8px;padding:1px 6px}
+/* --- relatório: lista de pacientes --- */
+.rel-kid{display:flex;align-items:center;gap:10px;background:#FBFDF7;border:2px solid var(--borda);border-radius:16px;padding:10px 12px;margin-bottom:8px;cursor:pointer}
+.rel-kid:last-child{margin-bottom:0}
+.rel-kid.on{border-color:var(--verde);background:var(--verde-fundo)}
+.rel-kid .rk-nome{flex:1;font-family:'Baloo 2';font-weight:800;font-size:14.5px;color:var(--verde-esc)}
+.rel-kid .rk-seta{color:#9cae90;font-size:12px;font-weight:700;flex:none}
+.rel-kid img.avatar-img{width:32px;height:32px;object-fit:contain;flex:none}
+.rel-kid .rk-ico{font-size:24px;flex:none;width:32px;text-align:center}
+/* --- relatório: rotina do paciente --- */
+.rel-horarios{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:13px}
+.rel-horarios span{background:var(--verde-fundo);border:1.5px solid var(--verde-claro);border-radius:20px;padding:5px 11px;font-size:12px;font-weight:600;color:#5c7351}
+.rel-per{margin-bottom:11px}
+.rel-per:last-child{margin-bottom:0}
+.rel-per h3{font-family:'Baloo 2';font-size:13.5px;color:var(--verde-esc);margin-bottom:6px}
+.rel-tar{display:flex;flex-wrap:wrap;gap:6px}
+.rel-tar span{background:#FBFDF7;border:1.5px solid var(--borda);border-radius:14px;padding:5px 10px;font-size:12.5px;font-weight:600}
+/* --- relatório: detalhe do dia --- */
+.rel-dia .rel-row{cursor:pointer}
+.rel-dia:last-child .rel-row{border-bottom:none}
+.rel-dia.aberto .rel-row{border-bottom:none}
+.rel-dia .r-seta{color:#9cae90;font-size:10px;margin-right:3px}
+.rel-det{display:none;padding:2px 6px 14px;font-size:12.5px;line-height:1.65}
+.rel-dia.aberto .rel-det{display:block;border-bottom:1.5px solid #F0F6E8}
+.rel-dia.aberto:last-child .rel-det{border-bottom:none}
+.rel-det b{display:block;font-family:'Baloo 2';font-size:12.5px;color:var(--verde-esc);margin-top:8px}
+.rel-det b:first-child{margin-top:0}
+.rel-det .t-ok{color:#4C9A41;font-weight:700}
+.rel-det .t-no{color:#C77C2E;font-weight:600}
+.rel-det .t-hs{color:#5c7351;font-weight:600}
+.rel-det .t-vazio{color:#9cae90;font-weight:500}
 
 /* ====== Ajustes / listas ====== */
 .ajuste-item{display:flex;align-items:center;gap:12px;background:var(--card);border:2px solid var(--borda);border-radius:18px;padding:14px 16px;margin-bottom:10px;cursor:pointer;box-shadow:0 4px 10px rgba(60,110,45,.05)}
@@ -656,15 +686,20 @@ body{
         <p id="relSub">Área do profissional</p>
       </div>
 
-      <div class="card-form" id="relSelCard" style="display:none">
-        <div class="campo">
-          <label for="relSel">Paciente:</label>
-          <select id="relSel"></select>
-        </div>
+      <div class="card-form" id="relSelCard">
+        <h2>🧒 Pacientes</h2>
+        <div id="relListaKids"></div>
+        <p class="nota" style="margin-top:8px">Toque em um paciente para ver a rotina e os registros dele.</p>
+      </div>
+
+      <div class="card-form">
+        <h2 id="relRotinaTit">🗓️ Rotina</h2>
+        <div id="relRotina"></div>
       </div>
 
       <div class="card-form">
         <h2>📅 Últimos dias</h2>
+        <p style="font-size:12.5px;color:var(--cinza);margin:-6px 0 10px">Toque em um dia para ver as tarefas e os horários.</p>
         <div class="rel-head">
           <span>Data</span><span>⭐ Tarefas</span><span>💧 Copos</span><span>🚽 Xixi</span><span>⏱ Interv. médio</span>
         </div>
@@ -1671,40 +1706,101 @@ function statsDia(h){
   };
 }
 function relKid(){ return kids.lista.find(c=>c.id===relKidId) || kidAtiva(); }
+function rotinaDe(id){ return lerJSON(B_ROTINA+'-'+id)||null; }
+function configDe(id){ return Object.assign({}, CONFIG_PADRAO, lerJSON(B_CONFIG+'-'+id)||{}); }
+
+// lista de pacientes clicável (topo do relatório)
+function renderRelKids(){
+  const cont=document.getElementById('relListaKids'); cont.innerHTML='';
+  kids.lista.forEach(c=>{
+    const el=document.createElement('div');
+    el.className='rel-kid'+(c.id===relKidId?' on':'');
+    el.innerHTML=`<span class="rk-ico">${avatarHTML(c.avatar)}</span>
+      <span class="rk-nome">${c.nome}</span>
+      <span class="rk-seta">${c.id===relKidId?'ver rotina ▾':'ver rotina ▸'}</span>`;
+    el.addEventListener('click',()=>{ relKidId=c.id; renderRelatorio(); });
+    cont.appendChild(el);
+  });
+}
+
+// rotina montada do paciente (tarefas por período + horários)
+function renderRelRotina(c){
+  document.getElementById('relRotinaTit').textContent='🗓️ Rotina de '+c.nome.split(' ')[0];
+  const cont=document.getElementById('relRotina'); cont.innerHTML='';
+  const r=rotinaDe(c.id), cfg=configDe(c.id);
+  const hor=document.createElement('div'); hor.className='rel-horarios';
+  hor.innerHTML=`<span>🌅 Acorda ${cfg.acordar}</span><span>🌙 Dorme ${cfg.dormir}</span>
+    <span>🚽 Xixi a cada ${fmtDur(cfg.xixiMin)}</span><span>💧 Água a cada ${fmtDur(cfg.aguaMin)}</span>`;
+  cont.appendChild(hor);
+  if(!r || !r.tarefas || !r.tarefas.length){
+    cont.insertAdjacentHTML('beforeend','<div class="hist-vazio">A rotina deste paciente ainda não foi montada. 🌱</div>');
+    return;
+  }
+  ['manha','tarde','noite'].forEach(per=>{
+    const lista=r.tarefas.filter(t=>t.periodo===per);
+    if(!lista.length) return;
+    const bloco=document.createElement('div'); bloco.className='rel-per';
+    bloco.innerHTML=`<h3>${NOMES_PERIODO[per]}</h3>
+      <div class="rel-tar">${lista.map(t=>`<span>${t.emoji} ${t.nome}</span>`).join('')}</div>`;
+    cont.appendChild(bloco);
+  });
+}
+
+// detalhe de um dia: tarefas feitas/não feitas + horários de água e xixi
+function detalheDia(h, tarefas){
+  const feitas=h.tarefas||[];
+  let html='';
+  if(tarefas.length){
+    const ok=tarefas.filter(t=>feitas.includes(t.id));
+    const no=tarefas.filter(t=>!feitas.includes(t.id));
+    html+='<b>⭐ Tarefas</b>';
+    html+= ok.length? '<div class="t-ok">✓ '+ok.map(t=>t.emoji+' '+t.nome).join(' · ')+'</div>' : '<div class="t-vazio">Nenhuma tarefa concluída neste dia.</div>';
+    if(no.length) html+='<div class="t-no">✗ '+no.map(t=>t.emoji+' '+t.nome).join(' · ')+'</div>';
+    const extras=feitas.filter(id=>!tarefas.some(t=>t.id===id)).length;
+    if(extras) html+=`<div class="t-vazio">+ ${extras} tarefa(s) de uma versão anterior da rotina.</div>`;
+  }else{
+    html+='<b>⭐ Tarefas</b><div class="t-vazio">Rotina não montada — '+feitas.length+' tarefa(s) registrada(s).</div>';
+  }
+  const agua=h.agua||[], xixi=h.xixi||[];
+  html+='<b>💧 Água</b>'+(agua.length? '<div class="t-hs">'+agua.map(fmtHora).join(' · ')+'</div>' : '<div class="t-vazio">Nenhum copo registrado.</div>');
+  html+='<b>🚽 Xixi</b>'+(xixi.length? '<div class="t-hs">'+xixi.map(fmtHora).join(' · ')+'</div>' : '<div class="t-vazio">Nenhum xixi registrado.</div>');
+  return html;
+}
+
 function renderRelatorio(){
   if(!relKidId || !kids.lista.some(c=>c.id===relKidId)) relKidId=kids.ativa;
-  // seletor de paciente (aparece se houver mais de um)
-  const selCard=document.getElementById('relSelCard'), sel=document.getElementById('relSel');
-  if(kids.lista.length>1){
-    selCard.style.display='block';
-    sel.innerHTML='';
-    kids.lista.forEach(c=>{
-      const op=document.createElement('option');
-      op.value=c.id; op.textContent=c.nome;
-      if(c.id===relKidId) op.selected=true;
-      sel.appendChild(op);
-    });
-  } else selCard.style.display='none';
+  renderRelKids();
 
   const c=relKid();
   document.getElementById('relSub').textContent='Dados de '+c.nome;
+  renderRelRotina(c);
+
+  const r=rotinaDe(c.id);
+  const tarefas=(r && r.tarefas) || [];
   const dados=histDe(c.id);
   const tab=document.getElementById('relTabela'); tab.innerHTML='';
   const dias=Object.keys(dados).sort().reverse();
   if(!dias.length){ tab.innerHTML='<div class="hist-vazio">Ainda não há registros deste paciente. 🌱</div>'; return; }
   dias.slice(0,14).forEach(d=>{
     const s=statsDia(dados[d]);
-    const row=document.createElement('div'); row.className='rel-row';
     const hoje=d===hojeId();
-    row.innerHTML=`<span class="r-data${hoje?' r-hoje':''}">${fmtDataBr(d)}${hoje?' 📍':''}</span>
-      <span>${s.tarefas}/${s.totalTarefas||'?'}</span>
-      <span>${s.copos}</span>
-      <span>${s.xixis}</span>
-      <span>${s.mediaMin!==''? fmtDur(s.mediaMin) : '···'}</span>`;
-    tab.appendChild(row);
+    const bloco=document.createElement('div'); bloco.className='rel-dia';
+    bloco.innerHTML=`<div class="rel-row">
+        <span class="r-data${hoje?' r-hoje':''}"><span class="r-seta">▸</span>${fmtDataBr(d)}${hoje?' 📍':''}</span>
+        <span>${s.tarefas}/${s.totalTarefas||'?'}</span>
+        <span>${s.copos}</span>
+        <span>${s.xixis}</span>
+        <span>${s.mediaMin!==''? fmtDur(s.mediaMin) : '···'}</span>
+      </div>
+      <div class="rel-det">${detalheDia(dados[d], tarefas)}</div>`;
+    bloco.querySelector('.rel-row').addEventListener('click',()=>{
+      const abrindo=!bloco.classList.contains('aberto');
+      bloco.classList.toggle('aberto', abrindo);
+      bloco.querySelector('.r-seta').textContent = abrindo?'▾':'▸';
+    });
+    tab.appendChild(bloco);
   });
 }
-document.getElementById('relSel').addEventListener('change',e=>{ relKidId=e.target.value; renderRelatorio(); });
 
 function baixarCSV(nomeArq, linhas){
   const blob=new Blob(["﻿"+linhas.join('\r\n')], {type:'text/csv;charset=utf-8'});

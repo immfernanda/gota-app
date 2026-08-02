@@ -75,6 +75,8 @@ body{
 .campo label{display:block;font-size:13.5px;font-weight:700;margin-bottom:6px;color:#5c7351}
 .campo input[type=text],.campo input[type=time],.campo input[type=password],.campo select{width:100%;border:2px solid var(--borda);border-radius:14px;padding:12px 14px;font-family:'Fredoka';font-size:16px;color:var(--texto);background:#FBFDF7}
 .campo input:focus,.campo select:focus{outline:none;border-color:var(--verde);background:#fff}
+.campo .dica{display:none;font-size:11.5px;color:#C77C2E;font-weight:600;margin-top:5px;padding-left:4px}
+.campo .dica.show{display:block}
 .duas-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .consent{display:flex;gap:11px;align-items:flex-start;background:var(--verde-fundo);border:2px solid var(--verde-claro);border-radius:14px;padding:13px}
 .consent input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--verde)}
@@ -323,12 +325,14 @@ body{
       </div>
       <div class="card-form">
         <div class="campo">
-          <label for="inResp">Nome do responsável</label>
-          <input type="text" id="inResp" placeholder="Ex.: Ana Paula" autocomplete="off">
+          <label for="inResp">Nome completo do responsável</label>
+          <input type="text" id="inResp" placeholder="Ex.: Ana Paula Ribeiro" autocomplete="off" autocapitalize="words">
+          <span class="dica" id="dicaResp">Digite nome e sobrenome</span>
         </div>
         <div class="campo">
-          <label for="inCrianca">Nome do paciente</label>
-          <input type="text" id="inCrianca" placeholder="Ex.: Sofia" autocomplete="off">
+          <label for="inCrianca">Nome completo do paciente</label>
+          <input type="text" id="inCrianca" placeholder="Ex.: Sofia Ribeiro Lima" autocomplete="off" autocapitalize="words">
+          <span class="dica" id="dicaCri">Digite nome e sobrenome</span>
         </div>
         <div class="consent">
           <input type="checkbox" id="inConsent">
@@ -1142,7 +1146,18 @@ function rotear(){
 // ===================== TELA 1: CADASTRO =====================
 const inResp=document.getElementById('inResp'), inCri=document.getElementById('inCrianca'),
       inCons=document.getElementById('inConsent'), btnCad=document.getElementById('btnCadastro');
-function validaCad(){ btnCad.disabled = !(inResp.value.trim() && inCri.value.trim() && inCons.checked); }
+const dicaResp=document.getElementById('dicaResp'), dicaCri=document.getElementById('dicaCri');
+function limpaNome(v){ return v.replace(/\s+/g,' ').trim(); }
+function nomeCompletoOk(v){
+  const partes = limpaNome(v).split(' ');
+  return partes.length>=2 && partes.every(p=>p.length>=2);
+}
+function validaCad(){
+  const okResp=nomeCompletoOk(inResp.value), okCri=nomeCompletoOk(inCri.value);
+  dicaResp.classList.toggle('show', !okResp && inResp.value.trim().length>0);
+  dicaCri.classList.toggle('show', !okCri && inCri.value.trim().length>0);
+  btnCad.disabled = !(okResp && okCri && inCons.checked);
+}
 [inResp,inCri].forEach(e=>e.addEventListener('input',validaCad));
 inCons.addEventListener('change',validaCad);
 
@@ -1158,7 +1173,7 @@ document.getElementById('btnCadVoltar').addEventListener('click',()=>{ renderCri
 
 btnCad.addEventListener('click',()=>{
   const id='c'+Date.now().toString(36);
-  const kid={id, nome:inCri.value.trim(), responsavel:inResp.value.trim(), avatar:'macaco', criadoEm:new Date().toISOString()};
+  const kid={id, nome:limpaNome(inCri.value), responsavel:limpaNome(inResp.value), avatar:'macaco', criadoEm:new Date().toISOString()};
   if(!kids) kids={ativa:id, lista:[]};
   kids.lista.push(kid); kids.ativa=id;
   salvarJSON(K_KIDS, kids);

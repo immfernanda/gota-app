@@ -1748,18 +1748,24 @@ function renderRelRotina(c){
 
 // detalhe de um dia: tarefas feitas/não feitas + horários de água e xixi
 function detalheDia(h, tarefas){
+  // h.tarefas guarda objetos {id, nome, ts} — ts é a hora em que foi marcada
   const feitas=h.tarefas||[];
-  let html='';
+  const feitaDe=id=>feitas.find(f=>f && f.id===id);
+  const comHora=f=>(f.ts? fmtHora(f.ts)+' ' : '');
+  let html='<b>⭐ Tarefas</b>';
   if(tarefas.length){
-    const ok=tarefas.filter(t=>feitas.includes(t.id));
-    const no=tarefas.filter(t=>!feitas.includes(t.id));
-    html+='<b>⭐ Tarefas</b>';
-    html+= ok.length? '<div class="t-ok">✓ '+ok.map(t=>t.emoji+' '+t.nome).join(' · ')+'</div>' : '<div class="t-vazio">Nenhuma tarefa concluída neste dia.</div>';
+    const ok=tarefas.filter(t=>feitaDe(t.id));
+    const no=tarefas.filter(t=>!feitaDe(t.id));
+    html+= ok.length
+      ? '<div class="t-ok">'+ok.map(t=>'✓ '+comHora(feitaDe(t.id))+t.emoji+' '+t.nome).join('<br>')+'</div>'
+      : '<div class="t-vazio">Nenhuma tarefa concluída neste dia.</div>';
     if(no.length) html+='<div class="t-no">✗ '+no.map(t=>t.emoji+' '+t.nome).join(' · ')+'</div>';
-    const extras=feitas.filter(id=>!tarefas.some(t=>t.id===id)).length;
-    if(extras) html+=`<div class="t-vazio">+ ${extras} tarefa(s) de uma versão anterior da rotina.</div>`;
+    const extras=feitas.filter(f=>f && !tarefas.some(t=>t.id===f.id));
+    if(extras.length) html+='<div class="t-hs">'+extras.map(f=>'✓ '+comHora(f)+(f.nome||f.id)+' <span class="t-vazio">(fora da rotina atual)</span>').join('<br>')+'</div>';
+  }else if(feitas.length){
+    html+='<div class="t-ok">'+feitas.map(f=>'✓ '+comHora(f)+(f.nome||f.id)).join('<br>')+'</div>';
   }else{
-    html+='<b>⭐ Tarefas</b><div class="t-vazio">Rotina não montada — '+feitas.length+' tarefa(s) registrada(s).</div>';
+    html+='<div class="t-vazio">Nenhuma tarefa registrada neste dia.</div>';
   }
   const agua=h.agua||[], xixi=h.xixi||[];
   html+='<b>💧 Água</b>'+(agua.length? '<div class="t-hs">'+agua.map(fmtHora).join(' · ')+'</div>' : '<div class="t-vazio">Nenhum copo registrado.</div>');

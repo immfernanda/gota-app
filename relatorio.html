@@ -81,6 +81,9 @@ td b{font-family:'Baloo 2';color:var(--verde-esc)}
 .sinal-row .sd{font-family:'Baloo 2';font-weight:700;color:var(--verde-esc);min-width:52px;font-size:12.5px}
 .sinal-row .st{flex:1}
 .sinal-row .escape-sim{color:var(--vermelho);font-weight:600}
+.tar-lista{display:flex;flex-wrap:wrap;gap:6px}
+.tar-chip{background:#F6FBEF;border:1.5px solid #DCEBCB;border-radius:14px;padding:3px 10px;font-size:12.5px;white-space:nowrap}
+.tar-chip b{font-family:'Baloo 2';color:var(--verde-esc);font-weight:800;margin-right:3px}
 .vazio{text-align:center;color:var(--cinza);font-size:13.5px;padding:30px 10px}
 .rodape{text-align:center;font-size:11.5px;color:#9cae90;margin-top:26px;line-height:1.5}
 .aviso-config{max-width:560px;margin:6vh auto 0;background:#FFF8E6;border:2px solid #F5DFA0;border-radius:22px;padding:26px;text-align:center;font-size:14px;line-height:1.6;color:#7B5E00}
@@ -429,6 +432,21 @@ function renderKid(k){
     html += '</div>';
   }
 
+  // rotina: o que fez e a que horas (mais recente primeiro)
+  const diasComTarefa = datas.filter(d => st.porDia[d] && st.porDia[d].tarefaLista && st.porDia[d].tarefaLista.length).reverse();
+  html += '<div class="sinais"><h3>⭐ Rotina do dia — o que fez e a que horas</h3>';
+  if(diasComTarefa.length){
+    diasComTarefa.forEach(d => {
+      const lista = st.porDia[d].tarefaLista.slice().sort((a,b) => String(a.hora).localeCompare(String(b.hora)));
+      html += '<div class="sinal-row"><span class="sd">'+fmtDataBr(d)+'</span><span class="st tar-lista">'+
+        lista.map(t => '<span class="tar-chip"><b>'+escapeHtml(t.hora||'--:--')+'</b> '+escapeHtml(t.nome)+'</span>').join('')+
+        '</span></div>';
+    });
+  } else {
+    html += '<div class="tl-vazio">Nenhuma tarefa da rotina registrada no período. 🌱</div>';
+  }
+  html += '</div>';
+
   // dia a dia (dados por dia, mais recente primeiro)
   const diasComDados = datas.filter(d => st.porDia[d] || st.sinalPorDia[d]).reverse();
   if(diasComDados.length){
@@ -523,10 +541,13 @@ function stats(regs){
   let tarefas = 0, meta = null, copoMl = null, ultimoReg = '';
   let manhaSeca = 0, manhaMolhada = 0, diasComSinalEscape = 0;
   regs.slice().sort((a,b)=>a.ts-b.ts).forEach(r => {
-    porDia[r.data] = porDia[r.data] || {agua:0, xixi:0, tarefas:0, xixiHoras:[]};
+    porDia[r.data] = porDia[r.data] || {agua:0, xixi:0, tarefas:0, xixiHoras:[], tarefaLista:[]};
     if(r.tipo==='Agua') porDia[r.data].agua++;
     if(r.tipo==='Xixi'){ porDia[r.data].xixi++; if(r.hora) porDia[r.data].xixiHoras.push(r.hora); }
-    if(r.tipo==='Tarefa'){ tarefas++; porDia[r.data].tarefas++; }
+    if(r.tipo==='Tarefa'){
+      tarefas++; porDia[r.data].tarefas++;
+      porDia[r.data].tarefaLista.push({hora:r.hora||'', nome:r.detalhe||'tarefa'});
+    }
     if(r.tipo==='SinaisDia'){
       sinais.push(r);
       sinalPorDia[r.data] = r.detalhe;

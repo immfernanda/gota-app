@@ -3,166 +3,261 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Relatório · App Gota 💧</title>
+<meta name="theme-color" content="#4FA646">
+<title>Relatório · Gota 💧</title>
+<link rel="icon" type="image/png" href="img/icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#E9F5DE; --card:#FFFDF6; --borda:#DCEECB;
-  --verde:#5BB450; --verde-esc:#3E8E38; --verde-claro:#C9E7B4; --verde-fundo:#EFF8E6;
-  --laranja:#FF9F1C; --amarelo:#FFD93D; --azul:#4FC3F7; --azul-esc:#2FA8DF; --roxo:#8E7CC3;
-  --texto:#37522E; --cinza:#8A9B7E; --rosa:#F17BA6; --vermelho:#E2606C;
+  --bg:#F2F8EC; --card:#FFFFFF; --borda:#E3EEDA; --linha:#EEF4E7;
+  --verde:#4FA646; --verde-esc:#2F7A2B; --verde-claro:#CFE8C0; --verde-fundo:#EEF7E6;
+  --agua:#2FA8DF; --agua-fundo:#E8F6FD; --agua-esc:#1C82B4;
+  --xixi:#F59A23; --xixi-fundo:#FFF4E2; --xixi-esc:#B8650A;
+  --alerta:#E2535F; --alerta-fundo:#FDECEE;
+  --roxo:#8E7CC3; --roxo-fundo:#F1EDFA;
+  --amarelo:#FFD23F;
+  --texto:#2E4729; --suave:#6F8566; --cinza:#93A489;
+  --sombra:0 1px 2px rgba(46,71,41,.05),0 8px 24px rgba(46,71,41,.07);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--texto);font-family:'Fredoka',sans-serif;min-height:100vh}
-.wrap{max-width:960px;margin:0 auto;padding:22px 16px 60px}
-h1,h2,h3{font-family:'Baloo 2'}
-.topo{text-align:center;margin-bottom:18px}
-.topo h1{font-size:28px;color:var(--verde-esc)}
-.topo p{color:var(--cinza);font-size:14px}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--texto);font-family:'Fredoka',system-ui,sans-serif;min-height:100vh;font-size:14.5px;line-height:1.45}
+h1,h2,h3,.num{font-family:'Baloo 2',sans-serif}
+button,select,input{font-family:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px 60px}
 
-/* portão de senha */
-.gate{max-width:420px;margin:8vh auto 0;background:var(--card);border:2px solid var(--borda);border-radius:24px;padding:30px 26px;text-align:center;box-shadow:0 10px 30px rgba(62,142,56,.10)}
-.gate .emoji{font-size:52px;display:block;margin-bottom:10px}
-.gate h2{font-size:22px;color:var(--verde-esc);margin-bottom:4px}
-.gate p{font-size:13.5px;color:var(--cinza);margin-bottom:16px}
-.gate input{width:100%;border:2px solid var(--borda);border-radius:16px;padding:13px;font-family:'Baloo 2';font-size:20px;font-weight:700;text-align:center;letter-spacing:6px;color:var(--texto);outline:none}
-.gate input:focus{border-color:var(--verde)}
-.gate button{width:100%;margin-top:12px;border:none;border-radius:30px;padding:14px;font-family:'Baloo 2';font-size:16px;font-weight:800;color:#fff;background:linear-gradient(135deg,#6FC162,#4C9A41);cursor:pointer;box-shadow:0 6px 14px rgba(76,154,65,.35)}
-.gate .erro{color:var(--vermelho);font-size:13px;margin-top:10px;font-weight:600;min-height:18px}
+/* ---------- cabeçalho ---------- */
+.hero{background:linear-gradient(135deg,#63BD57 0%,#3F9A3B 60%,#2F8A45 100%);color:#fff;padding:22px 16px 62px;position:relative;overflow:hidden}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.09)}
+.hero::before{width:260px;height:260px;right:-70px;top:-110px}
+.hero::after{width:150px;height:150px;left:-50px;bottom:-70px}
+.hero-in{max-width:1008px;margin:0 auto;display:flex;align-items:center;gap:14px;position:relative;z-index:1}
+.hero img{width:54px;height:54px;border-radius:16px;box-shadow:0 6px 16px rgba(0,0,0,.18);flex:none;background:#fff}
+.hero h1{font-size:25px;line-height:1.1;font-weight:800}
+.hero p{font-size:13.5px;opacity:.92;margin-top:2px}
+.hero-acoes{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.bt{border:none;border-radius:999px;padding:9px 15px;font-size:13.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:transform .1s,background .15s,box-shadow .15s;white-space:nowrap}
+.bt:active{transform:scale(.97)}
+.bt.vidro{background:rgba(255,255,255,.18);color:#fff;border:1.5px solid rgba(255,255,255,.35)}
+.bt.vidro:hover{background:rgba(255,255,255,.28)}
+.bt.claro{background:#fff;color:var(--verde-esc);border:1.5px solid var(--borda)}
+.bt.claro:hover{border-color:var(--verde)}
+.bt.perigo{background:#fff;color:var(--alerta);border:1.5px solid #F4C9CD}
+.bt.perigo:hover{background:var(--alerta-fundo)}
 
-/* controles */
-.controles{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
-.controles select{border:2px solid var(--borda);background:#fff;border-radius:30px;padding:9px 16px;font-family:'Fredoka';font-size:13.5px;font-weight:600;color:var(--texto);cursor:pointer}
-.controles button{border:2px solid var(--borda);background:#fff;border-radius:30px;padding:9px 16px;font-family:'Fredoka';font-size:13.5px;font-weight:600;color:var(--texto);cursor:pointer}
-.controles button:hover{border-color:var(--verde)}
+/* ---------- portão de senha ---------- */
+.gate{max-width:400px;margin:-38px auto 0;background:var(--card);border-radius:26px;padding:30px 26px;text-align:center;box-shadow:var(--sombra);position:relative;z-index:2}
+.gate .cadeado{width:64px;height:64px;border-radius:20px;background:var(--verde-fundo);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 12px}
+.gate h2{font-size:22px;color:var(--verde-esc)}
+.gate p{font-size:13.5px;color:var(--suave);margin:2px 0 18px}
+.gate input{width:100%;border:2px solid var(--borda);border-radius:16px;padding:13px;font-family:'Baloo 2';font-size:22px;font-weight:700;text-align:center;letter-spacing:8px;color:var(--texto);outline:none;background:#FBFDF8}
+.gate input:focus{border-color:var(--verde);background:#fff}
+.gate button{width:100%;margin-top:12px;border:none;border-radius:999px;padding:14px;font-family:'Baloo 2';font-size:16.5px;font-weight:800;color:#fff;background:linear-gradient(135deg,#63BD57,#3F9A3B);cursor:pointer;box-shadow:0 6px 16px rgba(63,154,59,.35)}
+.gate .erro{color:var(--alerta);font-size:13px;margin-top:10px;font-weight:600;min-height:18px}
+.aviso-config{max-width:560px;margin:-38px auto 0;background:#FFF8E6;border:2px solid #F5DFA0;border-radius:22px;padding:26px;text-align:center;line-height:1.6;color:#7B5E00;position:relative;z-index:2}
+.aviso-config code{background:#fff;padding:2px 7px;border-radius:8px;font-size:12.5px}
 
-/* visão geral */
-.geral{background:var(--card);border:2px solid var(--borda);border-radius:22px;padding:16px;margin-bottom:20px;overflow-x:auto}
-.geral h2{font-size:18px;color:var(--verde-esc);margin-bottom:10px}
-table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
-th{font-family:'Baloo 2';font-weight:700;color:var(--cinza);text-align:left;font-size:11.5px;text-transform:uppercase;padding:7px 8px;border-bottom:2px solid var(--borda)}
-td{padding:9px 8px;border-bottom:1.5px solid #F0F6E8;font-weight:500}
-tr:last-child td{border-bottom:none}
-td b{font-family:'Baloo 2';color:var(--verde-esc)}
-.tag{display:inline-block;border-radius:20px;padding:2px 10px;font-size:11.5px;font-weight:700}
-.tag.ok{background:var(--verde-fundo);color:var(--verde-esc)}
-.tag.atencao{background:#FDEEEE;color:var(--vermelho)}
-
-/* card por criança */
-.kid{background:var(--card);border:2px solid var(--borda);border-radius:22px;padding:18px;margin-bottom:18px;box-shadow:0 6px 18px rgba(62,142,56,.06)}
-.kid-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-.kid-head h2{font-size:21px;color:var(--verde-esc)}
-.kid-head span{font-size:12.5px;color:var(--cinza)}
-.pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.pill{flex:1;min-width:100px;background:var(--verde-fundo);border:2px solid var(--verde-claro);border-radius:16px;padding:10px 8px;text-align:center}
-.pill .v{font-family:'Baloo 2';font-size:19px;font-weight:800;color:var(--verde-esc)}
-.pill .l{font-size:10.5px;color:var(--cinza);font-weight:600;text-transform:uppercase}
-.pill.agua{background:#EAF7FD;border-color:#BFE4F7}.pill.agua .v{color:var(--azul-esc)}
-.pill.xixi{background:#FFF4E3;border-color:#FFDFA8}.pill.xixi .v{color:var(--laranja)}
-.pill.escape{background:#FDF0F4;border-color:#F7CBDD}.pill.escape .v{color:var(--rosa)}
-
-.grafico{margin:6px 0 4px}
-.grafico h3{font-size:13.5px;color:var(--cinza);font-weight:700;margin-bottom:6px}
-.barras{display:flex;gap:5px;align-items:flex-end;height:78px}
-.dia{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;min-width:0}
-.dia .b{width:100%;max-width:34px;border-radius:6px 6px 3px 3px;min-height:3px;position:relative}
-.dia .b.agua{background:linear-gradient(180deg,#8ED4F5,#4FC3F7)}
-.dia .b.agua.meta{background:linear-gradient(180deg,#FFE97F,#FFD93D)}
-.dia .b.xixi{background:linear-gradient(180deg,#FFCF87,#FF9F1C)}
-.dia .n{font-family:'Baloo 2';font-size:11px;font-weight:700;color:var(--texto)}
-.dia .d{font-size:9.5px;color:var(--cinza);font-weight:600;white-space:nowrap}
-.legenda-g{font-size:11px;color:var(--cinza);margin-top:4px}
-
-.sinais{margin-top:14px}
-.sinais h3{font-size:13.5px;color:var(--cinza);font-weight:700;margin-bottom:6px}
-.sinal-row{display:flex;gap:10px;padding:7px 2px;border-top:1.5px solid #F0F6E8;font-size:13px;align-items:baseline}
-.sinal-row:first-of-type{border-top:none}
-.sinal-row .sd{font-family:'Baloo 2';font-weight:700;color:var(--verde-esc);min-width:52px;font-size:12.5px}
-.sinal-row .st{flex:1}
-.sinal-row .escape-sim{color:var(--vermelho);font-weight:600}
-.tar-lista{display:flex;flex-wrap:wrap;gap:6px}
-.tar-chip{background:#F6FBEF;border:1.5px solid #DCEBCB;border-radius:14px;padding:3px 10px;font-size:12.5px;white-space:nowrap}
-.tar-chip b{font-family:'Baloo 2';color:var(--verde-esc);font-weight:800;margin-right:3px}
-.vazio{text-align:center;color:var(--cinza);font-size:13.5px;padding:30px 10px}
-.rodape{text-align:center;font-size:11.5px;color:#9cae90;margin-top:26px;line-height:1.5}
-.aviso-config{max-width:560px;margin:6vh auto 0;background:#FFF8E6;border:2px solid #F5DFA0;border-radius:22px;padding:26px;text-align:center;font-size:14px;line-height:1.6;color:#7B5E00}
-.aviso-config code{background:#FFF;padding:2px 7px;border-radius:8px;font-size:12.5px}
-.carregando{text-align:center;padding:60px 0;color:var(--cinza);font-size:15px}
-
-/* abas de criança + Todas */
-.abas{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
-.aba{border:2px solid var(--borda);background:#fff;border-radius:30px;padding:8px 16px;font-family:'Baloo 2';font-weight:700;font-size:13.5px;color:var(--cinza);cursor:pointer;transition:all .15s}
+/* ---------- barra de filtros ---------- */
+.barra{background:var(--card);border-radius:22px;box-shadow:var(--sombra);padding:12px;margin-top:-40px;position:relative;z-index:2;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.periodo{display:flex;background:var(--verde-fundo);border-radius:999px;padding:4px;gap:2px;flex:none}
+.periodo button{border:none;background:none;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;color:var(--suave);cursor:pointer}
+.periodo button.on{background:#fff;color:var(--verde-esc);box-shadow:0 2px 6px rgba(46,71,41,.12)}
+.abas{display:flex;gap:8px;flex:1;min-width:0;overflow-x:auto;padding:2px;scrollbar-width:thin}
+.aba{border:1.5px solid var(--borda);background:#fff;border-radius:999px;padding:5px 14px 5px 6px;font-weight:600;font-size:13.5px;color:var(--suave);cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;flex:none;transition:all .15s}
 .aba:hover{border-color:var(--verde-claro)}
-.aba.on{background:var(--verde);border-color:var(--verde);color:#fff;box-shadow:0 4px 10px rgba(76,154,65,.3)}
-.ajuda{font-size:12.5px;color:var(--cinza);margin-bottom:12px}
+.aba.on{background:var(--verde);border-color:var(--verde);color:#fff;box-shadow:0 4px 12px rgba(79,166,70,.32)}
+.ini{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:'Baloo 2';font-weight:800;font-size:12px;color:#fff;flex:none}
+.aba.on .ini{background:rgba(255,255,255,.28)!important}
 
-/* tendência / melhora */
-.trend{display:inline-block;border-radius:20px;padding:2px 10px;font-family:'Baloo 2';font-size:12px;font-weight:700;vertical-align:middle}
-.trend.up{background:var(--verde-fundo);color:var(--verde-esc)}
-.trend.down{background:#FDEEEE;color:var(--vermelho)}
-.trend.flat{background:#F0F0EA;color:var(--cinza)}
-.mini-meta{font-size:12px;color:var(--cinza);font-weight:600}
+/* ---------- cartões / seções ---------- */
+.sec{background:var(--card);border-radius:22px;box-shadow:var(--sombra);padding:20px;margin-top:16px}
+.sec-tit{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.sec-tit .ico{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex:none;background:var(--verde-fundo)}
+.sec-tit .ico.a{background:var(--agua-fundo)} .sec-tit .ico.x{background:var(--xixi-fundo)} .sec-tit .ico.r{background:var(--roxo-fundo)} .sec-tit .ico.v{background:var(--alerta-fundo)}
+.sec-tit h2{font-size:18px;color:var(--texto);line-height:1.2}
+.sec-sub{font-size:13px;color:var(--suave);margin:2px 0 14px}
+.duas{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.duas .sec{margin-top:16px}
+.vazio{text-align:center;color:var(--suave);padding:34px 10px}
+.carregando{text-align:center;padding:60px 0;color:var(--suave);font-size:15px}
+.mudo{color:var(--cinza);font-size:13px;padding:6px 0}
 
-/* linha por criança na home */
-.linha-kid{border:2px solid var(--borda);border-radius:16px;padding:12px 14px;margin-bottom:10px;cursor:pointer;transition:border-color .15s,transform .1s}
-.linha-kid:hover{border-color:var(--verde-claro)}
-.linha-kid:active{transform:scale(.995)}
-.linha-topo{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-.linha-topo b{font-family:'Baloo 2';color:var(--verde-esc);font-size:15px}
-.linha-media{font-size:11.5px;color:var(--cinza);margin-left:auto;font-weight:600}
-.barras.mini{height:46px}
-.barras.mini .dia .n,.barras.mini .dia .d{display:none}
+/* ---------- cabeçalho do paciente ---------- */
+.pac{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.pac .ini{width:56px;height:56px;font-size:21px}
+.pac h2{font-size:24px;line-height:1.1}
+.pac .resp{font-size:13.5px;color:var(--suave)}
+.pac .acoes{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
 
-/* apagar + tabela dia a dia */
-.btn-apagar{margin-left:auto;border:2px solid #F3C6C6;background:#fff;color:var(--vermelho);border-radius:30px;padding:6px 13px;font-family:'Fredoka';font-size:12.5px;font-weight:600;cursor:pointer}
-.btn-apagar:hover{background:#FDEEEE}
-.dia-tabela{margin-top:16px;overflow-x:auto}
-.dia-tabela h3{font-size:13.5px;color:var(--cinza);font-weight:700;margin-bottom:8px}
-.dia-tabela table{min-width:420px}
-.celula-sinais{font-size:12px;color:var(--texto);max-width:300px}
-/* Linha do tempo dos xixis */
-.tl-horas{display:flex;justify-content:space-between;font-size:10px;color:var(--cinza);font-weight:600;margin:2px 0 6px;padding:0 4px}
-.tl-linha{display:flex;align-items:center;gap:8px;margin-bottom:9px}
-.tl-data{font-family:'Baloo 2';font-weight:700;color:var(--verde-esc);font-size:12px;min-width:44px}
-.tl-track{position:relative;flex:1;height:16px;background:linear-gradient(90deg,#EAF7FD,#F4FBFF);border:1.5px solid #DCEECB;border-radius:20px}
-.tl-dot{position:absolute;top:50%;width:13px;height:13px;margin-left:-6.5px;transform:translateY(-50%);background:radial-gradient(circle at 35% 30%,#8ED4F5,#2FA8DF);border:2px solid #fff;border-radius:50%;box-shadow:0 1px 3px rgba(47,168,223,.5);cursor:default}
-.tl-hora{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);font-size:9px;color:#2FA8DF;font-weight:700;white-space:nowrap;opacity:0;transition:opacity .12s}
-.tl-dot:hover .tl-hora{opacity:1}
-.tl-vazio{font-size:12.5px;color:var(--cinza);padding:6px 0}
-/* Gráficos de pizza (rosquinha) */
-.donuts{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:4px}
-.donut-box{text-align:center;flex:1;min-width:150px}
-.donut-cap{font-family:'Baloo 2';font-weight:700;color:var(--verde-esc);font-size:13px;margin-bottom:6px}
-.donut{width:104px;height:104px;border-radius:50%;margin:0 auto;position:relative}
-.donut-hole{position:absolute;inset:24px;background:var(--card);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2';font-weight:800;font-size:15px;color:var(--texto)}
-.dn-legenda{margin-top:8px;display:flex;flex-direction:column;gap:3px;align-items:center}
-.dn-item{font-size:12px;color:var(--texto);font-weight:500}
-.dn-item i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+/* ---------- indicadores ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px}
+.kpi{background:var(--card);border-radius:20px;box-shadow:var(--sombra);padding:14px 16px;position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--verde)}
+.kpi.a::before{background:var(--agua)} .kpi.x::before{background:var(--xixi)} .kpi.v::before{background:var(--alerta)} .kpi.r::before{background:var(--roxo)}
+.kpi .l{font-size:11.5px;font-weight:600;color:var(--suave);text-transform:uppercase;letter-spacing:.4px}
+.kpi .v{font-family:'Baloo 2';font-size:27px;font-weight:800;line-height:1.15;margin-top:2px}
+.kpi .v small{font-size:14px;font-weight:700;color:var(--suave)}
+.kpi.a .v{color:var(--agua-esc)} .kpi.x .v{color:var(--xixi-esc)} .kpi.v .v{color:var(--alerta)} .kpi.r .v{color:#6B58A8} .kpi .v{color:var(--verde-esc)}
+.kpi .s{font-size:12px;color:var(--suave);margin-top:1px}
 
+/* ---------- selos ---------- */
+.selo{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;white-space:nowrap}
+.selo.ok{background:var(--verde-fundo);color:var(--verde-esc)}
+.selo.ruim{background:var(--alerta-fundo);color:var(--alerta)}
+.selo.neutro{background:#F0F2EC;color:var(--suave)}
+.selo.x{background:var(--xixi-fundo);color:var(--xixi-esc)}
+.selo.a{background:var(--agua-fundo);color:var(--agua-esc)}
+
+/* ---------- diário de xixi (horário de cada xixi) ---------- */
+.eixo{position:relative;height:16px;margin-left:92px;font-size:10.5px;color:var(--cinza);font-weight:600}
+.eixo span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.xd{padding:12px 0;border-top:1.5px solid var(--linha)}
+.xd:first-of-type{border-top:none}
+.xd-lin{display:flex;align-items:center;gap:12px}
+.xd-data{width:80px;flex:none;line-height:1.15}
+.xd-data b{font-family:'Baloo 2';font-size:16px;font-weight:800;color:var(--texto);display:block}
+.xd-data span{font-size:11.5px;color:var(--suave);text-transform:capitalize}
+.trilha{position:relative;flex:1;height:38px;background:linear-gradient(180deg,var(--agua-fundo) 0 42%,var(--xixi-fundo) 42% 100%);border-radius:12px;overflow:hidden}
+.trilha i.grade{position:absolute;top:0;bottom:0;width:1px;background:rgba(46,71,41,.09)}
+.trilha .ag{position:absolute;top:4px;width:8px;height:8px;margin-left:-4px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--agua)}
+.trilha .xx{position:absolute;bottom:5px;width:13px;height:13px;margin-left:-6.5px;border-radius:50%;background:var(--xixi);border:2px solid #fff;box-shadow:0 1px 3px rgba(184,101,10,.45)}
+.trilha .xx.esc{background:var(--alerta);box-shadow:0 0 0 2px rgba(226,83,95,.3)}
+.horas{display:flex;flex-wrap:wrap;align-items:center;gap:4px 3px;margin:9px 0 0 92px}
+.hx{font-family:'Baloo 2';font-weight:800;font-size:14px;background:var(--xixi-fundo);color:var(--xixi-esc);border-radius:9px;padding:1px 9px;white-space:nowrap}
+.hx.esc{background:var(--alerta-fundo);color:var(--alerta);box-shadow:inset 0 0 0 1.5px #F4C9CD}
+.gap{font-size:11px;color:var(--cinza);font-weight:600;white-space:nowrap;padding:0 2px}
+.gap::before{content:"→ "} .gap::after{content:" →"}
+.gap.maior{color:var(--xixi-esc)}
+.xd-res{margin:7px 0 0 92px;display:flex;gap:6px;flex-wrap:wrap}
+.legenda{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--suave);margin-top:12px;padding-top:12px;border-top:1.5px solid var(--linha)}
+.legenda span{display:inline-flex;align-items:center;gap:6px}
+.legenda i{width:11px;height:11px;border-radius:50%;display:inline-block}
+
+/* ---------- gráficos de barras ---------- */
+.graf-topo{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.barras{display:flex;gap:4px;align-items:flex-end;height:150px;position:relative;padding-top:18px}
+.barras .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;min-width:0;height:100%}
+.barras .b{width:100%;max-width:30px;border-radius:7px 7px 3px 3px;min-height:3px;background:var(--agua)}
+.barras .b.zero{background:var(--linha)}
+.barras.x .b{background:var(--xixi)}
+.barras .b.meta{background:linear-gradient(180deg,#FFE27A,var(--amarelo))}
+.barras .n{font-family:'Baloo 2';font-size:11.5px;font-weight:700;color:var(--texto);line-height:1}
+.barras .d{font-size:10px;color:var(--cinza);font-weight:600;white-space:nowrap;height:13px}
+.barras .linha-meta{position:absolute;left:0;right:0;border-top:2px dashed #E9B800;pointer-events:none}
+.barras .linha-meta span{position:absolute;right:0;top:-16px;font-size:10.5px;font-weight:700;color:#A88400;background:#fff;padding:0 4px}
+.barras.mini{height:54px;padding-top:0}
+.barras.mini .n,.barras.mini .d,.barras.mini .linha-meta span{display:none}
+.graf-nota{font-size:12px;color:var(--suave);margin-top:8px}
+
+/* ---------- tiras (manhãs / intestino) ---------- */
+.tira{display:flex;gap:4px;flex-wrap:wrap}
+.tira .q{width:38px;border-radius:11px;padding:5px 0 4px;text-align:center;background:#F3F5EF;color:var(--cinza);font-size:10px;font-weight:600;line-height:1.2}
+.tira .q b{display:block;font-size:16px;line-height:1.2}
+.tira .q.seca{background:var(--verde-fundo);color:var(--verde-esc)}
+.tira .q.molhada{background:var(--agua-fundo);color:var(--agua-esc)}
+.resumo-linha{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+
+/* ---------- tabelas ---------- */
+.tab-wrap{overflow-x:auto;margin:0 -6px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{font-weight:600;color:var(--suave);text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;padding:8px 10px;border-bottom:2px solid var(--borda);white-space:nowrap}
+td{padding:10px;border-bottom:1.5px solid var(--linha);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.data b{font-family:'Baloo 2';font-weight:800;font-size:14.5px}
+td.data span{display:block;font-size:11px;color:var(--suave);text-transform:capitalize}
+td.horas-cel{font-family:'Baloo 2';font-weight:700;color:var(--xixi-esc);min-width:150px}
+td.horas-cel .e{color:var(--alerta);text-decoration:underline wavy #F4A9AF}
+.bristol-n{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#8A9A3C;color:#fff;font-family:'Baloo 2';font-weight:800;font-size:13px}
+
+/* ---------- rotina ---------- */
+.rot{display:flex;gap:12px;padding:9px 0;border-top:1.5px solid var(--linha);align-items:baseline}
+.rot:first-of-type{border-top:none}
+.rot .rd{font-family:'Baloo 2';font-weight:800;min-width:50px}
+.rot .rl{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:#F7FAF3;border:1.5px solid var(--borda);border-radius:999px;padding:2px 11px;font-size:12.5px;white-space:nowrap}
+.chip b{font-family:'Baloo 2';color:var(--verde-esc);font-weight:800;margin-right:4px}
+
+/* ---------- visão geral (todas) ---------- */
+.grade-pac{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-top:16px}
+.cpac{background:var(--card);border-radius:22px;box-shadow:var(--sombra);padding:18px;cursor:pointer;transition:transform .12s,box-shadow .15s;border:2px solid transparent}
+.cpac:hover{transform:translateY(-2px);border-color:var(--verde-claro)}
+.cpac-topo{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.cpac-topo .ini{width:44px;height:44px;font-size:16px}
+.cpac-topo h3{font-size:17px;line-height:1.15}
+.cpac-topo small{font-size:12px;color:var(--suave)}
+.cpac-topo .seta{margin-left:auto;color:var(--cinza);font-size:20px}
+.mini-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.mk{border-radius:14px;padding:8px 6px;text-align:center;background:var(--verde-fundo)}
+.mk.a{background:var(--agua-fundo)} .mk.x{background:var(--xixi-fundo)} .mk.v{background:var(--alerta-fundo)}
+.mk b{display:block;font-family:'Baloo 2';font-size:19px;font-weight:800;line-height:1.1;color:var(--verde-esc)}
+.mk.a b{color:var(--agua-esc)} .mk.x b{color:var(--xixi-esc)} .mk.v b{color:var(--alerta)}
+.mk span{font-size:10.5px;color:var(--suave);font-weight:600;text-transform:uppercase}
+.cpac .hoje-x{font-size:12.5px;color:var(--suave);margin-bottom:10px}
+.cpac .hoje-x b{font-family:'Baloo 2';color:var(--xixi-esc);font-weight:800}
+.cpac-rod{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+
+.rodape{text-align:center;font-size:12px;color:var(--cinza);margin-top:28px;line-height:1.6}
+
+@media (max-width:760px){
+  .duas{grid-template-columns:1fr;gap:0}
+  .hero{padding-bottom:58px}
+  .hero h1{font-size:21px}
+  .hero-acoes .txt{display:none}
+  .bt.vidro{padding:9px 12px}
+  .barra{padding:10px}
+  .periodo{width:100%}.periodo button{flex:1;padding:7px 4px}
+  .sec{padding:16px 14px;border-radius:20px}
+  .eixo,.horas,.xd-res{margin-left:0}
+  .eixo{margin-left:62px}
+  .xd-data{width:50px}.xd-data b{font-size:14.5px}
+  .xd-lin{gap:12px}
+  .pac h2{font-size:21px}
+  .pac .acoes{margin-left:0;width:100%}
+  .kpis{grid-template-columns:1fr 1fr;gap:10px}
+  .kpi .v{font-size:23px}
+  .barras{height:130px;gap:3px}
+}
 @media print{
-  .abas,.btn-apagar{display:none!important}
-  body{background:#fff}
-  .controles,.gate{display:none!important}
-  .kid,.geral{box-shadow:none;break-inside:avoid}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff;font-size:12px}
+  .hero{background:none;color:var(--texto);padding:0 0 10px;border-bottom:2px solid var(--verde);margin-bottom:10px}
+  .hero::before,.hero::after,.hero-acoes,.barra,.gate,.pac .acoes{display:none!important}
+  .hero p{color:var(--suave)}
+  .wrap{max-width:none;padding:0}
+  .sec,.kpi,.cpac{box-shadow:none;border:1px solid var(--borda);break-inside:avoid}
+  .sec{margin-top:10px;padding:14px}
+  .xd{break-inside:avoid}
+  .tab-wrap{overflow:visible}
 }
 </style>
 </head>
 <body>
 
-<div class="wrap">
-  <div class="topo">
-    <h1>💧 Relatório do App Gota</h1>
-    <p id="subTopo">Acompanhamento das crianças</p>
+<header class="hero">
+  <div class="hero-in">
+    <img src="img/icons/icon-192.png" alt="">
+    <div>
+      <h1>Relatório Gota</h1>
+      <p id="subTopo">Área do profissional</p>
+    </div>
+    <div class="hero-acoes" id="heroAcoes" style="display:none">
+      <button class="bt vidro" id="btnVoltar" style="display:none">← <span class="txt">Voltar ao app</span></button>
+      <button class="bt vidro" id="btnAtualizar">🔄 <span class="txt">Atualizar</span></button>
+      <button class="bt vidro" onclick="window.print()">🖨️ <span class="txt">Imprimir / PDF</span></button>
+    </div>
   </div>
+</header>
 
+<div class="wrap">
   <!-- portão de senha -->
   <div class="gate" id="gate">
-    <span class="emoji">🔐</span>
+    <div class="cadeado">🔐</div>
     <h2>Área do profissional</h2>
-    <p>Digite sua senha para ver o relatório de todas as crianças</p>
-    <input type="password" id="pinInput" maxlength="8" inputmode="numeric" placeholder="····">
-    <button id="btnEntrar">Ver relatório 💚</button>
+    <p>Digite sua senha para ver o relatório dos pacientes</p>
+    <input type="password" id="pinInput" maxlength="8" inputmode="numeric" placeholder="····" autocomplete="off">
+    <button id="btnEntrar">Ver relatório</button>
     <div class="erro" id="gateErro"></div>
   </div>
 
@@ -175,18 +270,16 @@ td b{font-family:'Baloo 2';color:var(--verde-esc)}
   </div>
 
   <div id="painel" style="display:none">
-    <div class="controles">
-      <select id="selDias">
-        <option value="7">Últimos 7 dias</option>
-        <option value="14" selected>Últimos 14 dias</option>
-        <option value="30">Últimos 30 dias</option>
-      </select>
-      <button id="btnAtualizar">🔄 Atualizar</button>
-      <button onclick="window.print()">🖨️ Imprimir / PDF</button>
+    <div class="barra">
+      <div class="periodo" id="periodo">
+        <button data-d="7">7 dias</button>
+        <button data-d="14" class="on">14 dias</button>
+        <button data-d="30">30 dias</button>
+      </div>
+      <div class="abas" id="abas"></div>
     </div>
-    <div class="abas" id="abas"></div>
     <div id="conteudo"></div>
-    <p class="rodape">Relatório gerado pelo App Gota 💧 · Os dados chegam automaticamente conforme as famílias usam o app.<br><span id="geradoEm"></span></p>
+    <p class="rodape">Relatório gerado pelo app Gota 💧 · Os dados chegam automaticamente conforme as famílias usam o app.<br><span id="geradoEm"></span></p>
   </div>
 </div>
 
@@ -198,42 +291,64 @@ td b{font-family:'Baloo 2';color:var(--verde-esc)}
 const PLANILHA_URL = 'https://script.google.com/macros/s/AKfycbyg5kJ0k866-Ufsei9BvaH4I-SGjk604j0OERqkAc7T_0e_LxvcnUQeieT0ndCkPz1I/exec';
 
 let PIN_OK = '';
+let DIAS = 14;
+let DADOS = null;   // { nomes:[{key,nome,resp,regs,st}] }
+let ABA = 'todas';  // 'todas' ou a chave de um paciente
 
+// ---------- helpers ----------
+const p2 = n => String(n).padStart(2,'0');
+const idData = d => d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());
 // Normaliza data para "AAAA-MM-DD" e hora para "HH:MM", aceitando tanto o
 // formato certo quanto strings de Date antigas (ex.: "Fri Jul 03 2026 ...").
 const normData = v => {
   const s = String(v);
   if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10);
   const d = new Date(s);
-  if(isNaN(d)) return s;
-  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  return isNaN(d) ? s : idData(d);
 };
 const normHora = v => {
   const s = String(v);
   const m = s.match(/(\d{1,2}):(\d{2})/);
-  if(m) return m[1].padStart(2,'0')+':'+m[2];
+  if(m) return p2(m[1])+':'+m[2];
   const d = new Date(s);
-  if(isNaN(d)) return s;
-  return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+  return isNaN(d) ? '' : p2(d.getHours())+':'+p2(d.getMinutes());
 };
-const fmtDataBr = d => { const [a,m,dia]=normData(d).split('-'); return dia+'/'+m; };
-const fmtMl = ml => ml>=1000 ? (ml/1000).toLocaleString('pt-BR',{maximumFractionDigits:1})+' L' : ml+' mL';
-const hojeId = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
-const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const minutos = hhmm => { const [h,m] = String(hhmm).split(':').map(Number); return (h||0)*60+(m||0); };
+const fmtDataBr = d => { const [,m,dia] = d.split('-'); return dia+'/'+m; };
+const diaSemana = d => { const [a,m,dia] = d.split('-').map(Number); return new Date(a,m-1,dia).toLocaleDateString('pt-BR',{weekday:'short'}).replace('.',''); };
+const fmtMl = ml => ml>=1000 ? (ml/1000).toLocaleString('pt-BR',{maximumFractionDigits:1})+' L' : Math.round(ml)+' mL';
+const fmtDur = min => { min=Math.round(min); if(min<60) return min+' min'; const h=Math.floor(min/60), m=min%60; return m ? h+'h'+p2(m) : h+'h'; };
+const fmt1 = n => n.toFixed(1).replace('.',',');
+const plural = (n,s,p) => n+' '+(n===1?s:(p||s+'s'));
+const hojeId = () => idData(new Date());
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const CORES = ['#4FA646','#2FA8DF','#F59A23','#8E7CC3','#E2738F','#2EB5A6','#C98A2B'];
+const corDe = s => { let h=0; for(const c of s) h=(h*31+c.charCodeAt(0))>>>0; return CORES[h%CORES.length]; };
+const iniciais = nome => { const p=nome.trim().split(/\s+/); return ((p[0]||'?')[0]+(p.length>1?p[p.length-1][0]:'')).toUpperCase(); };
+const bolinha = nome => '<span class="ini" style="background:'+corDe(nome)+'">'+esc(iniciais(nome))+'</span>';
+function listaDatas(n){
+  const a=[], base=new Date();
+  for(let i=n-1;i>=0;i--){ const d=new Date(base); d.setDate(base.getDate()-i); a.push(idData(d)); }
+  return a;
+}
 
+// ---------- entrada ----------
 document.getElementById('btnEntrar').addEventListener('click', entrar);
 document.getElementById('pinInput').addEventListener('keydown', e => { if(e.key==='Enter') entrar(); });
 document.getElementById('btnAtualizar').addEventListener('click', () => carregar());
-document.getElementById('selDias').addEventListener('change', () => carregar());
+document.querySelectorAll('#periodo button').forEach(b => b.addEventListener('click', () => {
+  DIAS = parseInt(b.dataset.d,10);
+  document.querySelectorAll('#periodo button').forEach(x => x.classList.toggle('on', x===b));
+  carregar();
+}));
 
 // Aberto pelo app (relatorio.html?pin=XXXX): entra sozinho e mostra "voltar"
 (function(){
   const pin = new URLSearchParams(location.search).get('pin');
   if(!pin) return;
-  const back = document.createElement('button');
-  back.textContent = '← Voltar ao app';
+  const back = document.getElementById('btnVoltar');
+  back.style.display = '';
   back.addEventListener('click', () => location.href = 'index.html');
-  document.querySelector('.controles').prepend(back);
   document.getElementById('pinInput').value = pin;
   entrar();
 })();
@@ -251,48 +366,37 @@ function entrar(){
 }
 
 async function carregar(primeira){
-  const dias = document.getElementById('selDias').value;
   const alvo = primeira ? document.getElementById('gateErro') : null;
   if(alvo) alvo.textContent = 'Carregando…';
   else document.getElementById('conteudo').innerHTML = '<div class="carregando">Carregando os dados… 💧</div>';
   try{
-    const resp = await fetch(PLANILHA_URL+'?pin='+encodeURIComponent(PIN_OK)+'&dias='+dias);
+    const resp = await fetch(PLANILHA_URL+'?pin='+encodeURIComponent(PIN_OK)+'&dias='+DIAS);
     const json = await resp.json();
     if(!json.ok){
       if(alvo) alvo.textContent = json.erro==='PIN incorreto' ? 'Senha incorreta 😕' : ('Erro: '+json.erro);
-      else document.getElementById('conteudo').innerHTML = '<div class="vazio">Erro ao carregar: '+escapeHtml(json.erro)+'</div>';
+      else document.getElementById('conteudo').innerHTML = '<div class="sec vazio">Erro ao carregar: '+esc(json.erro)+'</div>';
       return;
     }
     document.getElementById('gate').style.display='none';
     document.getElementById('painel').style.display='block';
+    document.getElementById('heroAcoes').style.display='';
     document.getElementById('geradoEm').textContent = 'Atualizado em '+new Date().toLocaleString('pt-BR');
-    render(json.registros);
+    render(json.registros || []);
   }catch(err){
     const msg = 'Não consegui falar com a planilha. Confira a internet e a URL configurada.';
     if(alvo) alvo.textContent = msg;
-    else document.getElementById('conteudo').innerHTML = '<div class="vazio">'+msg+'</div>';
+    else document.getElementById('conteudo').innerHTML = '<div class="sec vazio">'+msg+'</div>';
   }
-}
-
-let DADOS = null;   // { nomes:[{key,nome,resp,regs}] }
-let ABA = 'todas';  // 'todas' ou a chave de uma criança
-
-function periodoDias(){ return parseInt(document.getElementById('selDias').value,10)||14; }
-function listaDatas(n){
-  const a=[], base=new Date();
-  for(let i=n-1;i>=0;i--){ const d=new Date(base); d.setDate(base.getDate()-i);
-    a.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')); }
-  return a;
 }
 
 function render(regs){
   // padroniza data/hora de todo registro (tolera formato antigo do script)
   regs.forEach(r => { r.data = normData(r.data); r.hora = normHora(r.hora); });
   const cont = document.getElementById('conteudo');
-  const abasEl = document.getElementById('abas');
   if(!regs.length){
-    abasEl.innerHTML = '';
-    cont.innerHTML = '<div class="vazio">🌱 Ainda não chegou nenhum registro neste período.<br>Assim que as famílias usarem o app, os dados aparecem aqui.</div>';
+    document.getElementById('abas').innerHTML = '';
+    document.getElementById('subTopo').textContent = 'Área do profissional';
+    cont.innerHTML = '<div class="sec vazio">🌱 Ainda não chegou nenhum registro neste período.<br>Assim que as famílias usarem o app, os dados aparecem aqui.</div>';
     return;
   }
   const kids = {};
@@ -301,275 +405,379 @@ function render(regs){
     (kids[chave] = kids[chave] || {key:chave, nome:r.crianca, resp:r.responsavel, regs:[]}).regs.push(r);
   });
   const nomes = Object.values(kids).sort((a,b)=>a.nome.localeCompare(b.nome));
+  nomes.forEach(k => k.st = stats(k.regs));
   DADOS = {nomes};
-  document.getElementById('subTopo').textContent =
-    nomes.length+' criança'+(nomes.length>1?'s':'')+' em acompanhamento';
+  document.getElementById('subTopo').textContent = plural(nomes.length,'paciente')+' em acompanhamento · últimos '+DIAS+' dias';
   if(ABA!=='todas' && !nomes.some(k=>k.key===ABA)) ABA='todas';
   renderAbas();
   renderAtiva();
 }
 
+function irPara(k){ ABA = k; renderAbas(); renderAtiva(); window.scrollTo({top:0, behavior:'smooth'}); }
 function renderAbas(){
   const abasEl = document.getElementById('abas');
-  let h = '<button class="aba'+(ABA==='todas'?' on':'')+'" data-k="todas">🏠 Todas</button>';
+  let h = '<button class="aba'+(ABA==='todas'?' on':'')+'" data-k="todas"><span class="ini" style="background:var(--verde)">👥</span>Todos</button>';
   DADOS.nomes.forEach(k => {
-    h += '<button class="aba'+(ABA===k.key?' on':'')+'" data-k="'+escapeHtml(k.key)+'">'+escapeHtml(k.nome)+'</button>';
+    h += '<button class="aba'+(ABA===k.key?' on':'')+'" data-k="'+esc(k.key)+'">'+bolinha(k.nome)+esc(k.nome)+'</button>';
   });
   abasEl.innerHTML = h;
-  abasEl.querySelectorAll('.aba').forEach(b => b.addEventListener('click', () => {
-    ABA = b.dataset.k;
-    renderAbas(); renderAtiva();
-    window.scrollTo({top:0, behavior:'smooth'});
-  }));
+  abasEl.querySelectorAll('.aba').forEach(b => b.addEventListener('click', () => irPara(b.dataset.k)));
 }
-
 function renderAtiva(){
-  if(ABA==='todas') return renderTodas();
-  const k = DADOS.nomes.find(x=>x.key===ABA);
+  const k = ABA==='todas' ? null : DADOS.nomes.find(x=>x.key===ABA);
   if(k) renderKid(k); else renderTodas();
 }
 
-// ---------- HOME: todas as crianças ----------
-function renderTodas(){
-  const cont = document.getElementById('conteudo');
-  const hoje = hojeId();
-  const datas = listaDatas(periodoDias());
-
-  let html = '<div class="geral"><h2>👀 Visão geral de hoje</h2><table><thead><tr>'+
-    '<th>Criança</th><th>💧 Água hoje</th><th>🚽 Xixi hoje</th><th>Último registro</th><th>⚠️ Escapes</th></tr></thead><tbody>';
-  DADOS.nomes.forEach(k => {
-    const st = stats(k.regs);
-    const aguaHoje = st.porDia[hoje] ? st.porDia[hoje].agua : 0;
-    const xixiHoje = st.porDia[hoje] ? st.porDia[hoje].xixi : 0;
-    const metaTxt = st.meta ? aguaHoje+'/'+st.meta+' copos' : aguaHoje+' copos';
-    html += '<tr><td><b>'+escapeHtml(k.nome)+'</b></td>'+
-      '<td>'+metaTxt+(st.copoMl? ' · '+fmtMl(aguaHoje*st.copoMl):'')+'</td>'+
-      '<td>'+xixiHoje+' vez'+(xixiHoje===1?'':'es')+'</td>'+
-      '<td>'+escapeHtml(st.ultimoReg)+'</td>'+
-      '<td>'+(st.escapes.length>0
-        ? '<span class="tag atencao">'+st.escapes.length+' no período</span>'
-        : '<span class="tag ok">nenhum 🎉</span>')+'</td></tr>';
-  });
-  html += '</tbody></table></div>';
-
-  html += '<div class="geral"><h2>📈 Evolução de cada criança</h2>'+
-    '<p class="ajuda">Toque numa criança para ver o detalhe. As barrinhas são os copos de água por dia no período.</p>';
-  DADOS.nomes.forEach(k => {
-    const st = stats(k.regs);
-    const serie = datas.map(d => st.porDia[d] ? st.porDia[d].agua : 0);
-    const media = serie.reduce((s,x)=>s+x,0)/(serie.length||1);
-    html += '<div class="linha-kid" data-k="'+escapeHtml(k.key)+'">'+
-      '<div class="linha-topo"><b>'+escapeHtml(k.nome)+'</b> '+badgeAgua(serie)+
-        (st.escapes.length
-          ? ' <span class="trend down">'+st.escapes.length+' escape'+(st.escapes.length>1?'s':'')+'</span>'
-          : ' <span class="trend up">sem escapes 🎉</span>')+
-        '<span class="linha-media">média '+media.toFixed(1).replace('.',',')+' copos/dia'+(st.meta?' · meta '+st.meta:'')+'</span></div>'+
-      grafBarras(datas, d => st.porDia[d]?st.porDia[d].agua:0, {cls:'agua', meta:st.meta, mini:true})+
-    '</div>';
-  });
-  html += '</div>';
-
-  cont.innerHTML = html;
-  cont.querySelectorAll('.linha-kid').forEach(el => el.addEventListener('click', () => {
-    ABA = el.dataset.k; renderAbas(); renderAtiva(); window.scrollTo({top:0, behavior:'smooth'});
-  }));
-}
-
-// ---------- DETALHE: uma criança ----------
-function renderKid(k){
-  const cont = document.getElementById('conteudo');
-  const hoje = hojeId();
-  const datas = listaDatas(periodoDias());
-  const st = stats(k.regs);
-  const serieAgua = datas.map(d => st.porDia[d]?st.porDia[d].agua:0);
-  const aguaHoje = st.porDia[hoje] ? st.porDia[hoje].agua : 0;
-  const xixiHoje = st.porDia[hoje] ? st.porDia[hoje].xixi : 0;
-  const mediaAgua = serieAgua.reduce((s,x)=>s+x,0)/(serieAgua.length||1);
-
-  let html = '<div class="kid"><div class="kid-head"><h2>'+escapeHtml(k.nome)+'</h2>'+
-    '<span>responsável: '+escapeHtml(k.resp)+'</span>'+
-    '<button class="btn-apagar" title="Apagar os dados desta criança">🗑️ Apagar dados</button></div>';
-
-  html += '<div class="pills">'+
-    '<div class="pill agua"><div class="v">'+aguaHoje+(st.meta?'/'+st.meta:'')+'</div><div class="l">copos hoje</div></div>'+
-    (st.copoMl ? '<div class="pill agua"><div class="v">'+fmtMl(aguaHoje*st.copoMl)+'</div><div class="l">água hoje</div></div>' : '')+
-    '<div class="pill"><div class="v">'+mediaAgua.toFixed(1).replace('.',',')+'</div><div class="l">média copos/dia</div></div>'+
-    '<div class="pill xixi"><div class="v">'+xixiHoje+'</div><div class="l">xixis hoje</div></div>'+
-    '<div class="pill escape"><div class="v">'+st.escapes.length+'</div><div class="l">escapes no período</div></div>'+
-  '</div>';
-
-  html += '<div class="grafico"><h3>💧 Copos de água por dia '+badgeAgua(serieAgua)+
-    (st.meta?' <span class="mini-meta">meta: '+st.meta+'</span>':'')+'</h3>'+
-    grafBarras(datas, d => st.porDia[d]?st.porDia[d].agua:0, {cls:'agua', meta:st.meta})+
-    '<div class="legenda-g">Barra amarela = meta batida 🌟</div></div>';
-
-  html += '<div class="grafico"><h3>🚽 Xixis por dia</h3>'+
-    grafBarras(datas, d => st.porDia[d]?st.porDia[d].xixi:0, {cls:'xixi'})+'</div>';
-
-  html += '<div class="grafico"><h3>🕐 Horários do xixi</h3>'+
-    linhaDoTempoXixi(datas, st.porDia)+
-    '<div class="legenda-g">Cada pontinho é um xixi (passe o dedo/mouse pra ver a hora). Ajuda a ver os intervalos ao longo do dia.</div></div>';
-
-  const donutManha = donut('Manhãs 🌅', [
-    {label:'Secas', v:st.manhaSeca, cor:'#5BB450'},
-    {label:'Molhadas', v:st.manhaMolhada, cor:'#4FC3F7'}
-  ]);
-  const donutEsc = donut('Escapes ⚠️', [
-    {label:'Sem escape', v:st.semEscape, cor:'#5BB450'},
-    {label:'Com escape', v:st.comEscape, cor:'#E2606C'}
-  ]);
-  if(donutManha || donutEsc){
-    html += '<div class="grafico"><h3>📊 Resumo do período</h3><div class="donuts">'+donutManha+donutEsc+'</div></div>';
+// ============================================================
+// Leitura dos registros
+// ============================================================
+// Entende o texto dos "Sinais do dia" enviado pelo app
+function lerSinais(txt){
+  const s = {txt};
+  let m = txt.match(/Evacuou:\s*(sim|n[ãa]o)/i);
+  if(m) s.evacuou = /sim/i.test(m[1]);
+  m = txt.match(/Evacuou:\s*sim\s+às\s+(\d{1,2}:\d{2})/i); if(m) s.cocoHora = normHora(m[1]);
+  m = txt.match(/tipo\s+(\d)\s+de\s+Bristol/i); if(m) s.bristol = m[1];
+  m = txt.match(/Escape de coc[ôo]:\s*(sim|n[ãa]o)(?:,\s*estava\s+([^·]+))?/i);
+  if(m){ s.escCoco = /sim/i.test(m[1]); if(m[2]) s.atividade = m[2].trim(); }
+  m = txt.match(/Escapes de xixi:\s*(\d+)/i); if(m) s.escXixiN = parseInt(m[1],10);
+  m = txt.match(/Acordou\s+(seca|molhada)/i); if(m) s.acordou = m[1].toLowerCase();
+  // formato antigo: "Escape: de xixi — estava brincando" / "Escape: não teve"
+  m = txt.match(/Escape:\s*(de [^·]+|não teve)/i);
+  if(m && /^de /i.test(m[1])){
+    const partes = m[1].slice(3).split(/\s*(?:[—–-]|,)\s*estava\s+/);
+    if(partes[1] && !s.atividade) s.atividade = partes[1].trim();
+    if(/coc/i.test(partes[0])) s.escCoco = true;
+    if(/xixi/i.test(partes[0]) && !s.escXixiN) s.escXixiN = 1;
   }
-
-  if(st.escapes.length){
-    html += '<div class="sinais"><h3>⚠️ Escapes no período</h3>';
-    st.escapes.slice().reverse().forEach(e => {
-      html += '<div class="sinal-row"><span class="sd">'+fmtDataBr(e.data)+'</span>'+
-        '<span class="st escape-sim">escape de '+escapeHtml(e.tipo)+
-        (e.atividade ? ' · estava '+escapeHtml(e.atividade) : '')+'</span></div>';
-    });
-    html += '</div>';
-  }
-
-  // rotina: o que fez e a que horas (mais recente primeiro)
-  const diasComTarefa = datas.filter(d => st.porDia[d] && st.porDia[d].tarefaLista && st.porDia[d].tarefaLista.length).reverse();
-  html += '<div class="sinais"><h3>⭐ Rotina do dia — o que fez e a que horas</h3>';
-  if(diasComTarefa.length){
-    diasComTarefa.forEach(d => {
-      const lista = st.porDia[d].tarefaLista.slice().sort((a,b) => String(a.hora).localeCompare(String(b.hora)));
-      html += '<div class="sinal-row"><span class="sd">'+fmtDataBr(d)+'</span><span class="st tar-lista">'+
-        lista.map(t => '<span class="tar-chip"><b>'+escapeHtml(t.hora||'--:--')+'</b> '+escapeHtml(t.nome)+'</span>').join('')+
-        '</span></div>';
-    });
-  } else {
-    html += '<div class="tl-vazio">Nenhuma tarefa da rotina registrada no período. 🌱</div>';
-  }
-  html += '</div>';
-
-  // dia a dia (dados por dia, mais recente primeiro)
-  const diasComDados = datas.filter(d => st.porDia[d] || st.sinalPorDia[d]).reverse();
-  if(diasComDados.length){
-    html += '<div class="dia-tabela"><h3>📅 Dia a dia</h3><table><thead><tr>'+
-      '<th>Data</th><th>💧 Copos</th>'+(st.copoMl?'<th>mL</th>':'')+'<th>🚽 Xixi</th><th>⭐ Tarefas</th><th>🌙 Sinais do dia</th></tr></thead><tbody>';
-    diasComDados.forEach(d => {
-      const p = st.porDia[d] || {agua:0,xixi:0,tarefas:0};
-      const bateu = st.meta && p.agua>=st.meta;
-      html += '<tr><td><b>'+fmtDataBr(d)+'</b></td>'+
-        '<td>'+p.agua+(bateu?' 🌟':'')+'</td>'+
-        (st.copoMl?'<td>'+fmtMl(p.agua*st.copoMl)+'</td>':'')+
-        '<td>'+p.xixi+'</td>'+
-        '<td>'+(p.tarefas||0)+'</td>'+
-        '<td class="celula-sinais">'+(st.sinalPorDia[d]?escapeHtml(st.sinalPorDia[d]):'—')+'</td></tr>';
-    });
-    html += '</tbody></table></div>';
-  }
-
-  html += '</div>';
-  cont.innerHTML = html;
-  const btn = cont.querySelector('.btn-apagar');
-  if(btn) btn.addEventListener('click', () => apagarCrianca(k));
-}
-
-// ---------- linha do tempo dos xixis (por dia) ----------
-function linhaDoTempoXixi(datas, porDia){
-  const INI=6*60, FIM=22*60; // janela 06:00–22:00
-  const dias = datas.filter(d => porDia[d] && porDia[d].xixiHoras && porDia[d].xixiHoras.length).reverse();
-  if(!dias.length) return '<div class="tl-vazio">Sem horários de xixi registrados ainda. 🌱</div>';
-  const pos = hhmm => { const [h,m]=String(hhmm).split(':').map(Number); const t=Math.min(FIM,Math.max(INI,(h||0)*60+(m||0))); return (t-INI)/(FIM-INI)*100; };
-  let h = '<div class="tl-horas"><span>6h</span><span>10h</span><span>14h</span><span>18h</span><span>22h</span></div>';
-  dias.slice(0,12).forEach(d => {
-    const horas = porDia[d].xixiHoras.slice().sort();
-    h += '<div class="tl-linha"><span class="tl-data">'+fmtDataBr(d)+'</span><div class="tl-track">';
-    horas.forEach(hh => { h += '<span class="tl-dot" style="left:'+pos(hh).toFixed(1)+'%" title="'+escapeHtml(hh)+'"><span class="tl-hora">'+escapeHtml(hh)+'</span></span>'; });
-    h += '</div></div>';
-  });
-  return h;
-}
-
-// ---------- gráfico de pizza (rosquinha) ----------
-function donut(caption, partes){
-  const total = partes.reduce((s,p)=>s+p.v, 0);
-  if(!total) return '';
-  let acc = 0;
-  const segs = partes.map(p => { const ini=acc/total*360; acc+=p.v; return p.cor+' '+ini+'deg '+(acc/total*360)+'deg'; }).join(', ');
-  const legenda = partes.map(p => '<span class="dn-item"><i style="background:'+p.cor+'"></i>'+p.label+' <b>'+p.v+'</b> ('+Math.round(p.v/total*100)+'%)</span>').join('');
-  return '<div class="donut-box"><div class="donut-cap">'+caption+'</div>'+
-    '<div class="donut" style="background:conic-gradient('+segs+')"><div class="donut-hole">'+total+'</div></div>'+
-    '<div class="dn-legenda">'+legenda+'</div></div>';
-}
-
-// ---------- gráfico de barras + tendência ----------
-function grafBarras(datas, valorDe, opts){
-  opts = opts || {};
-  const max = Math.max(opts.meta||0, ...datas.map(valorDe), 1);
-  const muitos = datas.length>18;
-  let h = '<div class="barras'+(opts.mini?' mini':'')+'">';
-  datas.forEach((d,i) => {
-    const v = valorDe(d);
-    const px = v>0 ? Math.max(6, Math.round(56*v/max)) : 3;
-    const meta = opts.meta && v>=opts.meta;
-    const rot = muitos ? (i%3===0 ? d.slice(8,10) : '') : fmtDataBr(d);
-    h += '<div class="dia"><div class="n">'+(v||'')+'</div>'+
-      '<div class="b '+opts.cls+(meta?' meta':'')+'" style="height:'+px+'px" title="'+fmtDataBr(d)+': '+v+'"></div>'+
-      '<div class="d">'+rot+'</div></div>';
-  });
-  return h+'</div>';
-}
-
-function tendencia(vals){
-  if(vals.length<4) return {tipo:'novo'};
-  const meio = Math.ceil(vals.length/2);
-  const med = a => a.length ? a.reduce((s,x)=>s+x,0)/a.length : 0;
-  const a1 = med(vals.slice(0,meio)), a2 = med(vals.slice(meio));
-  const pct = a1>0 ? Math.round((a2-a1)/a1*100) : (a2>0?100:0);
-  return {tipo: pct>=10?'up': pct<=-10?'down':'flat', pct};
-}
-function badgeAgua(vals){
-  const t = tendencia(vals);
-  if(t.tipo==='novo') return '<span class="trend flat">poucos dias ainda</span>';
-  if(t.tipo==='up')   return '<span class="trend up">📈 melhorando +'+t.pct+'%</span>';
-  if(t.tipo==='down') return '<span class="trend down">📉 caiu '+Math.abs(t.pct)+'%</span>';
-  return '<span class="trend flat">→ estável</span>';
+  return s;
 }
 
 function stats(regs){
   const porDia = {};
-  const sinalPorDia = {};
-  const sinais = [];
-  const escapes = []; // {data, tipo, atividade}
-  let tarefas = 0, meta = null, copoMl = null, ultimoReg = '';
-  let manhaSeca = 0, manhaMolhada = 0, diasComSinalEscape = 0;
+  const dia = d => porDia[d] = porDia[d] || {agua:[], xixi:[], esc:[], tarefas:[], sinais:null};
+  let meta = null, copoMl = null, ultimo = null;
+  const tiraUma = (arr, h) => { const i = arr.lastIndexOf(h); if(i>-1) arr.splice(i,1); };
   regs.slice().sort((a,b)=>a.ts-b.ts).forEach(r => {
-    porDia[r.data] = porDia[r.data] || {agua:0, xixi:0, tarefas:0, xixiHoras:[], tarefaLista:[]};
-    if(r.tipo==='Agua') porDia[r.data].agua++;
-    if(r.tipo==='Xixi'){ porDia[r.data].xixi++; if(r.hora) porDia[r.data].xixiHoras.push(r.hora); }
-    if(r.tipo==='Tarefa'){
-      tarefas++; porDia[r.data].tarefas++;
-      porDia[r.data].tarefaLista.push({hora:r.hora||'', nome:r.detalhe||'tarefa'});
-    }
-    if(r.tipo==='SinaisDia'){
-      sinais.push(r);
-      sinalPorDia[r.data] = r.detalhe;
-      if(/Acordou seca/i.test(r.detalhe)) manhaSeca++;
-      else if(/Acordou molhada/i.test(r.detalhe)) manhaMolhada++;
-      const m = r.detalhe.match(/Escape: (de [^·]+|não teve)/);
-      if(m){
-        diasComSinalEscape++;
-        if(m[1].indexOf('de ')===0){
-          let resto = m[1].slice(3).trim(), atividade='';
-          const parts = resto.split(/\s*(?:[—–-]|,)\s*estava\s+/);
-          if(parts.length>1){ atividade = parts[1].trim(); resto = parts[0].trim(); }
-          escapes.push({data:r.data, tipo:resto, atividade});
-        }
-      }
+    const D = dia(r.data);
+    if(r.tipo==='Agua') D.agua.push(r.hora);
+    else if(r.tipo==='Xixi') D.xixi.push(r.hora);
+    else if(r.tipo==='Escape de xixi') D.esc.push(normHora(r.detalhe) || r.hora);
+    else if(r.tipo==='Tarefa') D.tarefas.push({hora:r.hora, nome:r.detalhe||'tarefa'});
+    else if(r.tipo==='SinaisDia') D.sinais = lerSinais(r.detalhe||'');
+    else if(r.tipo==='Apagado'){            // a família apagou um registro no app
+      const m = String(r.detalhe).match(/^(Xixi|Agua)\s+(\d{1,2}:\d{2})/);
+      if(m){ const h = normHora(m[2]); if(m[1]==='Agua') tiraUma(D.agua,h); else { tiraUma(D.xixi,h); tiraUma(D.esc,h); } }
     }
     if(r.meta) meta = r.meta;
     if(r.copoMl) copoMl = r.copoMl;
-    ultimoReg = r.tipo+' · '+fmtDataBr(r.data)+' '+r.hora;
+    if(['Agua','Xixi','Tarefa','SinaisDia','Escape de xixi'].includes(r.tipo)) ultimo = r;
   });
-  const semEscape = Math.max(0, diasComSinalEscape - escapes.length);
-  return {porDia, sinalPorDia, sinais, tarefas, escapes, meta, copoMl, ultimoReg, manhaSeca, manhaMolhada, comEscape:escapes.length, semEscape};
+
+  const datas = listaDatas(DIAS);
+  const comDados = datas.filter(d => porDia[d] && (porDia[d].agua.length || porDia[d].xixi.length || porDia[d].tarefas.length || porDia[d].sinais));
+  let totAgua=0, totXixi=0, escXixi=0, escCoco=0, secas=0, molhadas=0, diasCoco=0, diasSinalCoco=0;
+  const gaps = [], porHora = new Array(24).fill(0);
+  comDados.forEach(d => {
+    const D = porDia[d];
+    D.agua.sort(); D.xixi.sort();
+    D.gaps = D.xixi.slice(1).map((h,i) => minutos(h)-minutos(D.xixi[i]));
+    D.escN = Math.max(D.esc.length, (D.sinais && D.sinais.escXixiN) || 0);
+    totAgua += D.agua.length; totXixi += D.xixi.length; escXixi += D.escN;
+    gaps.push(...D.gaps);
+    D.xixi.forEach(h => porHora[Math.min(23, Math.floor(minutos(h)/60))]++);
+    const s = D.sinais;
+    if(s){
+      if(s.acordou==='seca') secas++; else if(s.acordou==='molhada') molhadas++;
+      if(s.evacuou!==undefined){ diasSinalCoco++; if(s.evacuou) diasCoco++; }
+      if(s.escCoco) escCoco++;
+    }
+  });
+  const n = comDados.length || 1;
+  const H = porDia[hojeId()] || {agua:[], xixi:[], esc:[], escN:0};
+  return {
+    porDia, datas, comDados, meta, copoMl, ultimo,
+    hoje:H, totAgua, totXixi, escXixi, escCoco, secas, molhadas, diasCoco, diasSinalCoco, porHora,
+    mediaAgua: totAgua/n, mediaXixi: totXixi/n,
+    gapMedio: gaps.length ? gaps.reduce((s,x)=>s+x,0)/gaps.length : null,
+    gapMaior: gaps.length ? Math.max(...gaps) : null
+  };
+}
+
+function tendencia(vals){
+  if(vals.length<4) return null;
+  const meio = Math.ceil(vals.length/2);
+  const med = a => a.length ? a.reduce((s,x)=>s+x,0)/a.length : 0;
+  const a1 = med(vals.slice(0,meio)), a2 = med(vals.slice(meio));
+  return a1>0 ? Math.round((a2-a1)/a1*100) : (a2>0?100:0);
+}
+// tendência da água: compara a 1ª metade com a 2ª, só nos dias com registro
+function seloAgua(st){
+  const pct = tendencia(st.comDados.filter(d => d!==hojeId()).map(d => st.porDia[d].agua.length)); // hoje ainda está pela metade
+  if(pct===null) return '<span class="selo neutro">poucos dias ainda</span>';
+  if(pct>=10)  return '<span class="selo ok">↗ água subindo '+pct+'%</span>';
+  if(pct<=-10) return '<span class="selo ruim">↘ água caindo '+Math.abs(pct)+'%</span>';
+  return '<span class="selo neutro">→ água estável</span>';
+}
+function seloEscapes(st){
+  const n = st.escXixi + st.escCoco;
+  return n ? '<span class="selo ruim">'+plural(n,'escape')+' no período</span>' : '<span class="selo ok">sem escapes 🎉</span>';
+}
+
+// ============================================================
+// VISÃO GERAL: todos os pacientes
+// ============================================================
+function renderTodas(){
+  const cont = document.getElementById('conteudo');
+  let html = '<div class="grade-pac">';
+  DADOS.nomes.forEach(k => {
+    const st = k.st, H = st.hoje;
+    const horasHoje = H.xixi.length
+      ? 'Xixis de hoje: '+H.xixi.map(h => '<b>'+h+'</b>').join(' · ')
+      : 'Nenhum xixi registrado hoje.';
+    html += '<div class="cpac" data-k="'+esc(k.key)+'">'+
+      '<div class="cpac-topo">'+bolinha(k.nome)+'<div><h3>'+esc(k.nome)+'</h3><small>resp.: '+esc(k.resp)+'</small></div><span class="seta">›</span></div>'+
+      '<div class="mini-kpis">'+
+        '<div class="mk a"><b>'+H.agua.length+(st.meta?'/'+st.meta:'')+'</b><span>copos hoje</span></div>'+
+        '<div class="mk x"><b>'+H.xixi.length+'</b><span>xixis hoje</span></div>'+
+        '<div class="mk '+(st.escXixi+st.escCoco?'v':'')+'"><b>'+(st.escXixi+st.escCoco)+'</b><span>escapes</span></div>'+
+      '</div>'+
+      '<div class="hoje-x">'+horasHoje+'</div>'+
+      grafBarras(st.datas, d => st.porDia[d]?st.porDia[d].agua.length:0, {meta:st.meta, mini:true})+
+      '<div class="cpac-rod">'+seloAgua(st)+
+        (st.gapMedio!==null ? '<span class="selo x">xixi a cada '+fmtDur(st.gapMedio)+'</span>' : '')+
+        (st.ultimo ? '<span class="selo neutro">último registro '+fmtDataBr(st.ultimo.data)+' '+st.ultimo.hora+'</span>' : '')+
+      '</div></div>';
+  });
+  html += '</div>';
+  cont.innerHTML = html;
+  cont.querySelectorAll('.cpac').forEach(el => el.addEventListener('click', () => irPara(el.dataset.k)));
+}
+
+// ============================================================
+// DETALHE: um paciente
+// ============================================================
+function renderKid(k){
+  const cont = document.getElementById('conteudo');
+  const st = k.st, H = st.hoje;
+  const nDias = st.comDados.length;
+  let html = '';
+
+  // --- cabeçalho
+  html += '<div class="sec"><div class="pac">'+bolinha(k.nome)+
+    '<div><h2>'+esc(k.nome)+'</h2><div class="resp">Responsável: '+esc(k.resp)+' · '+plural(nDias,'dia')+' com registro nos últimos '+DIAS+'</div></div>'+
+    '<div class="acoes"><button class="bt claro" id="btnCsv">⬇️ Baixar CSV</button>'+
+    '<button class="bt perigo" id="btnApagar" title="Apagar os dados deste paciente">🗑️ Apagar dados</button></div></div></div>';
+
+  // --- indicadores
+  const mlMedia = st.copoMl ? fmtMl(st.mediaAgua*st.copoMl) : '';
+  html += '<div class="kpis">'+
+    kpi('a','Água por dia', fmt1(st.mediaAgua)+' <small>copos</small>', (mlMedia?'≈ '+mlMedia:'')+(st.meta?' · meta '+st.meta:'')+' · hoje '+H.agua.length)+
+    kpi('x','Xixis por dia', fmt1(st.mediaXixi), 'hoje '+H.xixi.length+(H.xixi.length?' · último às '+H.xixi[H.xixi.length-1]:''))+
+    kpi('x','Intervalo entre xixis', st.gapMedio!==null?fmtDur(st.gapMedio):'—', st.gapMaior!==null?'maior intervalo '+fmtDur(st.gapMaior):'precisa de 2 xixis no dia')+
+    kpi(st.escXixi?'v':'','Escapes de xixi', st.escXixi, st.escXixi?'no período':'nenhum no período 🎉')+
+    kpi('r','Manhãs secas', (st.secas+st.molhadas)?st.secas+' <small>de '+(st.secas+st.molhadas)+'</small>':'—', st.molhadas?plural(st.molhadas,'manhã molhada','manhãs molhadas'):'sem manhãs molhadas')+
+    kpi(st.escCoco?'v':'','Dias com cocô', st.diasSinalCoco?st.diasCoco+' <small>de '+st.diasSinalCoco+'</small>':'—', st.escCoco?plural(st.escCoco,'escape')+' de cocô':'sem escape de cocô')+
+  '</div>';
+
+  // --- diário de xixi: o horário de cada xixi
+  html += '<div class="sec"><div class="sec-tit"><span class="ico x">🚽</span><h2>Diário de xixi · horário de cada um</h2></div>'+
+    '<p class="sec-sub">Cada dia mostra a hora exata de todos os xixis e o tempo entre um e outro.</p>'+
+    diarioXixi(st)+'</div>';
+
+  // --- gráficos
+  html += '<div class="duas">'+
+    '<div class="sec"><div class="sec-tit"><span class="ico a">💧</span><h2>Copos de água por dia</h2></div>'+
+      '<div class="graf-topo">'+seloAgua(st)+'</div>'+
+      grafBarras(st.datas, d => st.porDia[d]?st.porDia[d].agua.length:0, {meta:st.meta})+
+      (st.meta?'<p class="graf-nota">Barra amarela = meta do dia batida 🌟</p>':'')+'</div>'+
+    '<div class="sec"><div class="sec-tit"><span class="ico x">📊</span><h2>Xixis por dia</h2></div>'+
+      '<div class="graf-topo"><span class="selo x">média '+fmt1(st.mediaXixi)+' por dia</span></div>'+
+      grafBarras(st.datas, d => st.porDia[d]?st.porDia[d].xixi.length:0, {cls:'x'})+'</div>'+
+  '</div>';
+
+  // --- horários mais comuns + manhãs
+  html += '<div class="duas">'+
+    '<div class="sec"><div class="sec-tit"><span class="ico x">🕐</span><h2>Em que horas faz mais xixi</h2></div>'+
+      '<p class="sec-sub">Soma de todos os xixis do período, por hora do dia.</p>'+porHoraGraf(st)+'</div>'+
+    '<div class="sec"><div class="sec-tit"><span class="ico r">🌅</span><h2>Como acordou</h2></div>'+
+      '<p class="sec-sub">Cama seca ou molhada, dia a dia.</p>'+tiraManhas(st)+'</div>'+
+  '</div>';
+
+  // --- intestino
+  html += '<div class="sec"><div class="sec-tit"><span class="ico">💩</span><h2>Intestino</h2></div>'+
+    '<p class="sec-sub">Horário do cocô, tipo na Escala de Bristol e escapes.</p>'+tabelaIntestino(st)+'</div>';
+
+  // --- rotina
+  const diasTar = st.comDados.filter(d => st.porDia[d].tarefas.length).reverse();
+  html += '<div class="sec"><div class="sec-tit"><span class="ico">⭐</span><h2>Rotina · o que fez e a que horas</h2></div><p class="sec-sub">Tarefas marcadas no app, com o horário em que foram marcadas.</p>';
+  if(diasTar.length){
+    diasTar.forEach(d => {
+      const lista = st.porDia[d].tarefas.slice().sort((a,b) => String(a.hora).localeCompare(String(b.hora)));
+      html += '<div class="rot"><span class="rd">'+fmtDataBr(d)+'</span><span class="rl">'+
+        lista.map(t => '<span class="chip"><b>'+esc(t.hora||'--:--')+'</b>'+esc(t.nome)+'</span>').join('')+'</span></div>';
+    });
+  } else html += '<div class="mudo">Nenhuma tarefa da rotina registrada no período. 🌱</div>';
+  html += '</div>';
+
+  // --- dia a dia
+  html += '<div class="sec"><div class="sec-tit"><span class="ico">📅</span><h2>Dia a dia</h2></div><p class="sec-sub">Resumo completo de cada dia, do mais recente para o mais antigo.</p>'+tabelaDias(st)+'</div>';
+
+  cont.innerHTML = html;
+  cont.querySelector('#btnApagar').addEventListener('click', () => apagarCrianca(k));
+  cont.querySelector('#btnCsv').addEventListener('click', () => baixarCsv(k));
+}
+
+function kpi(cls, rotulo, valor, sub){
+  return '<div class="kpi '+cls+'"><div class="l">'+rotulo+'</div><div class="v">'+valor+'</div><div class="s">'+sub+'</div></div>';
+}
+
+// ---------- diário de xixi ----------
+function diarioXixi(st){
+  const dias = st.comDados.filter(d => st.porDia[d].xixi.length || st.porDia[d].agua.length).reverse();
+  if(!dias.some(d => st.porDia[d].xixi.length)) return '<div class="mudo">Sem xixis registrados no período. 🌱</div>';
+  // janela do eixo: 5h às 23h; abre para 0h–24h se houver registro de madrugada
+  let ini=5*60, fim=23*60;
+  dias.forEach(d => st.porDia[d].xixi.concat(st.porDia[d].agua).forEach(h => { const m=minutos(h); if(m<ini||m>fim){ ini=0; fim=1440; } }));
+  const pos = h => ((Math.min(fim,Math.max(ini,minutos(h)))-ini)/(fim-ini)*100).toFixed(2);
+  const marcas = []; for(let h=Math.ceil(ini/180)*3; h*60<=fim; h+=3) marcas.push(h);
+  const grade = marcas.map(h => '<i class="grade" style="left:'+pos(h+':00')+'%"></i>').join('');
+  let html = '<div class="eixo">'+marcas.map(h => '<span style="left:'+pos(h+':00')+'%">'+h+'h</span>').join('')+'</div>';
+  dias.forEach(d => {
+    const D = st.porDia[d];
+    const ehEsc = D.esc.slice();
+    const marca = h => { const i=ehEsc.indexOf(h); if(i>-1){ ehEsc.splice(i,1); return true; } return false; };
+    const flags = D.xixi.map(marca);
+    const maior = D.gaps.length>1 ? Math.max(...D.gaps) : -1;
+    html += '<div class="xd"><div class="xd-lin"><div class="xd-data"><b>'+fmtDataBr(d)+'</b><span>'+(d===hojeId()?'hoje':diaSemana(d))+'</span></div>'+
+      '<div class="trilha">'+grade+
+        D.agua.map(h => '<span class="ag" style="left:'+pos(h)+'%" title="Água '+h+'"></span>').join('')+
+        D.xixi.map((h,i) => '<span class="xx'+(flags[i]?' esc':'')+'" style="left:'+pos(h)+'%" title="Xixi '+h+'"></span>').join('')+
+      '</div></div>';
+    if(D.xixi.length){
+      html += '<div class="horas">'+D.xixi.map((h,i) =>
+        (i ? '<span class="gap'+(D.gaps[i-1]===maior?' maior':'')+'">'+fmtDur(D.gaps[i-1])+'</span>' : '')+
+        '<span class="hx'+(flags[i]?' esc':'')+'">'+h+(flags[i]?' 💦':'')+'</span>').join('')+'</div>';
+    } else html += '<div class="horas"><span class="mudo" style="padding:0">Nenhum xixi registrado neste dia.</span></div>';
+    const sel = [];
+    if(D.xixi.length) sel.push('<span class="selo x">'+plural(D.xixi.length,'xixi','xixis')+'</span>');
+    if(D.gaps.length) sel.push('<span class="selo neutro">intervalo médio '+fmtDur(D.gaps.reduce((s,x)=>s+x,0)/D.gaps.length)+'</span>');
+    if(D.agua.length) sel.push('<span class="selo a">'+plural(D.agua.length,'copo')+' de água</span>');
+    if(D.escN) sel.push('<span class="selo ruim">'+plural(D.escN,'escape')+' de xixi</span>');
+    html += '<div class="xd-res">'+sel.join('')+'</div></div>';
+  });
+  html += '<div class="legenda"><span><i style="background:var(--xixi)"></i>xixi</span>'+
+    '<span><i style="background:var(--alerta)"></i>xixi com escape 💦</span>'+
+    '<span><i style="background:var(--agua)"></i>copo de água</span>'+
+    '<span>→ tempo desde o xixi anterior</span></div>';
+  return html;
+}
+
+// ---------- xixis por hora do dia ----------
+function porHoraGraf(st){
+  if(!st.totXixi) return '<div class="mudo">Sem xixis registrados no período. 🌱</div>';
+  let a=6, b=22;
+  st.porHora.forEach((v,h) => { if(v){ if(h<a) a=h; if(h>b) b=h; } });
+  const horas = []; for(let h=a; h<=b; h++) horas.push(h);
+  const max = Math.max(...st.porHora, 1);
+  return '<div class="barras x">'+horas.map(h => {
+    const v = st.porHora[h];
+    return '<div class="col"><div class="n">'+(v||'')+'</div><div class="b'+(v?'':' zero')+'" style="height:'+(v?Math.max(6,Math.round(v/max*100)):3)+'px" title="'+h+'h: '+v+'"></div><div class="d">'+(h%2===0?h+'h':'')+'</div></div>';
+  }).join('')+'</div>';
+}
+
+// ---------- manhãs secas / molhadas ----------
+function tiraManhas(st){
+  if(!(st.secas+st.molhadas)) return '<div class="mudo">Ainda sem registro de como acordou. 🌱</div>';
+  const total = st.secas+st.molhadas;
+  let h = '<div class="resumo-linha"><span class="selo ok">☀️ '+plural(st.secas,'manhã seca','manhãs secas')+' ('+Math.round(st.secas/total*100)+'%)</span>'+
+    '<span class="selo a">💧 '+plural(st.molhadas,'manhã molhada','manhãs molhadas')+'</span></div><div class="tira">';
+  st.datas.forEach(d => {
+    const s = st.porDia[d] && st.porDia[d].sinais, a = s && s.acordou;
+    h += '<div class="q '+(a||'')+'" title="'+fmtDataBr(d)+(a?': acordou '+a:': sem registro')+'"><b>'+(a==='seca'?'☀️':a==='molhada'?'💧':'·')+'</b>'+fmtDataBr(d)+'</div>';
+  });
+  return h+'</div>';
+}
+
+// ---------- intestino ----------
+function tabelaIntestino(st){
+  const dias = st.comDados.filter(d => { const s=st.porDia[d].sinais; return s && (s.evacuou!==undefined || s.escCoco!==undefined); }).reverse();
+  if(!dias.length) return '<div class="mudo">Ainda sem registro de cocô no período. 🌱</div>';
+  let h = '<div class="tab-wrap"><table><thead><tr><th>Data</th><th>Fez cocô?</th><th>Horário</th><th>Bristol</th><th>Escape de cocô</th></tr></thead><tbody>';
+  dias.forEach(d => {
+    const s = st.porDia[d].sinais;
+    h += '<tr><td class="data"><b>'+fmtDataBr(d)+'</b><span>'+diaSemana(d)+'</span></td>'+
+      '<td>'+(s.evacuou===undefined?'—':s.evacuou?'<span class="selo ok">sim</span>':'<span class="selo neutro">não</span>')+'</td>'+
+      '<td>'+(s.cocoHora?'<b class="num">'+s.cocoHora+'</b>':'—')+'</td>'+
+      '<td>'+(s.bristol?'<span class="bristol-n">'+s.bristol+'</span>':'—')+'</td>'+
+      '<td>'+(s.escCoco===undefined?'—':s.escCoco?'<span class="selo ruim">sim'+(s.atividade?' · estava '+esc(s.atividade):'')+'</span>':'não')+'</td></tr>';
+  });
+  return h+'</tbody></table></div>';
+}
+
+// ---------- dia a dia ----------
+function tabelaDias(st){
+  const dias = st.comDados.slice().reverse();
+  if(!dias.length) return '<div class="mudo">Sem registros no período. 🌱</div>';
+  let h = '<div class="tab-wrap"><table><thead><tr><th>Data</th><th>💧 Água</th><th>🚽 Xixis</th><th>Horário de cada xixi</th><th>Intervalo médio</th><th>Escapes</th><th>💩 Cocô</th><th>Acordou</th><th>⭐ Tarefas</th></tr></thead><tbody>';
+  dias.forEach(d => {
+    const D = st.porDia[d], s = D.sinais || {};
+    const ehEsc = D.esc.slice();
+    const horas = D.xixi.map(x => { const i=ehEsc.indexOf(x); if(i>-1){ ehEsc.splice(i,1); return '<span class="e" title="com escape">'+x+'</span>'; } return x; }).join(' · ');
+    const bateu = st.meta && D.agua.length>=st.meta;
+    const escTxt = [D.escN?D.escN+' xixi':'', s.escCoco?'cocô':''].filter(Boolean).join(' + ');
+    h += '<tr><td class="data"><b>'+fmtDataBr(d)+'</b><span>'+diaSemana(d)+'</span></td>'+
+      '<td>'+D.agua.length+(bateu?' 🌟':'')+(st.copoMl?'<br><small style="color:var(--suave)">'+fmtMl(D.agua.length*st.copoMl)+'</small>':'')+'</td>'+
+      '<td><b class="num">'+D.xixi.length+'</b></td>'+
+      '<td class="horas-cel">'+(horas||'—')+'</td>'+
+      '<td>'+(D.gaps.length?fmtDur(D.gaps.reduce((a,x)=>a+x,0)/D.gaps.length):'—')+'</td>'+
+      '<td>'+(escTxt?'<span class="selo ruim">'+escTxt+'</span>':'—')+'</td>'+
+      '<td>'+(s.evacuou===undefined?'—':s.evacuou?('sim'+(s.cocoHora?' '+s.cocoHora:'')+(s.bristol?' · tipo '+s.bristol:'')):'não')+'</td>'+
+      '<td>'+(s.acordou?(s.acordou==='seca'?'☀️ seca':'💧 molhada'):'—')+'</td>'+
+      '<td>'+D.tarefas.length+'</td></tr>';
+  });
+  return h+'</tbody></table></div>';
+}
+
+// ---------- gráfico de barras por dia ----------
+function grafBarras(datas, valorDe, opts){
+  opts = opts || {};
+  const vals = datas.map(valorDe);
+  const max = Math.max(opts.meta||0, ...vals, 1);
+  const alt = opts.mini ? 50 : 100;
+  const passo = datas.length>16 ? Math.ceil(datas.length/8) : (datas.length>8 ? 2 : 1);
+  let h = '<div class="barras '+(opts.cls||'')+(opts.mini?' mini':'')+'">';
+  if(opts.meta) h += '<div class="linha-meta" style="bottom:'+(Math.round(alt*opts.meta/max)+(opts.mini?0:16))+'px"><span>meta '+opts.meta+'</span></div>';
+  datas.forEach((d,i) => {
+    const v = vals[i];
+    const px = v>0 ? Math.max(6, Math.round(alt*v/max)) : 3;
+    const meta = opts.meta && v>=opts.meta;
+    h += '<div class="col"><div class="n">'+(v||'')+'</div>'+
+      '<div class="b'+(meta?' meta':'')+(v?'':' zero')+'" style="height:'+px+'px" title="'+fmtDataBr(d)+': '+v+'"></div>'+
+      '<div class="d">'+((datas.length-1-i)%passo===0?fmtDataBr(d):'')+'</div></div>';
+  });
+  return h+'</div>';
+}
+
+// ---------- exportar ----------
+function baixarCsv(k){
+  const st = k.st;
+  const limpa = v => String(v==null?'':v).replace(/[;\r\n]+/g,' ');
+  const linhas = ['Data;Copos de agua;Horarios da agua;Xixis;Horario de cada xixi;Intervalo medio (min);Maior intervalo (min);Escapes de xixi;Horarios dos escapes;Fez coco;Horario do coco;Bristol;Escape de coco;Acordou;Tarefas'];
+  st.comDados.forEach(d => {
+    const D = st.porDia[d], s = D.sinais || {};
+    linhas.push([d, D.agua.length, D.agua.join(' '), D.xixi.length, D.xixi.join(' '),
+      D.gaps.length?Math.round(D.gaps.reduce((a,x)=>a+x,0)/D.gaps.length):'', D.gaps.length?Math.max(...D.gaps):'',
+      D.escN, D.esc.join(' '), s.evacuou===undefined?'':(s.evacuou?'sim':'nao'), s.cocoHora||'', s.bristol||'',
+      s.escCoco===undefined?'':(s.escCoco?'sim':'nao'), s.acordou||'',
+      D.tarefas.map(t => (t.hora?t.hora+' ':'')+t.nome).join(' | ')].map(limpa).join(';'));
+  });
+  const blob = new Blob(['﻿'+linhas.join('\r\n')], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'gota-'+k.nome.toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'-'+hojeId()+'.csv';
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
 }
 
 async function apagarCrianca(k){
@@ -585,7 +793,7 @@ async function apagarCrianca(k){
       alert('Pronto! '+(json.apagadas||0)+' registro(s) de '+k.nome+' apagado(s).');
       ABA='todas'; carregar();
     }else{
-      alert('Não deu para apagar: '+(json.erro||'erro')+'.\n\nSe aparecer algo como "ação não reconhecida", é porque o script publicado ainda é o antigo — republique o Code.gs.');
+      alert('Não deu para apagar: '+(json.erro||'erro')+'.\n\nSe aparecer algo como "ação não reconhecida", é porque o script publicado ainda é o antigo. Republique o Code.gs.');
     }
   }catch(e){
     alert('Falha ao falar com a planilha. Se o script publicado ainda for o antigo, republique o Code.gs para o botão de apagar funcionar.');

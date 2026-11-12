@@ -340,6 +340,119 @@ body{
 .aviso-topo .av-txt{flex:1;font-size:13.5px;font-weight:600;line-height:1.3}
 .aviso-topo .av-txt b{font-family:'Baloo 2';font-size:15px;display:block;color:#E5731F}
 .aviso-topo .av-x{border:none;background:#F5F5F0;border-radius:50%;width:30px;height:30px;font-weight:800;color:#999;cursor:pointer;flex:none}
+
+/* ====== Acabamento visual (refino por cima da base) ====== */
+:root{
+  --sombra-card:0 1px 2px rgba(46,71,41,.05),0 10px 26px rgba(60,110,45,.09);
+  --borda:#E2EFD6; --texto:#2F4A2A; --cinza:#7F9175;
+}
+body{background:radial-gradient(1200px 500px at 50% -10%,#F8FCF2 0%,rgba(248,252,242,0) 70%),linear-gradient(170deg,#F2F9EA 0%,#E9F5DE 50%,#E1F0D3 100%);background-attachment:fixed;-webkit-font-smoothing:antialiased}
+button{font-family:inherit}
+:focus-visible{outline:3px solid rgba(91,180,80,.45);outline-offset:2px}
+.pad{padding:0 16px}
+.saudacao h1{font-size:26px;line-height:1.15;letter-spacing:-.2px}
+.saudacao p{font-size:14px}
+.cenario{box-shadow:0 10px 26px rgba(60,110,45,.16);border-radius:0 0 36px 36px}
+.mascote{box-shadow:0 10px 26px rgba(60,110,45,.26),inset 0 -6px 12px rgba(255,190,90,.25)}
+
+/* cartões */
+.card-form,.lembretes,.semana,.ajuste-item{background:#fff;border:1.5px solid var(--borda);box-shadow:var(--sombra-card)}
+.card-form{border-radius:26px;padding:20px 18px;margin-bottom:16px}
+.card-form h2{font-size:18px;margin-bottom:14px;color:var(--texto)}
+.lembretes,.semana{border-radius:26px;margin-bottom:16px}
+.lembretes .lem-head{background:none;padding:15px 18px 6px;font-size:17px;color:var(--texto);font-weight:700}
+.lem-row{padding:12px 18px;border-top:none}
+.lem-row + .lem-row{border-top:1.5px solid #F1F6EA}
+.lem-row .lem-ico{border-radius:16px;width:48px;height:48px}
+.lem-info .lem-titulo{font-size:15px;font-weight:600}
+.lem-row.due{background:linear-gradient(90deg,#FFF6E8,#fff)}
+.semana{padding:16px}
+.semana-head>span:first-child{color:var(--texto);font-size:16px}
+.dia{border-radius:16px;border-width:1.5px}
+.dia.hoje{box-shadow:0 4px 12px rgba(255,159,28,.22);transform:translateY(-2px)}
+
+/* botões */
+.btn{padding:16px;font-size:17.5px}
+.btn-primary,.btn-registro,.lem-btn,.pwa-btn.primario{text-shadow:0 1px 0 rgba(0,0,0,.08)}
+.btn-primary{background:linear-gradient(180deg,#6FC766,#4A9E42);box-shadow:0 4px 0 #3A8233,0 12px 22px rgba(76,154,65,.3)}
+.btn-primary:active{transform:translateY(3px);box-shadow:0 1px 0 #3A8233,0 6px 12px rgba(76,154,65,.3)}
+.btn-primary:disabled{background:#D6DDD0;box-shadow:none;transform:none;color:#fff}
+.btn-registro{padding:15px;font-size:16.5px;margin-top:14px}
+.btn-registro.r-agua{background:linear-gradient(180deg,#5FCBF7,#2FA8DF);box-shadow:0 4px 0 #1F8BBD,0 12px 20px rgba(47,168,223,.28)}
+.btn-registro.r-xixi{background:linear-gradient(180deg,#FFBE5C,#FB9A1B);box-shadow:0 4px 0 #D97E08,0 12px 20px rgba(255,159,28,.28)}
+.btn-registro.r-verde{background:linear-gradient(180deg,#6FC766,#4A9E42);box-shadow:0 4px 0 #3A8233,0 12px 20px rgba(76,154,65,.28)}
+.btn-registro:active{transform:translateY(3px);box-shadow:none}
+.lem-btn{padding:10px 16px;font-size:14px}
+
+/* painel do dia */
+.painel{background:linear-gradient(140deg,#72C968 0%,#4BA243 55%,#3B9349 100%);border-radius:28px;padding:16px;margin-bottom:16px;box-shadow:0 14px 28px rgba(76,154,65,.3)}
+.painel::after{content:"";position:absolute;bottom:-50px;left:-30px;width:120px;height:120px;background:rgba(255,255,255,.08);border-radius:50%}
+.painel-item{background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.22);border-radius:20px}
+.painel-item .pi-valor{font-size:26px}
+.progress-wrap{height:12px;background:rgba(255,255,255,.26)}
+.progress-bar{box-shadow:0 0 10px rgba(255,217,61,.7)}
+
+/* tarefas */
+.periodo{margin-bottom:22px}
+.periodo-label{font-size:16.5px;padding:8px 18px}
+.card{border:2px solid #EAF3E0;border-radius:22px;box-shadow:0 2px 0 #E3EDD8,0 8px 16px rgba(60,110,45,.07);padding:14px 6px 11px}
+.card:active{transform:scale(.94)}
+.card.done{background:linear-gradient(180deg,#F6FBEF,#E9F5DE);box-shadow:0 2px 0 var(--verde-claro),0 8px 16px rgba(60,110,45,.09)}
+.card .ilust{font-size:42px}
+.card .check{border-width:2px}
+.card.done .check{box-shadow:0 3px 8px rgba(76,154,65,.4)}
+
+/* cuidados */
+.gota-medidor{align-items:flex-end;transition:height .5s cubic-bezier(.34,1.56,.64,1)}
+.agua-meta-txt{font-family:'Baloo 2';font-size:17px;font-weight:700;color:var(--texto);margin-top:6px}
+.agua-copos{gap:6px;margin:10px 0 4px}
+.copo{width:30px;height:38px;border-width:2.5px;border-radius:7px 7px 11px 11px;font-size:13px;padding-bottom:2px}
+.agua-ml-txt{font-size:13px;margin:2px 0 4px}
+.stat-pill{background:#F7FBF2;border:1.5px solid var(--borda);border-radius:18px;padding:10px 6px}
+.stat-pill .sp-v{font-size:20px;color:var(--texto)}
+.hist-lista{margin-top:14px}
+.hist-item{padding:8px 2px;border-top:1.5px solid #F1F6EA}
+.hist-item .h-ico{width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:17px;flex:none;background:#E3F4FD}
+.hist-item .h-ico.xixi{background:#FFF3D6}
+.hist-item .h-hora{font-size:16px;color:var(--texto);min-width:50px}
+.hist-item .h-esc{font-style:normal;background:#FDECEE;color:#D2485A;border-radius:20px;padding:1px 8px;font-size:11px;font-weight:700;margin-left:4px;white-space:nowrap}
+.hist-item .h-del{color:#C9B5B5;width:32px;height:32px;border-radius:50%}
+.hist-item .h-del:active{background:#FDECEE}
+.sinal-grupo{background:#F8FBF3;border-color:#E9F1DC;border-radius:20px}
+.sinal-op{padding:10px 17px;font-size:14px;border-width:1.5px}
+
+/* relatório local: horário de cada xixi */
+.rel-xixis{display:flex;flex-wrap:wrap;align-items:center;gap:4px 3px;margin:3px 0 2px}
+.rx-h{font-family:'Baloo 2';font-weight:800;font-size:13.5px;background:#FFF4E2;color:#B8650A;border-radius:9px;padding:0 8px}
+.rx-h.esc{background:#FDECEE;color:#D2485A}
+.rx-gap{font-size:10.5px;color:#9cae90;font-weight:600}
+.rx-gap::before{content:"→ "} .rx-gap::after{content:" →"}
+
+/* ajustes */
+.ajuste-item{border-radius:20px;padding:13px 14px}
+.ajuste-item .aj-ico{width:44px;height:44px;border-radius:14px;background:var(--verde-fundo);display:flex;align-items:center;justify-content:center;font-size:21px;flex:none}
+.ajuste-item .aj-txt b{font-size:15px;font-weight:600}
+.ajuste-item .aj-seta{font-size:20px}
+
+/* formulários e modais */
+.campo input[type=text],.campo input[type=time],.campo input[type=password],.campo select{border-width:1.5px;border-radius:16px;padding:13px 14px}
+.campo input:focus,.campo select:focus{box-shadow:0 0 0 4px rgba(91,180,80,.15)}
+.chip{border-width:1.5px;padding:9px 14px}
+.modal-fundo{background:rgba(30,50,25,.45);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.modal{border:none;border-radius:28px;box-shadow:0 24px 60px rgba(30,50,25,.3)}
+.modal-fundo.show .modal{animation:pop .3s cubic-bezier(.34,1.56,.64,1)}
+
+/* navegação */
+.navbar .nav-in{background:rgba(255,255,255,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1.5px solid rgba(226,239,214,.9);border-radius:28px;box-shadow:0 10px 30px rgba(60,110,45,.2);padding:6px}
+.nav-item{border-radius:22px;padding:7px 2px 6px;transition:background .2s,transform .12s}
+.nav-item:active{transform:scale(.94)}
+.nav-item .ni-ico{transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.nav-item.on{background:linear-gradient(180deg,#F1F9E9,#E4F3D7)}
+.nav-item.on .ni-ico{transform:translateY(-1px) scale(1.12)}
+.nav-item .ni-lbl{font-size:11px}
+.toast{box-shadow:0 10px 24px rgba(76,154,65,.4);padding:12px 26px}
+.aviso-topo{border-width:2px;border-radius:24px;box-shadow:0 16px 36px rgba(0,0,0,.2)}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
@@ -555,6 +668,7 @@ body{
           </div>
         </div>
         <div class="agua-meta-txt" id="aguaMetaTxt">0 de 6 copos</div>
+        <div class="agua-copos" id="aguaCopos"></div>
         <div class="agua-ml-txt" id="aguaMlTxt"></div>
         <button class="btn-registro r-agua" id="btnBebi2">💧 Bebi um copo de água!</button>
         <div class="hist-lista" id="aguaHist"></div>
@@ -1534,6 +1648,8 @@ document.querySelectorAll('#xixiEscape .sinal-op').forEach(b=>{
       if(!Array.isArray(cuidados.xixiEscape)) cuidados.xixiEscape=[];
       cuidados.xixiEscape.push(ultimoXixiTs||Date.now());
       salvarCuidados();
+      const hd=histDia(); (hd.xixiEscape=hd.xixiEscape||[]).push(ultimoXixiTs||Date.now()); salvarHist();
+      renderCuidados();
       sincronizarNuvem('Escape de xixi', fmtHora(ultimoXixiTs||Date.now()));
       showToast('Anotado: escape de xixi 😬');
     }else{
@@ -1576,7 +1692,11 @@ function renderCuidados(){
   document.getElementById('cuidadosSub').textContent='Água e banheiro de '+primeiroNome();
   const meta=config.aguaMeta, qtd=cuidados.agua.length;
   // sem água a gota fica triste e pequenininha; cresce a cada copo; na meta vira herói
-  document.getElementById('gotaWrap').style.transform = 'scale('+(0.52+0.63*Math.min(1, qtd/meta))+')';
+  const escGota=0.62+0.38*Math.min(1, qtd/meta);
+  document.getElementById('gotaWrap').style.transform = 'scale('+escGota+')';
+  document.querySelector('.gota-medidor').style.height = Math.round(168*escGota+10)+'px';
+  let copos=''; for(let i=0;i<Math.max(meta,qtd);i++) copos+='<span class="copo'+(i<qtd?(i>=meta?' extra':' cheio'):'')+'">'+(i<qtd?'💧':'')+'</span>';
+  document.getElementById('aguaCopos').innerHTML=copos;
   document.getElementById('gotaImgTriste').style.opacity = qtd===0 ? 1 : 0;
   document.getElementById('gotaImgNormal').style.opacity = (qtd>0 && qtd<meta) ? 1 : 0;
   document.getElementById('gotaImgMeta').style.opacity = qtd>=meta ? 1 : 0;
@@ -1650,13 +1770,13 @@ document.getElementById('snAtividade').addEventListener('input',()=>{
   cuidados.sinais.atividade=document.getElementById('snAtividade').value;
   salvarCuidados();
 });
-function resumoSinais(s){
+function resumoSinais(s, nEscDia){
   const partes=[];
   if(s.evacuou) partes.push('Evacuou: '+(s.evacuou==='sim'
     ? 'sim'+(s.cocoHora?' às '+s.cocoHora:'')+(s.tipoCoco?' (tipo '+s.tipoCoco+' de Bristol)':'')
     : 'não'));
   if(s.escapeCoco) partes.push('Escape de cocô: '+(s.escapeCoco==='sim'?'sim'+(s.atividade?', estava '+s.atividade:''):'não'));
-  const nEsc=(cuidados.xixiEscape||[]).length;
+  const nEsc = nEscDia!==undefined ? nEscDia : (cuidados.xixiEscape||[]).length;
   if(nEsc) partes.push('Escapes de xixi: '+nEsc);
   if(s.acordou) partes.push('Acordou '+s.acordou);
   return partes.join(' · ');
@@ -1679,14 +1799,22 @@ function montaHistorico(elId, arr, tipo){
   const ult=[...arr].map((ts,i)=>({ts,i})).reverse().slice(0,8);
   ult.forEach(({ts,i})=>{
     const row=document.createElement('div'); row.className='hist-item';
-    const gap = i>0 ? fmtDur((ts-arr[i-1])/60000)+' depois do anterior' : 'primeiro do dia';
-    row.innerHTML=`<span class="h-hora">${fmtHora(ts)}</span><span class="h-gap">${tipo==='agua'?'💧':'🚽'} ${gap}</span>
+    const min = i>0 ? (ts-arr[i-1])/60000 : 0;
+    const gap = i>0 ? (min<1 ? 'logo após o anterior' : fmtDur(min)+' depois do anterior') : 'primeiro do dia';
+    const comEscape = tipo==='xixi' && (cuidados.xixiEscape||[]).includes(ts);
+    row.innerHTML=`<span class="h-ico ${tipo}">${tipo==='agua'?'💧':'🚽'}</span><span class="h-hora">${fmtHora(ts)}</span><span class="h-gap">${gap}${comEscape?' <em class="h-esc">escape 💦</em>':''}</span>
       <button class="h-del" title="Apagar" data-i="${i}">✕</button>`;
     row.querySelector('.h-del').addEventListener('click',()=>{
       arr.splice(i,1);
       const h=histDia();
       const lista = tipo==='agua'? h.agua : h.xixi;
       const idx=lista.indexOf(ts); if(idx>-1) lista.splice(idx,1);
+      if(tipo==='xixi'){
+        cuidados.xixiEscape=(cuidados.xixiEscape||[]).filter(x=>x!==ts);
+        if(h.xixiEscape) h.xixiEscape=h.xixiEscape.filter(x=>x!==ts);
+      }
+      // avisa a planilha, para o relatório não contar um registro apagado
+      sincronizarNuvem('Apagado', (tipo==='agua'?'Agua ':'Xixi ')+fmtHora(ts));
       salvarCuidados(); salvarHist(); renderCuidados(); atualizarLembretes();
     });
     el.appendChild(row);
@@ -1769,7 +1897,13 @@ function detalheDia(h, tarefas){
   }
   const agua=h.agua||[], xixi=h.xixi||[];
   html+='<b>💧 Água</b>'+(agua.length? '<div class="t-hs">'+agua.map(fmtHora).join(' · ')+'</div>' : '<div class="t-vazio">Nenhum copo registrado.</div>');
-  html+='<b>🚽 Xixi</b>'+(xixi.length? '<div class="t-hs">'+xixi.map(fmtHora).join(' · ')+'</div>' : '<div class="t-vazio">Nenhum xixi registrado.</div>');
+  const escs=h.xixiEscape||[];
+  html+='<b>🚽 Horário de cada xixi</b>'+(xixi.length
+    ? '<div class="rel-xixis">'+xixi.map((ts,i)=>(i?'<span class="rx-gap">'+fmtDur((ts-xixi[i-1])/60000)+'</span>':'')+
+        '<span class="rx-h'+(escs.includes(ts)?' esc':'')+'">'+fmtHora(ts)+(escs.includes(ts)?' 💦':'')+'</span>').join('')+'</div>'
+      +(escs.length?'<div class="t-no">💦 '+escs.length+' escape'+(escs.length>1?'s':'')+' de xixi</div>':'')
+    : '<div class="t-vazio">Nenhum xixi registrado.</div>');
+  if(h.sinais && h.sinais.ts) html+='<b>🌙 Sinais do dia</b><div class="t-hs">'+resumoSinais(h.sinais, escs.length)+'</div>';
   return html;
 }
 
@@ -1817,10 +1951,10 @@ function baixarCSV(nomeArq, linhas){
 }
 document.getElementById('btnCsvResumo').addEventListener('click',()=>{
   const c=relKid(); const dados=histDe(c.id);
-  const linhas=['Data;Crianca;Tarefas feitas;Total de tarefas;Copos de agua;Xixis;Intervalo medio xixi (min);Primeiro xixi;Ultimo xixi'];
+  const linhas=['Data;Crianca;Tarefas feitas;Total de tarefas;Copos de agua;Xixis;Intervalo medio xixi (min);Primeiro xixi;Ultimo xixi;Horario de cada xixi;Escapes de xixi'];
   Object.keys(dados).sort().forEach(d=>{
     const s=statsDia(dados[d]);
-    linhas.push([d, c.nome, s.tarefas, s.totalTarefas, s.copos, s.xixis, s.mediaMin, s.primeiroXixi, s.ultimoXixi].join(';'));
+    linhas.push([d, c.nome, s.tarefas, s.totalTarefas, s.copos, s.xixis, s.mediaMin, s.primeiroXixi, s.ultimoXixi, (dados[d].xixi||[]).map(fmtHora).join(' '), (dados[d].xixiEscape||[]).length].join(';'));
   });
   if(linhas.length===1){ showToast('Ainda não há dados para exportar 🌱'); return; }
   baixarCSV('rotina-'+slug(c.nome)+'-resumo-'+hojeId()+'.csv', linhas);
@@ -1832,9 +1966,9 @@ document.getElementById('btnCsvDetalhe').addEventListener('click',()=>{
   Object.keys(dados).sort().forEach(d=>{
     const h=dados[d]; const evs=[];
     (h.agua||[]).forEach(ts=>evs.push({ts, tipo:'Agua', det:'copo de agua'}));
-    (h.xixi||[]).forEach(ts=>evs.push({ts, tipo:'Xixi', det:''}));
+    (h.xixi||[]).forEach(ts=>evs.push({ts, tipo:'Xixi', det:(h.xixiEscape||[]).includes(ts)?'com escape':''}));
     (h.tarefas||[]).forEach(t=>evs.push({ts:t.ts, tipo:'Tarefa', det:t.nome}));
-    if(h.sinais && h.sinais.ts) evs.push({ts:h.sinais.ts, tipo:'Sinais do dia', det:resumoSinais(h.sinais)});
+    if(h.sinais && h.sinais.ts) evs.push({ts:h.sinais.ts, tipo:'Sinais do dia', det:resumoSinais(h.sinais, (h.xixiEscape||[]).length)});
     evs.sort((a,b)=>a.ts-b.ts).forEach(e=>linhas.push([d, fmtHora(e.ts), c.nome, e.tipo, e.det].join(';')));
   });
   if(linhas.length===1){ showToast('Ainda não há dados para exportar 🌱'); return; }
@@ -1852,7 +1986,8 @@ function textoResumo(){
     const s=statsDia(hist[d]);
     msg+='\n📅 '+fmtDataBr(d)+' → ⭐ '+s.tarefas+'/'+s.totalTarefas+' tarefas · 💧 '+s.copos+' copos (≈'+fmtMl(s.copos*mlCopo())+') · 🚽 '+s.xixis+' xixis';
     if(s.mediaMin!=='') msg+=' (intervalo médio '+fmtDur(s.mediaMin)+')';
-    if(s.primeiroXixi) msg+=' · 1º xixi '+s.primeiroXixi+', último '+s.ultimoXixi;
+    const xs=hist[d].xixi||[], es=hist[d].xixiEscape||[];
+    if(xs.length) msg+='\n   🕐 Horários do xixi: '+xs.map(ts=>fmtHora(ts)+(es.includes(ts)?' (escape)':'')).join(', ');
   });
   msg+='\n\nEnviado pelo app Gota 💧';
   return msg;

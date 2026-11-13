@@ -546,15 +546,18 @@ input,select,textarea{background-color:#FBFDF7;color:var(--texto)}
 @keyframes vapor{from{transform:translate(0,0) scaleY(.5);opacity:0}30%{opacity:.9}to{transform:translate(var(--dx),-30px) scaleY(1.2);opacity:0}}
 .particula.zzz{font-family:'Baloo 2';font-weight:800;color:#8E7CC3;font-size:14px;top:10px;animation:zzz 1.6s ease-out forwards}
 @keyframes zzz{from{transform:translate(4px,0) scale(.6);opacity:0}25%{opacity:1}to{transform:translate(calc(var(--dx) + 18px),-34px) scale(1.2);opacity:0}}
-/* Acordar: desenho que amanhece quando marca */
-.acd{width:52px;height:52px;display:block;margin:0 auto}
-.acd .dia,.acd .raios-acd,.acd .nuvem-acd{opacity:0;transition:opacity 1s ease}
-.acd .sol-acd{transform:translateY(17px);transition:transform 1.1s cubic-bezier(.34,1.3,.64,1)}
-.acd .raios-acd{transform-box:fill-box;transform-origin:center;animation:gira 12s linear infinite}
-.card.done .acd .dia,.card.done .acd .raios-acd,.card.done .acd .nuvem-acd{opacity:1}
-.card.done .acd .sol-acd{transform:translateY(0)}
-.card.done .acd .madrugada{opacity:0}
-.acd .madrugada{transition:opacity 1s ease}
+/* Acordar: solzinho que dorme atrás da nuvem e acorda ao marcar */
+.acd{width:70px;height:70px;display:block;margin:-6px auto -10px;overflow:visible}
+.acd .sol-acd{transform:translateY(11px);transition:transform 1.1s cubic-bezier(.34,1.4,.64,1)}
+.acd .raios-acd,.acd .olhos-acordados{opacity:0;transition:opacity .6s ease .35s}
+.acd .raios-acd{transform-box:fill-box;transform-origin:center;animation:gira 16s linear infinite}
+.acd .olhos-dormindo{transition:opacity .3s}
+.acd .zzz-acd{animation:zzz-acd 2.4s ease-in-out infinite alternate;transition:opacity .3s}
+@keyframes zzz-acd{from{transform:translateY(1px);opacity:.55}to{transform:translateY(-2px);opacity:1}}
+.card.done .acd .sol-acd{transform:none}
+.card.done .acd .raios-acd,.card.done .acd .olhos-acordados{opacity:1}
+.card.done .acd .olhos-dormindo,.card.done .acd .zzz-acd{opacity:0;animation:none}
+.card.fx-acordar.done .ilust{transform:scale(1.08)}
 @keyframes gira{to{transform:rotate(360deg)}}
 
 /* ===== copos de água desenhados ===== */
@@ -1915,29 +1918,42 @@ function fxTarefa(t){
 function hueDoDia(){ const d=new Date(); const n=d.getFullYear()*372+d.getMonth()*31+d.getDate(); return [140,200,260,320,40,90][n%6]; }
 function iconeAcordar(id){
   const k='acd'+String(id).replace(/[^a-z0-9]/gi,'');
-  return `<svg class="acd" viewBox="0 0 52 52" aria-hidden="true">
+  const nuvem='M11 52 C5.5 52 4 45 9.5 43.2 C9 36.5 17 33.5 21.2 37.4 C23.5 31.6 32.5 31 35.4 36.6 C38.6 32.6 46.5 34 46.8 40 C52.5 39.2 56.8 45.4 53.2 49.6 C52.2 51.2 50.6 52 48.6 52 Z';
+  const raios=[0,45,90,135,180,225,270,315].map((a,i)=>{
+    const r1=16.5, r2=i%2?20.5:22.5, rad=(a-90)*Math.PI/180;
+    return `<line x1="${(32+Math.cos(rad)*r1).toFixed(2)}" y1="${(22+Math.sin(rad)*r1).toFixed(2)}" x2="${(32+Math.cos(rad)*r2).toFixed(2)}" y2="${(22+Math.sin(rad)*r2).toFixed(2)}"/>`;
+  }).join('');
+  return `<svg class="acd" viewBox="0 0 64 64" aria-hidden="true">
     <defs>
-      <clipPath id="${k}c"><rect width="52" height="52" rx="14"/></clipPath>
-      <linearGradient id="${k}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8FA8E8"/><stop offset=".55" stop-color="#F5B8C8"/><stop offset="1" stop-color="#FFD9A8"/></linearGradient>
-      <linearGradient id="${k}d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5EC0F0"/><stop offset="1" stop-color="#CFEFFC"/></linearGradient>
-      <radialGradient id="${k}s" cx="38%" cy="35%" r="70%"><stop offset="0" stop-color="#FFF4A8"/><stop offset=".6" stop-color="#FFD93D"/><stop offset="1" stop-color="#FFB61A"/></radialGradient>
+      <radialGradient id="${k}s" cx="36%" cy="30%" r="75%">
+        <stop offset="0" stop-color="#FFF6B8"/><stop offset=".45" stop-color="#FFD84A"/><stop offset=".85" stop-color="#FFB224"/><stop offset="1" stop-color="#F59A12"/>
+      </radialGradient>
+      <linearGradient id="${k}n" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".6" stop-color="#F3F8FD"/><stop offset="1" stop-color="#D3E6F6"/></linearGradient>
+      <radialGradient id="${k}b" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FF8FA3" stop-opacity=".8"/><stop offset="1" stop-color="#FF8FA3" stop-opacity="0"/></radialGradient>
     </defs>
-    <g clip-path="url(#${k}c)">
-      <rect class="madrugada" width="52" height="52" fill="url(#${k}m)"/>
-      <rect class="dia" width="52" height="52" fill="url(#${k}d)"/>
-      <g class="nuvem-acd"><path d="M6 15 q0 -5 5 -5 q2 -4 7 -2 q5 0 5 5 q3 1 2 4 h-18 q-2 0 -1 -2z" fill="#fff"/></g>
-      <g class="sol-acd">
-        <g class="raios-acd" stroke="#FFD93D" stroke-width="2.6" stroke-linecap="round">
-          <line x1="34" y1="9" x2="34" y2="5"/><line x1="34" y1="31" x2="34" y2="35"/><line x1="23" y1="20" x2="19" y2="20"/><line x1="45" y1="20" x2="49" y2="20"/>
-          <line x1="26" y1="12" x2="23.5" y2="9.5"/><line x1="42" y1="12" x2="44.5" y2="9.5"/><line x1="26" y1="28" x2="23.5" y2="30.5"/><line x1="42" y1="28" x2="44.5" y2="30.5"/>
-        </g>
-        <circle cx="34" cy="20" r="8.5" fill="url(#${k}s)"/>
-        <circle cx="31" cy="17" r="2.6" fill="#FFFBE0" opacity=".9"/>
+    <ellipse cx="32" cy="58.5" rx="19" ry="2.4" fill="#2E5A26" opacity=".12"/>
+    <g class="sol-acd">
+      <g class="raios-acd" stroke="#FFC530" stroke-width="3.2" stroke-linecap="round">${raios}</g>
+      <circle cx="32" cy="22" r="13" fill="url(#${k}s)"/>
+      <circle cx="32" cy="22" r="13" fill="none" stroke="#E98A0C" stroke-opacity=".3" stroke-width="1"/>
+      <ellipse cx="27" cy="16.2" rx="4.6" ry="2.8" fill="#FFFDE8" opacity=".85" transform="rotate(-28 27 16.2)"/>
+      <circle cx="24.6" cy="26" r="3" fill="url(#${k}b)"/><circle cx="39.4" cy="26" r="3" fill="url(#${k}b)"/>
+      <g class="olhos-dormindo" fill="none" stroke="#7A4A12" stroke-width="1.6" stroke-linecap="round">
+        <path d="M25.6 22 q2.2 2.2 4.4 0"/><path d="M34 22 q2.2 2.2 4.4 0"/>
       </g>
-      <path d="M0 38 Q14 30 28 36 T52 34 V52 H0Z" fill="#8FCC6F"/>
-      <path d="M0 44 Q18 38 34 43 T52 42 V52 H0Z" fill="#6DB553"/>
+      <g class="olhos-acordados">
+        <ellipse cx="27.8" cy="21.4" rx="1.75" ry="2.2" fill="#5A3410"/><circle cx="28.4" cy="20.5" r=".65" fill="#fff"/>
+        <ellipse cx="36.2" cy="21.4" rx="1.75" ry="2.2" fill="#5A3410"/><circle cx="36.8" cy="20.5" r=".65" fill="#fff"/>
+        <path d="M29 25.6 q3 3 6 0" fill="#C8501E" stroke="#7A3A10" stroke-width=".9" stroke-linejoin="round"/>
+      </g>
     </g>
-    <rect width="52" height="52" rx="14" fill="none" stroke="rgba(0,0,0,.06)"/>
+    <g class="nuvem-acd" transform="translate(5.8 11) scale(.82)">
+      <path d="${nuvem}" fill="url(#${k}n)" stroke="#BCD5EB" stroke-width="1.2"/>
+      <path d="M12.5 42.5 C13 38.6 17.6 37 20.4 39.6 M24.5 36.4 C27 33.8 31.6 34.2 33.4 37.4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+    </g>
+    <g class="zzz-acd" font-family="Baloo 2, sans-serif" font-weight="800" fill="#8E7CC3">
+      <text x="45" y="22" font-size="8">z</text><text x="50.5" y="15" font-size="6">z</text>
+    </g>
   </svg>`;
 }
 function iconeTarefa(t){ return fxTarefa(t)==='acordar' ? iconeAcordar(t.id) : t.emoji; }
@@ -1955,7 +1971,7 @@ function animarTarefa(card, t){
 
 function buildPeriodos(){
   const cont=document.getElementById('periodos'); cont.innerHTML='';
-  const horasPer={manha:'🌅 '+config.acordar, tarde:'', noite:'🌙 '+config.dormir};
+  const horasPer={manha:'⏰ '+config.acordar, tarde:'', noite:'🌙 '+config.dormir};
   ['manha','tarde','noite'].forEach(per=>{
     const lista=rotina.tarefas.filter(t=>t.periodo===per);
     if(!lista.length) return;

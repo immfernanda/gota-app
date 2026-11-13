@@ -3,7 +3,7 @@
 // - Outros arquivos: "stale-while-revalidate" (mostra rápido do cache e atualiza por baixo).
 // - Cache versionado: ao subir a versão, o cache antigo é apagado no activate.
 // Ao mudar arquivos, suba o número da versão para forçar a atualização.
-const CACHE = 'gota-v11';
+const CACHE = 'gota-v12';
 
 const APP_SHELL = [
   './',

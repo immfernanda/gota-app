@@ -572,8 +572,8 @@ input,select,textarea{background-color:#FBFDF7;color:var(--texto)}
 .copo-svg .bolhinha{animation:bolhinha 2.6s ease-in infinite}
 @keyframes bolhinha{from{transform:translateY(0);opacity:0}20%{opacity:.9}to{transform:translateY(-22px);opacity:0}}
 .copo-svg.proximo{cursor:pointer}
-.copo-svg.proximo .contorno{stroke-dasharray:4 3;animation:respira-copo 1.6s ease-in-out infinite alternate}
-@keyframes respira-copo{to{stroke:#2FA8DF}}
+.copo-svg.proximo svg{animation:respira-copo 1.4s ease-in-out infinite alternate}
+@keyframes respira-copo{from{filter:drop-shadow(0 0 0 rgba(47,168,223,0));transform:translateY(0)}to{filter:drop-shadow(0 2px 6px rgba(47,168,223,.45));transform:translateY(-2px)}}
 .copo-svg.proximo:active{transform:scale(.9)}
 .copo-svg.novo::after{content:"";position:absolute;left:50%;top:-14px;width:8px;height:11px;margin-left:-4px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:#2FA8DF;animation:pingo .45s ease-in both}
 @keyframes pingo{from{transform:translateY(0);opacity:1}to{transform:translateY(40px);opacity:0}}
@@ -599,6 +599,21 @@ input,select,textarea{background-color:#FBFDF7;color:var(--texto)}
 @keyframes heroiVoa{from{transform:translateY(0) rotate(-3deg);filter:drop-shadow(0 0 0 rgba(255,217,61,0))}to{transform:translateY(-10px) rotate(3deg);filter:drop-shadow(0 6px 12px rgba(255,200,40,.55))}}
 .char-wrap.pop #gotaImgMeta{animation:heroiPop .7s cubic-bezier(.34,1.56,.64,1)}
 @keyframes heroiPop{0%{transform:scale(1)}40%{transform:translateY(-16px) scale(1.12) rotate(-6deg)}100%{transform:scale(1)}}
+
+/* ===== bloco da água, arrumado ===== */
+.gota-medidor{height:178px;align-items:flex-end}
+#gotaWrap{transform:none!important}
+.agua-meta-txt{font-family:'Baloo 2';font-size:18px;font-weight:800;color:var(--texto);margin-top:8px}
+.agua-barra{position:relative;height:28px;border-radius:20px;background:#E8F5FD;border:2px solid #CFEAF9;overflow:hidden;margin:10px 6px 14px}
+.agua-barra-fill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:18px;background:linear-gradient(180deg,#7FD0F6,#2FA8DF);transition:width .9s cubic-bezier(.3,.8,.3,1);overflow:hidden}
+.agua-barra-fill::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.2) 0 9px,rgba(255,255,255,0) 9px 18px);background-size:25.5px 25.5px;animation:listras 1.2s linear infinite}
+@keyframes listras{to{background-position:25.5px 0}}
+.agua-barra.meta .agua-barra-fill{background:linear-gradient(180deg,#FFE97F,#FFC93D)}
+.ab-txt{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;height:100%;font-family:'Baloo 2';font-weight:800;font-size:13.5px;color:#17658C;text-shadow:0 1px 0 rgba(255,255,255,.75)}
+.agua-copos{display:grid;justify-content:center;gap:12px 10px;background:linear-gradient(180deg,#F5FBFF,#EAF6FD);border:1.5px solid #DCEFFA;border-radius:20px;padding:14px 10px 12px;margin:0 0 4px}
+.copo-svg{width:34px;height:43px}
+
+.hist-mais{display:block;margin:8px auto 0;border:1.5px solid var(--borda);background:#fff;border-radius:30px;padding:7px 16px;font-family:'Fredoka';font-size:13px;font-weight:600;color:var(--verde-esc);cursor:pointer}
 
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
@@ -829,8 +844,8 @@ input,select,textarea{background-color:#FBFDF7;color:var(--texto)}
           </div>
         </div>
         <div class="agua-meta-txt" id="aguaMetaTxt">0 de 6 copos</div>
+        <div class="agua-barra" id="aguaBarraBox"><div class="agua-barra-fill" id="aguaBarra"></div><span class="ab-txt" id="aguaMlTxt"></span></div>
         <div class="agua-copos" id="aguaCopos"></div>
-        <div class="agua-ml-txt" id="aguaMlTxt"></div>
         <button class="btn-registro r-agua" id="btnBebi2">💧 Bebi um copo de água!</button>
         <div class="hist-lista" id="aguaHist"></div>
       </div>
@@ -2166,17 +2181,17 @@ function copoSVG(i, cheio, extra, novo, proximo){
       '<clipPath id="'+k+'"><path d="'+corpo+'"/></clipPath>'+
       '<linearGradient id="'+k+'g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+agua[0]+'"/><stop offset="1" stop-color="'+agua[1]+'"/></linearGradient>'+
     '</defs>'+
-    '<path d="'+corpo+'" fill="#F4FBFF"/>'+
+    '<path d="'+corpo+'" fill="'+(cheio?'#F4FBFF':'#E8F5FD')+'"/>'+
     (cheio ? '<g clip-path="url(#'+k+')"><g transform="translate(0 13)"><g class="nivel">'+
         '<path class="onda-agua tras" d="'+onda(0)+'" fill="'+agua[2]+'"/>'+
         '<path class="onda-agua" d="'+onda(1.5)+'" fill="url(#'+k+'g)"/>'+
         '<circle class="bolhinha" cx="15" cy="28" r="1.3" fill="#fff" opacity=".8"/>'+
         '<circle class="bolhinha" style="animation-delay:-1.2s" cx="24" cy="30" r="1" fill="#fff" opacity=".8"/>'+
       '</g></g></g>' : '')+
-    '<path class="contorno" d="'+corpo+'" fill="none" stroke="'+(cheio?(extra?'#E9B800':'#2FA8DF'):'#BFE4F7')+'" stroke-width="2.2" stroke-linejoin="round"/>'+
+    '<path class="contorno" d="'+corpo+'" fill="none" stroke="'+(cheio?(extra?'#E9B800':'#2FA8DF'):(proximo?'#4FB8E8':'#A9D8F2'))+'" stroke-width="2.2" stroke-linejoin="round"/>'+
     '<path d="M10 10 L12.6 40" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".75"/>'+
-    '<path d="M5 6 H35" stroke="'+(cheio?(extra?'#E9B800':'#2FA8DF'):'#BFE4F7')+'" stroke-width="2.6" stroke-linecap="round"/>'+
-    (proximo ? '<text x="20" y="31" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="15" fill="#8ACDEE">+</text>' : '')+
+    '<path d="M5 6 H35" stroke="'+(cheio?(extra?'#E9B800':'#2FA8DF'):(proximo?'#4FB8E8':'#A9D8F2'))+'" stroke-width="2.6" stroke-linecap="round"/>'+
+    (proximo ? '<circle cx="20" cy="27" r="7.5" fill="#fff" stroke="#4FB8E8" stroke-width="1.6"/><path d="M20 23.4 V30.6 M16.4 27 H23.6" stroke="#2FA8DF" stroke-width="2" stroke-linecap="round"/>' : '')+
     (extra && cheio ? '<text x="33" y="9" font-size="9">⭐</text>' : '')+
     '</svg></span>';
 }
@@ -2185,9 +2200,12 @@ function renderCuidados(){
   document.getElementById('cuidadosSub').textContent='Água e banheiro de '+primeiroNome();
   const meta=config.aguaMeta, qtd=cuidados.agua.length;
   // sem água a gota fica triste e pequenininha; cresce a cada copo; na meta vira herói
-  const escGota=0.62+0.38*Math.min(1, qtd/meta);
-  document.getElementById('gotaWrap').style.transform = 'scale('+escGota+')';
-  document.querySelector('.gota-medidor').style.height = Math.round(168*escGota+10)+'px';
+  // copos em linhas iguais (12 viram 2 linhas de 6; até 7 cabem numa linha só)
+  const nCopos=Math.max(meta,qtd), linhas=Math.ceil(nCopos/7), porLinha=Math.ceil(nCopos/linhas);
+  document.getElementById('aguaCopos').style.gridTemplateColumns='repeat('+porLinha+', 34px)';
+  const pctAgua=Math.min(100, Math.round(qtd/meta*100));
+  document.getElementById('aguaBarra').style.width=(qtd?Math.max(pctAgua,8):0)+'%';
+  document.getElementById('aguaBarraBox').classList.toggle('meta', qtd>=meta);
   const antes = renderCuidados._qtd;
   let copos=''; for(let i=0;i<Math.max(meta,qtd);i++) copos+=copoSVG(i, i<qtd, i>=meta, antes!==undefined && i>=antes && i<qtd, i===qtd);
   renderCuidados._qtd = qtd;
@@ -2196,13 +2214,13 @@ function renderCuidados(){
   document.getElementById('gotaImgNormal').style.opacity = (qtd>0 && qtd<meta) ? 1 : 0;
   document.getElementById('gotaImgMeta').style.opacity = qtd>=meta ? 1 : 0;
   document.getElementById('aguaMetaTxt').textContent =
-    qtd>=meta ? `Meta batida! ${qtd} copos hoje. Virou super-herói! 🦸`
+    qtd>=meta ? `Meta batida! Virou super-herói! 🦸`
     : qtd===0 ? `A gotinha está com sede… que tal um copo de água? 🥺`
     : `${qtd} de ${meta} copos`;
   const metaMl=config.aguaMetaMl||meta*mlCopo();
   document.getElementById('aguaMlTxt').textContent =
-    qtd===0 ? `Copo de ${mlCopo()} mL · meta de ${fmtMl(metaMl)} por dia`
-    : `≈ ${fmtMl(qtd*mlCopo())} de ${fmtMl(metaMl)} 💧`;
+    qtd===0 ? `Meta de ${fmtMl(metaMl)} · copo de ${mlCopo()} mL`
+    : `${fmtMl(qtd*mlCopo())} de ${fmtMl(metaMl)}`;
   montaHistorico('aguaHist', cuidados.agua, 'agua');
   const x=cuidados.xixi;
   document.getElementById('xxTotal').textContent=x.length;
@@ -2296,9 +2314,11 @@ document.getElementById('btnSinais').addEventListener('click',()=>{
 });
 
 function montaHistorico(elId, arr, tipo){
+  montaHistorico.aberto=montaHistorico.aberto||{};
   const el=document.getElementById(elId); el.innerHTML='';
   if(!arr.length){ el.innerHTML='<div class="hist-vazio">Nenhum registro hoje ainda.</div>'; return; }
-  const ult=[...arr].map((ts,i)=>({ts,i})).reverse().slice(0,8);
+  const aberto=montaHistorico.aberto[elId];
+  const ult=[...arr].map((ts,i)=>({ts,i})).reverse().slice(0, aberto?arr.length:3);
   ult.forEach(({ts,i})=>{
     const row=document.createElement('div'); row.className='hist-item';
     const min = i>0 ? (ts-arr[i-1])/60000 : 0;
@@ -2321,6 +2341,12 @@ function montaHistorico(elId, arr, tipo){
     });
     el.appendChild(row);
   });
+  if(arr.length>3){
+    const b=document.createElement('button'); b.className='hist-mais';
+    b.textContent = aberto ? 'Mostrar menos' : 'Ver todos os '+arr.length+' horários';
+    b.addEventListener('click',()=>{ montaHistorico.aberto[elId]=!aberto; montaHistorico(elId, arr, tipo); });
+    el.appendChild(b);
+  }
 }
 
 // ===================== RELATÓRIO (área do profissional) =====================

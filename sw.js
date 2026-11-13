@@ -3,7 +3,7 @@
 // - Outros arquivos: "stale-while-revalidate" (mostra rápido do cache e atualiza por baixo).
 // - Cache versionado: ao subir a versão, o cache antigo é apagado no activate.
 // Ao mudar arquivos, suba o número da versão para forçar a atualização.
-const CACHE = 'gota-v10';
+const CACHE = 'gota-v11';
 
 const APP_SHELL = [
   './',
@@ -13,7 +13,15 @@ const APP_SHELL = [
   './img/icons/icon-192.png',
   './img/icons/icon-512.png',
   './img/gota-heroi.png',
-  './img/gota-triste.png'
+  './img/gota-triste.png',
+  './img/gota/corpo.png',
+  './img/gota/olhos.png',
+  './img/gota/olhos-fechados.png',
+  './img/gota/boca.png',
+  './img/gota/boca-aberta.png',
+  './img/gota/mao-ok.png',
+  './img/gota/mao-acena.png',
+  './img/gota/mao-esq.png'
 ];
 
 const FONTES = ['https://fonts.googleapis.com', 'https://fonts.gstatic.com'];
